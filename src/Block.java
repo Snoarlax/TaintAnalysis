@@ -52,6 +52,11 @@ public class Block {
 
     public void updateTaintedVariables(){
         // TODO: implement the dataflow equations s.t the "tainted variables" = "Out" hold for the "in"
+        HashSet<Variable> in = new HashSet<>();
+
+        for (Block block : Pred)
+            in.addAll(block.getTainted());
+
         HashSet<Variable> newTainted = new HashSet<>();
 
     }
