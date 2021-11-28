@@ -52,7 +52,6 @@ public class CFGParser {
 
         // Finish parsing the blocks by allocating their predecessors and successors
 
-
         // Initialise data structure to keep track of successors
         HashMap<Block, HashSet<Block>> Successors = new HashMap<>();
         Arrays.stream(Blocks).forEach(b -> Successors.put(b, new HashSet<>()));
@@ -62,7 +61,7 @@ public class CFGParser {
 
             ArrayList<Block> ParentsList = new ArrayList<>();
             // Go through properties and find Parents (Predecessors) of blocks
-            for (String property : block.getProperties()) {
+            for (String property : block.getStatements()) {
                 if (property.split(": ")[0].equals("Parent"))
                     ParentsList.add(getBlock(property.split(": ")[1]));
             }

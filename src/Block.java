@@ -6,44 +6,44 @@ public class Block {
     private Block[] Pred;
     private Block[] Succ;
     private boolean ret = false;
-    private final String[] Properties;
+    private final String[] Statements; // TODO: change to Statements type, with statement that gets new tainted variables given input tainted
     private final HashMap<String, String[]> Arguments; // Maps from Property to Argument
 
     private final HashSet<Variable> Tainted;
     // Used when resolving dataflow equations to test if equations have reached a stable point (TaintedChanged == False)
     private boolean TaintedChanged = true;
 
-    // Block has Properties, which each have Arguments
+    // Block has Statements, which each have Arguments
     public Block(String rawBlock) {
         Arguments = new HashMap<>();
         Tainted = new HashSet<>();
 
         BlockName  = rawBlock.split("\n", 2)[0];
 
-        // Properties un-separated from their Arguments
-        String[] PropertiesCombined = rawBlock
+        // Statements un-separated from their Arguments
+        String[] StatementsCombined = rawBlock
                                         .split("\n( {4})(?=[^\s])", 2)[1]
-                                            .split("\n( {4})(?=[^\s])"); // 4 character indent + non-whitespace character delimits properties
+                                            .split("\n( {4})(?=[^\s])"); // 4 character indent + non-whitespace character delimits Statements
 
-        Properties = new String[PropertiesCombined.length];
+        Statements = new String[StatementsCombined.length];
 
-        for (int i = 0; i < Properties.length; i++) {
-            Properties[i] = PropertiesCombined[i].split("\n( {8})(?=[^\s])", 2)[0];
+        for (int i = 0; i < Statements.length; i++) {
+            Statements[i] = StatementsCombined[i].split("\n( {8})(?=[^\s])", 2)[0];
 
-            if (PropertiesCombined[i].split("\n( {8})(?=[^\s])", 2).length > 1) { // If there are arguments, then parse them
+            if (StatementsCombined[i].split("\n( {8})(?=[^\s])", 2).length > 1) { // If there are arguments, then parse them
                 // Array of Arguments
-                String[] ArgumentsArray = PropertiesCombined[i]
+                String[] ArgumentsArray = StatementsCombined[i]
                         .split("\n( {8})(?=[^\s])", 2)[1]
                         .split("\n( {8})(?=[^\s])"); // 8 character indent + non-whitespace character delimits arguments
 
                 for (int j = 0; j < ArgumentsArray.length; j++)
-                    Arguments.put(Properties[i], ArgumentsArray);
+                    Arguments.put(Statements[i], ArgumentsArray);
             }
         }
 
-        // Go through properties, add the necessary ones
-        for (String property : Properties) {
-            // TODO: implement the parsing of important properties
+        // Go through Statements, add the necessary ones
+        for (String property : Statements) {
+            // TODO: implement the parsing of important Statements
 
             if (property.equals("Terminal_Return"))
                 ret = true;
@@ -85,8 +85,8 @@ public class Block {
         return ret;
     }
 
-    public String[] getProperties() {
-        return Properties;
+    public String[] getStatements() {
+        return Statements;
     }
 
     public HashMap<String, String[]> getArguments() {
