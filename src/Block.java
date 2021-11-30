@@ -1,3 +1,5 @@
+import Statement.*;
+
 import java.util.*;
 
 public class Block {
@@ -5,9 +7,8 @@ public class Block {
     private final String BlockName;
     private Block[] Pred;
     private Block[] Succ;
-    private boolean ret = false;
-    private final String[] Statements; // TODO: change to Statements type, with statement that gets new tainted variables given input tainted
-    private final HashMap<String, String[]> Arguments; // Maps from Property to Argument
+    private final Statement[] Statements;
+    private final HashMap<Statement, String[]> Arguments; // Maps from Property to Argument
 
     private final HashSet<Variable> Tainted;
     // Used when resolving dataflow equations to test if equations have reached a stable point (TaintedChanged == False)
@@ -25,10 +26,24 @@ public class Block {
                                         .split("\n( {4})(?=[^\s])", 2)[1]
                                             .split("\n( {4})(?=[^\s])"); // 4 character indent + non-whitespace character delimits Statements
 
-        Statements = new String[StatementsCombined.length];
-
+        Statements = new Statement[StatementsCombined.length];
         for (int i = 0; i < Statements.length; i++) {
-            Statements[i] = StatementsCombined[i].split("\n( {8})(?=[^\s])", 2)[0];
+            String rawStatement = StatementsCombined[i].split("\n( {8})(?=[^\s])", 2)[0];
+
+            StatementType statementType = StatementType.ParseStatementType(rawStatement);
+            if (statementType == StatementType.PROPERTY)
+                Statements[i] = StatementType.ConstructPropertyStatement(rawStatement);
+            else if (statementType == StatementType.ASSIGNMENT)
+                Statements[i] = StatementType.ConstructAssignmentStatement(rawStatement);
+            else if (statementType == StatementType.EXPRESSION)
+                Statements[i] = StatementType.ConstructExpressionStatement(rawStatement);
+            else if (statementType == StatementType.STATEMENT)
+                Statements[i] = StatementType.ConstructStatementStatement(rawStatement);
+            else if (statementType == StatementType.TERMINAL)
+                Statements[i] = StatementType.ConstructTerminalStatement(rawStatement);
+            else
+                Statements[i] = null;
+                // TODO:handle invalid statement being created
 
             if (StatementsCombined[i].split("\n( {8})(?=[^\s])", 2).length > 1) { // If there are arguments, then parse them
                 // Array of Arguments
@@ -39,14 +54,6 @@ public class Block {
                 for (int j = 0; j < ArgumentsArray.length; j++)
                     Arguments.put(Statements[i], ArgumentsArray);
             }
-        }
-
-        // Go through Statements, add the necessary ones
-        for (String property : Statements) {
-            // TODO: implement the parsing of important Statements
-
-            if (property.equals("Terminal_Return"))
-                ret = true;
         }
     }
 
@@ -81,15 +88,11 @@ public class Block {
         return Succ;
     }
 
-    public boolean isEnd() {
-        return ret;
-    }
-
-    public String[] getStatements() {
+    public Statement[] getStatements() {
         return Statements;
     }
 
-    public HashMap<String, String[]> getArguments() {
+    public HashMap<Statement, String[]> getArguments() {
         return Arguments;
     }
 

@@ -1,6 +1,10 @@
+import Statement.Statement;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
+
+import Statement.*;
 
 public class CFGParser {
     // Parses the output of the PHP-CFG programme into Block Objects I can analyse.
@@ -60,10 +64,10 @@ public class CFGParser {
             // Add Predecessors to each Block object
 
             ArrayList<Block> ParentsList = new ArrayList<>();
-            // Go through properties and find Parents (Predecessors) of blocks
-            for (String property : block.getStatements()) {
-                if (property.split(": ")[0].equals("Parent"))
-                    ParentsList.add(getBlock(property.split(": ")[1]));
+            // Go through Statements and find Parents (Predecessors) of blocks
+            for (Statement statement : block.getStatements()) {
+                if (statement.getStatementType() == StatementType.PROPERTY && ((PropertyStatement)statement).getPropertyName().equals("Parent"))
+                    ParentsList.add(getBlock(((PropertyStatement)statement).getPropertyValue()));
             }
 
             block.setPred(ParentsList.toArray(Block[]::new));

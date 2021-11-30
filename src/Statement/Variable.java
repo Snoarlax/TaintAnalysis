@@ -1,3 +1,5 @@
+package Statement;
+
 public class Variable {
     // TODO: implement flags for different types of taint
 
