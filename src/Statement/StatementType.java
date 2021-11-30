@@ -48,5 +48,9 @@ public enum StatementType {
     public static TerminalStatement ConstructTerminalStatement(String rawStatement) {
         return new TerminalStatement(rawStatement);
     }
+
+    public static DefaultStatement ConstructDefaultStatement(String rawStatement) {
+        return new DefaultStatement(rawStatement);
+    }
 }
 

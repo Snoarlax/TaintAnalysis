@@ -1,0 +1,18 @@
+
+Block#1
+    Expr_Assign
+        var: Var#1<$a>
+        expr: LITERAL(2)
+        result: Var#2
+    Expr_BinaryOp_Greater
+        left: Var#1<$a>
+        right: LITERAL(1)
+        result: Var#3
+    Stmt_JumpIf
+        cond: Var#3
+        if: Block#2
+        else: Block#2
+
+Block#2
+
+Block#3

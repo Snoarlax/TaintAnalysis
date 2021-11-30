@@ -12,14 +12,10 @@ public class CFGParser {
     private Block[] Blocks = null;
     private String Data = "";
 
-    CFGParser(String FileLocation){
+    CFGParser(String FileLocation) throws InvalidFileException{
         ReadFile(FileLocation);
-        try {
-            ParseFile(Data);
-        }
-        catch (InvalidFileException e){
-            System.out.println(e.getMessage());
-        }
+        ParseFile(Data);
+
     }
 
     private void ReadFile(String FileLocation){

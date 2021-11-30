@@ -4,13 +4,14 @@ import org.junit.jupiter.api.DisplayName;
 
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import Statement.*;
 
 public class UnitTests {
     @Test
     @DisplayName("Tests that CFGParser returns a block for each block in the .dat file")
-    public void CFGParser_TestParsing() {
+    public void CFGParser_TestParsing() throws InvalidFileException {
         // Arrange
         CFGParser parser = new CFGParser("graph.dat");
         // Act
@@ -20,8 +21,25 @@ public class UnitTests {
     }
 
     @Test
+    @DisplayName("Tests that CFGParser throws an error on the .dat file being invalid")
+    public void CFGParser_TestInvalidFileException() {
+        // Arrange
+        String expectedMessage = "The file is not a valid CFG .dat file. ";
+
+        // Act
+        Exception exception = assertThrows(InvalidFileException.class, () -> {
+            CFGParser parser = new CFGParser("InvalidFile.dat");
+        });
+        String actualMessage = exception.getMessage();
+
+        // Assert
+        assertEquals(actualMessage, expectedMessage);
+
+    }
+
+    @Test
     @DisplayName("Test getBlock from CFGParser")
-    public void CFGParser_TestGetBlock() {
+    public void CFGParser_TestGetBlock() throws InvalidFileException {
         // Arrange
         CFGParser parser = new CFGParser("graph.dat");
         // Act
@@ -32,7 +50,7 @@ public class UnitTests {
 
     @Test
     @DisplayName("Test getSucc from CFGParser")
-    public void CFGParser_TestGetSucc() {
+    public void CFGParser_TestGetSucc() throws InvalidFileException {
         // Arrange
         CFGParser parser = new CFGParser("graph.dat");
         // Act
@@ -45,7 +63,7 @@ public class UnitTests {
 
     @Test
     @DisplayName("Test getPred from CFGParser")
-    public void CFGParser_TestGetPred() {
+    public void CFGParser_TestGetPred() throws InvalidFileException {
         // Arrange
         CFGParser parser = new CFGParser("graph.dat");
         // Act
@@ -58,7 +76,7 @@ public class UnitTests {
 
     @Test
     @DisplayName("Test GetStatementType from Statement.StatementType")
-    public void StatementType_TestGetStatementType() {
+    public void StatementType_TestGetStatementType() throws InvalidFileException {
         // Arrange
         CFGParser parser = new CFGParser("graph.dat");
 

@@ -1,6 +1,7 @@
 import Statement.*;
 
 import java.util.*;
+import java.util.regex.Pattern;
 
 public class Block {
     private final String BlockName;
@@ -17,6 +18,9 @@ public class Block {
     public Block(String rawBlock) throws InvalidFileException {
         Arguments = new HashMap<>();
         Tainted = new HashSet<>();
+
+        if (!Pattern.compile("\n( {4})(?=[^\s])").matcher(rawBlock).find()) // check for regex matches for the Statement Delimiter
+            throw new InvalidFileException("The file is not a valid CFG .dat file. ");
 
         BlockName  = rawBlock.split("\n", 2)[0];
 
@@ -41,8 +45,7 @@ public class Block {
             else if (statementType == StatementType.TERMINAL)
                 Statements[i] = StatementType.ConstructTerminalStatement(rawStatement);
             else {
-                Statements[i] = null;
-                throw new InvalidFileException("Invalid Statement in file: " + rawStatement);
+                Statements[i] = StatementType.ConstructDefaultStatement(rawStatement);
             }
 
             if (StatementsCombined[i].split("\n( {8})(?=[^\s])", 2).length > 1) { // If there are arguments, then parse them
