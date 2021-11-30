@@ -14,7 +14,12 @@ public class CFGParser {
 
     CFGParser(String FileLocation){
         ReadFile(FileLocation);
-        ParseFile(Data);
+        try {
+            ParseFile(Data);
+        }
+        catch (InvalidFileException e){
+            System.out.println(e.getMessage());
+        }
     }
 
     private void ReadFile(String FileLocation){
@@ -47,7 +52,7 @@ public class CFGParser {
         return null;
     }
 
-    private void ParseFile(String Data){
+    private void ParseFile(String Data) throws InvalidFileException{
         String[] RawBlocks = Data.split("\n\n");
         Blocks = new Block[RawBlocks.length];
 

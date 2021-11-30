@@ -12,9 +12,9 @@ public class AssignmentStatement extends Statement{
     }
 
     @Override
-    HashSet<Variable> computeTaintFromInput(HashSet<Variable> inputTaint) {
+    public void computeTaintFromInput(HashSet<Variable> inputTaint, String[] Arguments) {
         // TODO implement taint transfer for a assignment
-        return null;
+        return;
     }
 
     @Override

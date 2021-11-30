@@ -4,15 +4,17 @@ import java.util.HashSet;
 
 public class TerminalStatement extends Statement{
     private final String TerminalName;
+    private boolean tainted;
 
     public TerminalStatement(String terminalName) {
         TerminalName = terminalName;
+        tainted = false;
     }
 
     @Override
-    HashSet<Variable> computeTaintFromInput(HashSet<Variable> inputTaint) {
+    public void computeTaintFromInput(HashSet<Variable> inputTaint, String[] Arguments) {
         // TODO implement taint transfer for a terminal
-        return null;
+        return;
     }
 
     @Override

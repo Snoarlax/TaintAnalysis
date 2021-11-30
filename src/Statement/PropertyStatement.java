@@ -12,9 +12,9 @@ public class PropertyStatement extends Statement {
     }
 
     @Override
-    HashSet<Variable> computeTaintFromInput(HashSet<Variable> inputTaint) {
-        // TODO: implement taint transfer for a Property Node
-        return null;
+    public void computeTaintFromInput(HashSet<Variable> inputTaint, String[] Arguments) {
+        // Property statements do not affect Taint
+        return;
     }
 
     @Override

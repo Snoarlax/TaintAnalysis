@@ -9,9 +9,9 @@ public class StatementStatement extends Statement{
         StatementName = statementName;
     }
     @Override
-    HashSet<Variable> computeTaintFromInput(HashSet<Variable> inputTaint) {
+    public void computeTaintFromInput(HashSet<Variable> inputTaint, String[] Arguments) {
         // TODO implement taint transfer for a statement
-        return null;
+        return;
     }
 
     @Override

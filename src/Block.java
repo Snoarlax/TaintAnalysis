@@ -3,7 +3,6 @@ import Statement.*;
 import java.util.*;
 
 public class Block {
-
     private final String BlockName;
     private Block[] Pred;
     private Block[] Succ;
@@ -15,7 +14,7 @@ public class Block {
     private boolean TaintedChanged = true;
 
     // Block has Statements, which each have Arguments
-    public Block(String rawBlock) {
+    public Block(String rawBlock) throws InvalidFileException {
         Arguments = new HashMap<>();
         Tainted = new HashSet<>();
 
@@ -41,9 +40,10 @@ public class Block {
                 Statements[i] = StatementType.ConstructStatementStatement(rawStatement);
             else if (statementType == StatementType.TERMINAL)
                 Statements[i] = StatementType.ConstructTerminalStatement(rawStatement);
-            else
+            else {
                 Statements[i] = null;
-                // TODO:handle invalid statement being created
+                throw new InvalidFileException("Invalid Statement in file: " + rawStatement);
+            }
 
             if (StatementsCombined[i].split("\n( {8})(?=[^\s])", 2).length > 1) { // If there are arguments, then parse them
                 // Array of Arguments
@@ -58,14 +58,12 @@ public class Block {
     }
 
     public void updateTaintedVariables(){
-        // TODO: implement the dataflow equations s.t the "tainted variables" = "Out" hold for the "in"
-        HashSet<Variable> in = new HashSet<>();
-
         for (Block block : Pred)
-            in.addAll(block.getTainted());
+            Tainted.addAll(block.getTainted());
 
-        HashSet<Variable> newTainted = new HashSet<>();
-
+        // The taint function of the block should be equal to the application of all sequential taint functions of the statements that make up the block
+        for (Statement statement: Statements)
+            statement.computeTaintFromInput(Tainted, Arguments.get(statement));
     }
 
     public String getBlockName() {
