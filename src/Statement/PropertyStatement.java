@@ -1,5 +1,6 @@
 package Statement;
 
+import java.util.HashMap;
 import java.util.HashSet;
 
 public class PropertyStatement extends Statement {
@@ -12,9 +13,8 @@ public class PropertyStatement extends Statement {
     }
 
     @Override
-    public void computeTaintFromInput(HashSet<Variable> inputTaint, String[] Arguments) {
+    public void computeTaintFromInput(HashMap<Variable,Variable> inputTaint, String[] Arguments) {
         // Property statements do not affect Taint
-        return;
     }
 
     @Override

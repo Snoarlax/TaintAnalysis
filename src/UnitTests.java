@@ -4,9 +4,13 @@ import org.junit.jupiter.api.DisplayName;
 
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import Statement.*;
+
+import java.util.HashMap;
+import java.util.HashSet;
 
 public class UnitTests {
     @Test
@@ -89,5 +93,87 @@ public class UnitTests {
 
         // Assert
         assertTrue(types[0] == StatementType.PROPERTY && types[1] == StatementType.ASSIGNMENT && types[2] == StatementType.EXPRESSION && types[3] == StatementType.TERMINAL && types[4] == StatementType.STATEMENT);
+    }
+
+    @Test
+    @DisplayName("Test computeTaintFromInput for an AssignmentStatement for an assignment without a Phi function and tainted assignments")
+    public void AssignmentStatement_computeTaintFromInput_noPhi_WithTaint(){
+        // Arrange
+        AssignmentStatement StatementWithTaint = new AssignmentStatement("Var1", "Var2");
+
+        HashMap<Variable, Variable> TaintMap = new HashMap<>();
+        Variable Var2 = new Variable("Var2", new HashSet<>());
+        Variable Var1 = new Variable("Var1", new HashSet<>());
+        Var2.setTainted(TaintType.Default);
+
+        TaintMap.put(Var2, Var2);
+
+
+        // Act
+        StatementWithTaint.computeTaintFromInput(TaintMap, new String[0]);
+
+        // Assert
+        assertTrue(TaintMap.get(Var1).isTainted());
+    }
+
+    @Test
+    @DisplayName("Test computeTaintFromInput for an AssignmentStatement for an assignment without a Phi function and no tainted assignments")
+    public void AssignmentStatement_computeTaintFromInput_noPhi_NoTaint(){
+        // Arrange
+        AssignmentStatement StatementWithTaint = new AssignmentStatement("Var1", "Var2");
+
+        HashMap<Variable, Variable> TaintMap = new HashMap<>();
+        Variable Var2 = new Variable("Var2", new HashSet<>());
+        Variable Var1 = new Variable("Var1", new HashSet<>());
+
+        TaintMap.put(Var2, Var2);
+
+
+        // Act
+        StatementWithTaint.computeTaintFromInput(TaintMap, new String[0]);
+
+        // Assert
+        assertFalse(TaintMap.containsKey(Var1));
+    }
+
+    @Test
+    @DisplayName("Test computeTaintFromInput for an AssignmentStatement for an assignment with a Phi function and tainted assignments")
+    public void AssignmentStatement_computeTaintFromInput_Phi_WithTaint(){
+        // Arrange
+        AssignmentStatement StatementWithTaint = new AssignmentStatement("Var1", "Phi(Var2,Var3,Var4,Var5)");
+
+        HashMap<Variable, Variable> TaintMap = new HashMap<>();
+        Variable Var2 = new Variable("Var2", new HashSet<>());
+        Variable Var1 = new Variable("Var1", new HashSet<>());
+        Var2.setTainted(TaintType.Default);
+
+        TaintMap.put(Var2, Var2);
+
+
+        // Act
+        StatementWithTaint.computeTaintFromInput(TaintMap, new String[0]);
+
+        // Assert
+        assertTrue(TaintMap.get(Var1).isTainted());
+    }
+
+    @Test
+    @DisplayName("Test computeTaintFromInput for an AssignmentStatement for an assignment with a Phi function and tainted assignments")
+    public void AssignmentStatement_computeTaintFromInput_Phi_NoTaint(){
+        // Arrange
+        AssignmentStatement StatementWithTaint = new AssignmentStatement("Var1", "Phi(Var2,Var3,Var4,Var5)");
+
+        HashMap<Variable, Variable> TaintMap = new HashMap<>();
+        Variable Var2 = new Variable("Var2", new HashSet<>());
+        Variable Var1 = new Variable("Var1", new HashSet<>());
+
+        TaintMap.put(Var2, Var2);
+
+
+        // Act
+        StatementWithTaint.computeTaintFromInput(TaintMap, new String[0]);
+
+        // Assert
+        assertFalse(TaintMap.containsKey(Var1));
     }
 }

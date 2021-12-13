@@ -1,5 +1,6 @@
 package Statement;
 
+import java.util.HashMap;
 import java.util.HashSet;
 
 public class TerminalStatement extends Statement{
@@ -12,9 +13,8 @@ public class TerminalStatement extends Statement{
     }
 
     @Override
-    public void computeTaintFromInput(HashSet<Variable> inputTaint, String[] Arguments) {
+    public void computeTaintFromInput(HashMap<Variable,Variable> inputTaint, String[] Arguments) {
         // TODO implement taint transfer for a terminal
-        return;
     }
 
     @Override

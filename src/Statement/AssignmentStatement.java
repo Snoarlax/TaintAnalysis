@@ -1,5 +1,6 @@
 package Statement;
 
+import java.util.HashMap;
 import java.util.HashSet;
 
 public class AssignmentStatement extends Statement{
@@ -12,9 +13,35 @@ public class AssignmentStatement extends Statement{
     }
 
     @Override
-    public void computeTaintFromInput(HashSet<Variable> inputTaint, String[] Arguments) {
+    public void computeTaintFromInput(HashMap<Variable,Variable> inputTaint, String[] Arguments) {
         // TODO implement taint transfer for a assignment
-        return;
+
+        // put a new Variable in the Taint Set passed on to the next Statement. Make it have no types of taint registered.
+        Variable AssignedVar = new Variable(AssignedVariable, new HashSet<>());
+
+        // Determine Type[s] of taint present in the variable
+
+        String[] Values;
+        // Check if it is a Phi() assignment
+        if (AssignedValue.startsWith("Phi(") && AssignedValue.endsWith(")"))
+            Values = AssignedValue.substring(4,AssignedValue.length()-1).split(",");
+
+        else
+            Values = new String[] {AssignedValue};
+
+        // For each of the potential values, see if it is tainted. If it is, the AssignedVariable could be tainted, so pass it on.
+        for (String Value : Values){
+            Variable key = new Variable(Value, new HashSet<>());
+            if (inputTaint.containsKey(key) && inputTaint.get(key).isTainted()) {
+                AssignedVar.setAllTainted(inputTaint.get(key).getTaints());
+            }
+        }
+
+
+        // Add the Variable to the Taint Set if it has been tainted
+        if (AssignedVar.isTainted())
+            inputTaint.put(AssignedVar, AssignedVar);
+
     }
 
     @Override

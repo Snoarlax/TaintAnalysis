@@ -1,5 +1,6 @@
 package Statement;
 
+import java.util.HashMap;
 import java.util.HashSet;
 
 public class ExpressionStatement extends Statement{
@@ -11,9 +12,8 @@ public class ExpressionStatement extends Statement{
     }
 
     @Override
-    public void computeTaintFromInput(HashSet<Variable> inputTaint, String[] Arguments) {
+    public void computeTaintFromInput(HashMap<Variable,Variable> inputTaint, String[] Arguments) {
         // TODO implement taint transfer for a expression
-        return;
     }
 
     @Override
