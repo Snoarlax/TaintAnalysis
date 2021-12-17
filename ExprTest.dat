@@ -1,0 +1,55 @@
+
+Block#1
+    Expr_Assign
+        var: Var#1<$a>
+        expr: LITERAL('Hello There!')
+        result: Var#2
+    Expr_Assign
+        var: Var#3<$b>
+        expr: LITERAL(4)
+        result: Var#4
+    Expr_BinaryOp_Concat
+        left: Var#1<$a>
+        right: LITERAL('
+        ')
+        result: Var#5
+    Terminal_Echo
+        expr: Var#5
+    Expr_ConcatList
+        list[0]: Var#1<$a>
+        list[1]: LITERAL('
+        ')
+        result: Var#6
+    Terminal_Echo
+        expr: Var#6
+    Expr_BinaryOp_Concat
+        left: Var#1<$a>
+        right: LITERAL('fake\')
+        FakeArgument : LITERAL(\'FakeValue')
+        result: Var#7
+    Terminal_Echo
+        expr: Var#7
+    Expr_BinaryOp_Plus
+        left: Var#3<$b>
+        right: LITERAL(3)
+        result: Var#8
+    Terminal_Echo
+        expr: Var#8
+    Expr_Assign
+        var: Var#9<$c>
+        expr: LITERAL('My name is John')
+        result: Var#10
+    Expr_Assign
+        var: Var#11<$d>
+        expr: LITERAL(' What is your name?')
+        result: Var#12
+    Expr_ConcatList
+        list[0]: LITERAL('
+        ')
+        list[1]: Var#1<$a>
+        list[2]: Var#9<$c>
+        list[3]: Var#11<$d>
+        result: Var#13
+    Terminal_Echo
+        expr: Var#13
+    Terminal_Return

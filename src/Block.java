@@ -1,4 +1,5 @@
 import Statement.*;
+import org.junit.Assert;
 
 import java.util.*;
 import java.util.regex.Pattern;
@@ -50,10 +51,23 @@ public class Block {
 
             if (StatementsCombined[i].split("\n( {8})(?=[^\s])", 2).length > 1) { // If there are arguments, then parse them
                 // Array of Arguments
-                String[] ArgumentsArray = StatementsCombined[i]
+                String[] ArgumentsArray_Unchecked = StatementsCombined[i]
                         .split("\n( {8})(?=[^\s])", 2)[1]
                         .split("\n( {8})(?=[^\s])"); // 8 character indent + non-whitespace character delimits arguments
 
+                // Check if the bug (look in tests for more detail) caused the Arguments to be parsed incorrectly, and if so fix it
+                ArrayList<String> ArgumentList = new ArrayList<>();
+                for (int j = 0; j < ArgumentsArray_Unchecked.length; j++) {
+                    // Fix bug by checking if bug has happened, by checking for LITERAL(' at the start and no ') at the end
+                    // Then iteratively combining with the next argument until the bug is fixed.
+                    String arg = ArgumentsArray_Unchecked[j].split(": ", 2)[0] + ": ";
+                    StringBuilder value = new StringBuilder(ArgumentsArray_Unchecked[j].split(": ", 2)[1]);
+                    if (value.toString().startsWith("LITERAL('"))
+                        while (!(value.toString().endsWith("')") && !value.toString().endsWith("\\')")))
+                            value.append(ArgumentsArray_Unchecked[++j]);
+                    ArgumentList.add(arg + value);
+                }
+                String[] ArgumentsArray = ArgumentList.toArray(String[]::new);
                 for (int j = 0; j < ArgumentsArray.length; j++)
                     Arguments.put(Statements[i], ArgumentsArray);
             }
@@ -99,8 +113,7 @@ public class Block {
 
     public HashMap<Variable,Variable> getTainted() {
         // It is important the result is a copy of the tainted Values, so the taint application is a serializable flow.
-        // TODO: Make it return a copy of Tainted
-        return Tainted;
+        return new HashMap<>(Tainted);
     }
 
     public boolean hasTaintedChanged() {

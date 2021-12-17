@@ -1,4 +1,5 @@
 import Statement.Statement;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.jupiter.api.DisplayName;
 
@@ -113,14 +114,14 @@ public class UnitTests {
         StatementWithTaint.computeTaintFromInput(TaintMap, new String[0]);
 
         // Assert
-        assertTrue(TaintMap.get(Var1).isTainted());
+        assertTrue(TaintMap.get(Var1).isTainted() && TaintMap.get(Var1).isTainted());
     }
 
     @Test
     @DisplayName("Test computeTaintFromInput for an AssignmentStatement for an assignment without a Phi function and no tainted assignments")
     public void AssignmentStatement_computeTaintFromInput_noPhi_NoTaint(){
         // Arrange
-        AssignmentStatement StatementWithTaint = new AssignmentStatement("Var1", "Var2");
+        AssignmentStatement StatementWithNoTaint = new AssignmentStatement("Var1", "Var2");
 
         HashMap<Variable, Variable> TaintMap = new HashMap<>();
         Variable Var2 = new Variable("Var2", new HashSet<>());
@@ -130,7 +131,7 @@ public class UnitTests {
 
 
         // Act
-        StatementWithTaint.computeTaintFromInput(TaintMap, new String[0]);
+        StatementWithNoTaint.computeTaintFromInput(TaintMap, new String[0]);
 
         // Assert
         assertFalse(TaintMap.containsKey(Var1));
@@ -154,14 +155,14 @@ public class UnitTests {
         StatementWithTaint.computeTaintFromInput(TaintMap, new String[0]);
 
         // Assert
-        assertTrue(TaintMap.get(Var1).isTainted());
+        assertTrue(TaintMap.get(Var1).isTainted() && TaintMap.get(Var1).isTainted());
     }
 
     @Test
-    @DisplayName("Test computeTaintFromInput for an AssignmentStatement for an assignment with a Phi function and tainted assignments")
+    @DisplayName("Test computeTaintFromInput for an AssignmentStatement for an assignment with a Phi function and no tainted assignments")
     public void AssignmentStatement_computeTaintFromInput_Phi_NoTaint(){
         // Arrange
-        AssignmentStatement StatementWithTaint = new AssignmentStatement("Var1", "Phi(Var2,Var3,Var4,Var5)");
+        AssignmentStatement StatementWithNoTaint = new AssignmentStatement("Var1", "Phi(Var2,Var3,Var4,Var5)");
 
         HashMap<Variable, Variable> TaintMap = new HashMap<>();
         Variable Var2 = new Variable("Var2", new HashSet<>());
@@ -171,9 +172,76 @@ public class UnitTests {
 
 
         // Act
-        StatementWithTaint.computeTaintFromInput(TaintMap, new String[0]);
+        StatementWithNoTaint.computeTaintFromInput(TaintMap, new String[0]);
 
         // Assert
         assertFalse(TaintMap.containsKey(Var1));
+    }
+
+    @Test
+    @DisplayName("Found a bug when including new Lines in Literals, this checks a file with the bug to check for correct parsing. ")
+    public void Test_NewLineInLiteral_BugFix() throws InvalidFileException {
+        // Upon Experimenting with the bug, it seems you cannot inject an injection that looks like a normally parsed program (See ExprTest.dat for my attempt,
+        // Created by parsing [ echo $a."fake')\nFakeArgument : LITERAL('FakeValue"; ]
+
+        // Arrange
+        CFGParser parser = new CFGParser("ExprTest.dat");
+        // Act + Assert
+        for (Block block : parser.getBlocks()){
+            for (String[] arguments : block.getArguments().values()){
+                for (String argument : arguments){
+                    // Check each argument's value, if it starts with LITERAL(' it must end with ') (where the last ' is unescaped)
+                    String value = argument.split(": ",2)[1];
+                    if (value.startsWith("LITERAL('")){
+                        if (!(value.endsWith("')") && !value.endsWith("\\')")))
+                            Assert.fail();
+                    }
+                }
+            }
+        }
+    }
+
+
+    @Test
+    @DisplayName("Check that Expr_BinaryOp_Concat passes on taint correctly when given tainted arguments")
+    public void ExpressionStatement_ExprBinaryOpConcat_ComputeTaintFromInput_WithTaintedArguments() {
+        // Arrange
+        ExpressionStatement StatementWithNoTaint = new ExpressionStatement("Expr_BinaryOp_Concat");
+
+        HashMap<Variable, Variable> TaintMap = new HashMap<>();
+        Variable Var2 = new Variable("Var2", new HashSet<>());
+        Variable Var1 = new Variable("Var1", new HashSet<>());
+
+        Var1.setTainted(TaintType.Default);
+        TaintMap.put(Var1, Var1);
+
+        String[] Arguments = new String[]{"left: Var1","right: LITERAL('')", "result: Var2"};
+
+
+        // Act
+        StatementWithNoTaint.computeTaintFromInput(TaintMap, Arguments);
+
+        // Assert
+        assertTrue(TaintMap.containsKey(Var2) && TaintMap.get(Var2).isTainted());
+    }
+
+    @Test
+    @DisplayName("Check that Expr_BinaryOp_Concat passes on taint correctly when given untainted arguments")
+    public void ExpressionStatement_ExprBinaryOpConcat_ComputeTaintFromInput_NoTaintedArguments() {
+        // Arrange
+        ExpressionStatement StatementWithNoTaint = new ExpressionStatement("Expr_BinaryOp_Concat");
+
+        HashMap<Variable, Variable> TaintMap = new HashMap<>();
+        Variable Var2 = new Variable("Var2", new HashSet<>());
+        Variable Var1 = new Variable("Var1", new HashSet<>());
+
+        String[] Arguments = new String[]{"left: Var1","right: LITERAL('')", "result: Var2"};
+
+
+        // Act
+        StatementWithNoTaint.computeTaintFromInput(TaintMap, Arguments);
+
+        // Assert
+        assertFalse(TaintMap.containsKey(Var2));
     }
 }

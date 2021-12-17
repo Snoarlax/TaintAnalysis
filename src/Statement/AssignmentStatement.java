@@ -14,10 +14,15 @@ public class AssignmentStatement extends Statement{
 
     @Override
     public void computeTaintFromInput(HashMap<Variable,Variable> inputTaint, String[] Arguments) {
-        // TODO implement taint transfer for a assignment
+        // TODO:  Check arguments are are A Literal( ), and if they are ignore it
+        // This does not generate any Taint, only transfers it. If inputTaint is empty, we can simply return.
+        if (inputTaint.isEmpty())
+            return;
 
         // put a new Variable in the Taint Set passed on to the next Statement. Make it have no types of taint registered.
-        Variable AssignedVar = new Variable(AssignedVariable, new HashSet<>());
+        // Check if it is already in the taint map first, and if it is use that one
+        Variable AssignedVar = inputTaint.getOrDefault(new Variable(AssignedVariable, new HashSet<>()),
+                new Variable(AssignedVariable, new HashSet<>()));
 
         // Determine Type[s] of taint present in the variable
 

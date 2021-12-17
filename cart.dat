@@ -1,0 +1,341 @@
+
+Block#1
+    Var#1<$form> = Phi()
+    Expr_FuncCall
+        name: LITERAL('defined')
+        args[0]: LITERAL('ABSPATH')
+        result: Var#2
+    Stmt_JumpIf
+        cond: Var#2
+        if: Block#2
+        else: Block#3
+
+Block#2
+    Parent: Block#1
+    Var#3 = Phi(LITERAL(true), Var#4)
+    Var#5<$form> = Phi(Var#1<$form>)
+    Expr_FuncCall
+        name: LITERAL('__')
+        args[0]: LITERAL('Item')
+        args[1]: LITERAL('invoicing')
+        result: Var#6
+    Expr_FuncCall
+        name: LITERAL('__')
+        args[0]: LITERAL('Price')
+        args[1]: LITERAL('invoicing')
+        result: Var#7
+    Expr_FuncCall
+        name: LITERAL('__')
+        args[0]: LITERAL('Qty')
+        args[1]: LITERAL('invoicing')
+        result: Var#8
+    Expr_FuncCall
+        name: LITERAL('__')
+        args[0]: LITERAL('Subtotal')
+        args[1]: LITERAL('invoicing')
+        result: Var#9
+    Expr_Array
+        keys[0]: LITERAL('name')
+        keys[1]: LITERAL('price')
+        keys[2]: LITERAL('quantity')
+        keys[3]: LITERAL('subtotal')
+        values[0]: Var#6
+        values[1]: Var#7
+        values[2]: Var#8
+        values[3]: Var#9
+        result: Var#10
+    Expr_Assign
+        var: Var#11<$columns>
+        expr: Var#10
+        result: Var#12
+    Expr_PropertyFetch
+        var: Var#5<$form>
+        name: LITERAL('invoice')
+        result: Var#13
+    Expr_Empty
+        expr: Var#13
+        result: Var#14
+    Expr_BooleanNot
+        expr: Var#14
+        result: Var#15
+    Stmt_JumpIf
+        cond: Var#15
+        if: Block#4
+        else: Block#5
+
+Block#3
+    Parent: Block#1
+    Terminal_Exit
+
+Block#4
+    Parent: Block#2
+    Var#16<$form> = Phi(Var#5<$form>)
+    Expr_PropertyFetch
+        var: Var#16<$form>
+        name: LITERAL('invoice')
+        result: Var#17
+    Expr_FuncCall
+        name: LITERAL('getpaid_invoice_item_columns')
+        args[0]: Var#17
+        result: Var#18
+    Expr_Assign
+        var: Var#19<$columns>
+        expr: Var#18
+        result: Var#20
+    Stmt_Jump
+        target: Block#6
+
+Block#5
+    Parent: Block#2
+    Stmt_Jump
+        target: Block#6
+
+Block#6
+    Parent: Block#4
+    Parent: Block#5
+    Var#21<$columns> = Phi(Var#19<$columns>, Var#11<$columns>)
+    Var#22<$form> = Phi(Var#16<$form>, Var#5<$form>)
+    Expr_ArrayDimFetch
+        var: Var#21<$columns>
+        dim: LITERAL('tax_rate')
+        result: Var#23
+    Expr_Isset
+        vars[0]: Var#23
+        result: Var#24
+    Stmt_JumpIf
+        cond: Var#24
+        if: Block#7
+        else: Block#8
+
+Block#7
+    Parent: Block#6
+    Var#25<$columns> = Phi(Var#21<$columns>)
+    Expr_ArrayDimFetch
+        var: Var#25<$columns>
+        dim: LITERAL('tax_rate')
+        result: Var#26
+    Terminal_Unset
+        exprs[0]: Var#26
+    Stmt_Jump
+        target: Block#9
+
+Block#8
+    Parent: Block#6
+    Stmt_Jump
+        target: Block#9
+
+Block#9
+    Parent: Block#7
+    Parent: Block#8
+    Var#27<$columns> = Phi(Var#25<$columns>, Var#21<$columns>)
+    Var#28<$form> = Phi(Var#22<$form>)
+    Expr_FuncCall
+        name: LITERAL('apply_filters')
+        args[0]: LITERAL('getpaid_payment_form_cart_table_columns')
+        args[1]: Var#27<$columns>
+        args[2]: Var#28<$form>
+        result: Var#29
+    Expr_Assign
+        var: Var#30<$columns>
+        expr: Var#29
+        result: Var#31
+    Expr_FuncCall
+        name: LITERAL('do_action')
+        args[0]: LITERAL('getpaid_before_payment_form_cart')
+        args[1]: Var#28<$form>
+        result: Var#32
+    Terminal_Echo
+        expr: LITERAL('    <div class="getpaid-payment-form-items-cart border form-group">
+        
+                <div class="getpaid-payment-form-items-cart-header font-weight-bold bg-light border-bottom py-2 px-3">
+                    <div class="form-row">
+                        ')
+    Iterator_Reset
+        var: Var#30<$columns>
+    Stmt_Jump
+        target: Block#10
+
+Block#10
+    Parent: Block#9
+    Parent: Block#18
+    Var#33<$form> = Phi(Var#28<$form>, Var#34<$form>)
+    Iterator_Valid
+        var: Var#30<$columns>
+        result: Var#35
+    Stmt_JumpIf
+        cond: Var#35
+        if: Block#11
+        else: Block#12
+
+Block#11
+    Parent: Block#10
+    Iterator_Key
+        var: Var#30<$columns>
+        result: Var#36
+    Expr_Assign
+        var: Var#37<$key>
+        expr: Var#36
+        result: Var#38
+    Iterator_Value
+        var: Var#30<$columns>
+        result: Var#39
+    Expr_Assign
+        var: Var#40<$label>
+        expr: Var#39
+        result: Var#41
+    Terminal_Echo
+        expr: LITERAL('                    <div class="')
+    Expr_BinaryOp_Equal
+        left: LITERAL('name')
+        right: Var#37<$key>
+        result: Var#42
+    Stmt_JumpIf
+        cond: Var#42
+        if: Block#13
+        else: Block#14
+
+Block#12
+    Parent: Block#10
+    Stmt_Jump
+        target: Block#15
+
+Block#13
+    Parent: Block#11
+    Expr_Assign
+        var: Var#43
+        expr: LITERAL('col-12 col-sm-6')
+        result: Var#44
+    Stmt_Jump
+        target: Block#16
+
+Block#14
+    Parent: Block#11
+    Expr_Assign
+        var: Var#45
+        expr: LITERAL('col-12 col-sm')
+        result: Var#46
+    Stmt_Jump
+        target: Block#16
+
+Block#15
+    Parent: Block#12
+    Var#47<$form> = Phi(Var#33<$form>)
+    Terminal_Echo
+        expr: LITERAL('            </div>
+                </div>
+        
+                ')
+    Expr_MethodCall
+        var: Var#47<$form>
+        name: LITERAL('get_items')
+        result: Var#48
+    Iterator_Reset
+        var: Var#48
+    Stmt_Jump
+        target: Block#17
+
+Block#16
+    Parent: Block#13
+    Parent: Block#14
+    Var#49 = Phi(Var#43, Var#45)
+    Var#50<$key> = Phi(Var#37<$key>)
+    Var#51<$label> = Phi(Var#40<$label>)
+    Var#34<$form> = Phi(Var#33<$form>)
+    Terminal_Echo
+        expr: Var#49
+    Terminal_Echo
+        expr: LITERAL(' getpaid-form-cart-item-')
+    Expr_FuncCall
+        name: LITERAL('sanitize_html_class')
+        args[0]: Var#50<$key>
+        result: Var#52
+    Terminal_Echo
+        expr: Var#52
+    Terminal_Echo
+        expr: LITERAL('">
+                                <span>')
+    Expr_FuncCall
+        name: LITERAL('sanitize_text_field')
+        args[0]: Var#51<$label>
+        result: Var#53
+    Terminal_Echo
+        expr: Var#53
+    Terminal_Echo
+        expr: LITERAL('</span>
+                            </div>
+                        ')
+    Stmt_Jump
+        target: Block#18
+
+Block#17
+    Parent: Block#15
+    Parent: Block#21
+    Var#54<$form> = Phi(Var#47<$form>)
+    Iterator_Valid
+        var: Var#48
+        result: Var#55
+    Stmt_JumpIf
+        cond: Var#55
+        if: Block#19
+        else: Block#20
+
+Block#18
+    Parent: Block#16
+    Stmt_Jump
+        target: Block#10
+
+Block#19
+    Parent: Block#17
+    Iterator_Value
+        var: Var#48
+        result: Var#56
+    Expr_Assign
+        var: Var#57<$item>
+        expr: Var#56
+        result: Var#58
+    Expr_FuncCall
+        name: LITERAL('compact')
+        args[0]: LITERAL('form')
+        args[1]: LITERAL('item')
+        args[2]: LITERAL('columns')
+        result: Var#59
+    Expr_FuncCall
+        name: LITERAL('wpinv_get_template')
+        args[0]: LITERAL('payment-forms/cart-item.php')
+        args[1]: Var#59
+        result: Var#60
+    Stmt_Jump
+        target: Block#21
+
+Block#20
+    Parent: Block#17
+    Stmt_Jump
+        target: Block#22
+
+Block#21
+    Parent: Block#19
+    Stmt_Jump
+        target: Block#17
+
+Block#22
+    Parent: Block#20
+    Var#61<$form> = Phi(Var#54<$form>)
+    Expr_FuncCall
+        name: LITERAL('compact')
+        args[0]: LITERAL('form')
+        result: Var#62
+    Expr_FuncCall
+        name: LITERAL('wpinv_get_template')
+        args[0]: LITERAL('payment-forms/cart-totals.php')
+        args[1]: Var#62
+        result: Var#63
+    Terminal_Echo
+        expr: LITERAL('    </div>
+        
+        ')
+    Expr_FuncCall
+        name: LITERAL('do_action')
+        args[0]: LITERAL('getpaid_after_payment_form_cart')
+        args[1]: Var#61<$form>
+        result: Var#64
+    Terminal_Return
