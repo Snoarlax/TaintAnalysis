@@ -11,7 +11,7 @@ public class StatementStatement extends Statement{
     @Override
     public void computeTaintFromInput(HashMap<Variable,Variable> inputTaint, String[] Arguments) {
         // From experimentation, it seems statements do not transfer taint, but manage control flow
-        // May have to consider "Property"
+        // TODO: May have to consider "Property"
     }
 
     @Override

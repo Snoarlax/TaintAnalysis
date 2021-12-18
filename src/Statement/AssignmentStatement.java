@@ -14,15 +14,14 @@ public class AssignmentStatement extends Statement{
 
     @Override
     public void computeTaintFromInput(HashMap<Variable,Variable> inputTaint, String[] Arguments) {
-        // TODO:  Check arguments are are A Literal( ), and if they are ignore it
         // This does not generate any Taint, only transfers it. If inputTaint is empty, we can simply return.
         if (inputTaint.isEmpty())
             return;
 
         // put a new Variable in the Taint Set passed on to the next Statement. Make it have no types of taint registered.
         // Check if it is already in the taint map first, and if it is use that one
-        Variable AssignedVar = inputTaint.getOrDefault(new Variable(AssignedVariable, new HashSet<>()),
-                new Variable(AssignedVariable, new HashSet<>()));
+        Variable AssignedVar = new Variable(AssignedVariable);
+        AssignedVar = inputTaint.getOrDefault(AssignedVar, AssignedVar);
 
         // Determine Type[s] of taint present in the variable
 
@@ -36,8 +35,8 @@ public class AssignmentStatement extends Statement{
 
         // For each of the potential values, see if it is tainted. If it is, the AssignedVariable could be tainted, so pass it on.
         for (String Value : Values){
-            Variable key = new Variable(Value, new HashSet<>());
-            if (inputTaint.containsKey(key) && inputTaint.get(key).isTainted()) {
+            Variable key = new Variable(Value);
+            if (inputTaint.get(key).isTainted()) {
                 AssignedVar.setAllTainted(inputTaint.get(key).getTaints());
             }
         }

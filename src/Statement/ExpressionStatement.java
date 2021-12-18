@@ -41,18 +41,20 @@ public class ExpressionStatement extends Statement{
             // Variables will contain the arguments that are not the result
             Variable[] Variables = new Variable[Arguments.length-1];
 
-            for (int i = 0; i < Variables.length; i++)
-                Variables[i] = inputTaint.getOrDefault(new Variable(Arguments[i].split(": ",2)[1], new HashSet<>()),
-                        new Variable("Default", new HashSet<>()));
+            for (int i = 0; i < Variables.length; i++) {
+                Variables[i] = new Variable(Arguments[i].split(": ", 2)[1]);
+                Variables[i] = inputTaint.getOrDefault(Variables[i],Variables[i]);
+            }
 
             // check if any of the arguments are tainted
             if (Arrays.stream(Variables).anyMatch(x -> x.isTainted())) {
                 // Check if the resultant variable is already in the TaintMap, if not create a new Variable.
-                Variable result = inputTaint.getOrDefault(new Variable(Arguments[Arguments.length-1].split(": ", 2)[1], new HashSet<>()),
-                        new Variable(Arguments[Arguments.length-1].split(": ", 2)[1], new HashSet<>()));
+                Variable result = new Variable(Arguments[Arguments.length-1].split(": ", 2)[1], new HashSet<>());
+                result = inputTaint.getOrDefault(result, result);
 
                 // Gets taint from all arguments into the result
-                Arrays.stream(Variables).forEach(x -> result.setAllTainted(x.getTaints()));
+                for (Variable var : Variables)
+                    result.setAllTainted(var.getTaints());
 
                 inputTaint.put(result, result);
             }
@@ -60,14 +62,15 @@ public class ExpressionStatement extends Statement{
         // binary concat -> result has taint = union of input taints of concat
         if (Expression.equals("Expr_BinaryOp_Concat")){
             // Arguments are left, right and result
-            Variable left = inputTaint.getOrDefault(new Variable(Arguments[0].split(": ",2)[1], new HashSet<>()),
-                    new Variable("Default", new HashSet<>()));
-            Variable right = inputTaint.getOrDefault(new Variable(Arguments[1].split(": ",2)[1], new HashSet<>()),
-                    new Variable("Default", new HashSet<>()));
+            Variable left = new Variable(Arguments[0].split(": ",2)[1]);
+            left = inputTaint.getOrDefault(left, left);
+            Variable right = new Variable(Arguments[1].split(": ",2)[1]);
+            right = inputTaint.getOrDefault(right, right);
+
             if (left.isTainted() || right.isTainted()) {
                 // Check if the resultant variable is already in the TaintMap, if not create a new Variable.
-                Variable result = inputTaint.getOrDefault(new Variable(Arguments[2].split(": ", 2)[1], new HashSet<>()),
-                        new Variable(Arguments[2].split(": ", 2)[1], new HashSet<>()));
+                Variable result = new Variable(Arguments[2].split(": ", 2)[1]);
+                result = inputTaint.getOrDefault(result, result);
 
                 result.setAllTainted(left.getTaints());
                 result.setAllTainted(right.getTaints());
