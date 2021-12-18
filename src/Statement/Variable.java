@@ -15,6 +15,13 @@ public class Variable {
         this.Taints = new HashSet<>(Tainted);
     }
 
+    public Variable(String VariableName) {
+        // TODO: replace the redundant usages of the overloaded constructors with this one
+        // TODO: implement detection of sources and update Taints accordingly
+        this.VariableName = VariableName;
+        this.Taints = new HashSet<>();
+    }
+
     public String getVariableName() {
         return VariableName;
     }
@@ -37,6 +44,12 @@ public class Variable {
 
     public void setAllTainted(Collection<? extends TaintType> newTaint){
         Taints.addAll(newTaint);
+    }
+
+    public boolean isTaintSource() {
+        // TODO: detect whether the variable is a taint source using the Name
+
+        return false;
     }
 
     @Override
