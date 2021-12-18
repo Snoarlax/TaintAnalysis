@@ -46,12 +46,6 @@ public class Variable {
         Taints.addAll(newTaint);
     }
 
-    public boolean isTaintSource() {
-        // TODO: detect whether the variable is a taint source using the Name
-
-        return false;
-    }
-
     @Override
     public boolean equals(Object o) {
         // State equality is equivalent to equality in the name of the Variable, not the taint status.
