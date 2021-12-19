@@ -59,4 +59,5 @@ public class Variable {
         // State equality is equivalent to equality in the name of the Variable, not the taint status.
         return Objects.hash(VariableName);
     }
+
 }

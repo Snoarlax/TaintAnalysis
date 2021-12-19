@@ -359,5 +359,5 @@ public class UnitTests {
         assertFalse(!TaintMap.containsKey(Var2) && TaintMap.containsKey(Var3) && TaintMap.containsKey(Var1));
     }
 
-
+// TODO: Tests for terminal statements
 }

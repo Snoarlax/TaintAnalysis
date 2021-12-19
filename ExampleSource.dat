@@ -1,0 +1,13 @@
+
+Block#1
+    Expr_ArrayDimFetch
+        var: Var#1<$_GET>
+        dim: LITERAL('str')
+        result: Var#2
+    Expr_BinaryOp_Concat
+        left: LITERAL('This is your string: ')
+        right: Var#2
+        result: Var#3
+    Terminal_Echo
+        expr: Var#3
+    Terminal_Return

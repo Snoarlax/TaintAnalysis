@@ -6,16 +6,18 @@ import java.util.HashSet;
 
 public class ExpressionStatement extends Statement{
     private final String Expression;
+    private boolean sink;
 
     public ExpressionStatement(String expression) {
-
+        // TODO: Subclass the Expression type; its too big
         Expression = expression;
     }
 
     @Override
     public void computeTaintFromInput(HashMap<Variable,Variable> inputTaint, String[] Arguments) {
-
-        // Identify sources via Expr_assign
+        // TODO: Identify Sources from Expr_ArrayDimFetch (Sources from $_GET[], $_SERVER ...
+        // TODO: Identify Sinks
+        // Pass taint from expr_assign
         if (Expression.equals("Expr_Assign")) {
             // Arguments are var, expr, result. Var and Result inherit taint from expr
             Variable expr = new Variable(Arguments[1].split(": ",2)[1]);

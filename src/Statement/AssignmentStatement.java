@@ -36,7 +36,7 @@ public class AssignmentStatement extends Statement{
         // For each of the potential values, see if it is tainted. If it is, the AssignedVariable could be tainted, so pass it on.
         for (String Value : Values){
             Variable key = new Variable(Value);
-            if (inputTaint.get(key).isTainted()) {
+            if (inputTaint.containsKey(key) && inputTaint.get(key).isTainted()) {
                 AssignedVar.setAllTainted(inputTaint.get(key).getTaints());
             }
         }

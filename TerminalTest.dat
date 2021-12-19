@@ -1,0 +1,44 @@
+
+Block#1
+    Terminal_Echo
+        expr: LITERAL('This is a test')
+    Expr_Print
+        expr: LITERAL('This is also a test')
+        result: Var#1
+    Expr_Assign
+        var: Var#2<$a>
+        expr: Var#1
+        result: Var#3
+    Expr_FuncCall
+        name: LITERAL('shell_exec')
+        args[0]: LITERAL('ls -la')
+        result: Var#4
+    Expr_Assign
+        var: Var#5<$b>
+        expr: Var#4
+        result: Var#6
+    Expr_FuncCall
+        name: LITERAL('exec')
+        args[0]: LITERAL('pwd')
+        result: Var#7
+    Expr_Assign
+        var: Var#8<$c>
+        expr: Var#7
+        result: Var#9
+    Expr_ConcatList
+        list[0]: LITERAL('
+        ')
+        list[1]: Var#2<$a>
+        list[2]: LITERAL('
+        ')
+        list[3]: Var#5<$b>
+        list[4]: LITERAL('
+        ')
+        list[5]: Var#8<$c>
+        result: Var#10
+    Terminal_Echo
+        expr: Var#10
+    Terminal_Return
+        expr: LITERAL('
+        Tainted?
+        ')
