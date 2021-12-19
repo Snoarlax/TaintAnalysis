@@ -1,3 +1,7 @@
+import Statement.Expression.Expr_Assign;
+import Statement.Expression.Expr_BinaryOp_Concat;
+import Statement.Expression.Expr_ConcatList;
+import Statement.Expression.ExpressionStatement;
 import Statement.Statement;
 import org.junit.Assert;
 import org.junit.Test;
@@ -93,7 +97,7 @@ public class UnitTests {
             types[i] = statements[i].getStatementType();
 
         // Assert
-        assertTrue(types[0] == StatementType.PROPERTY && types[1] == StatementType.ASSIGNMENT && types[2] == StatementType.EXPRESSION && types[3] == StatementType.TERMINAL && types[4] == StatementType.STATEMENT);
+        assertTrue(types[0] == StatementType.PROPERTY && types[1] == StatementType.ASSIGNMENT && types[2] == StatementType.Expr && types[3] == StatementType.Terminal && types[4] == StatementType.Stmt);
     }
 
     @Test
@@ -206,7 +210,7 @@ public class UnitTests {
     @DisplayName("Check that Expr_BinaryOp_Concat passes on taint correctly when given tainted arguments")
     public void ExpressionStatement_ExprBinaryOpConcat_ComputeTaintFromInput_WithTaintedArguments() {
         // Arrange
-        ExpressionStatement StatementWithTaint = new ExpressionStatement("Expr_BinaryOp_Concat");
+        ExpressionStatement StatementWithTaint = new Expr_BinaryOp_Concat("Expr_BinaryOp_Concat");
 
         HashMap<Variable, Variable> TaintMap = new HashMap<>();
         Variable Var2 = new Variable("Var2", new HashSet<>());
@@ -229,7 +233,7 @@ public class UnitTests {
     @DisplayName("Check that Expr_BinaryOp_Concat passes on taint correctly when given untainted arguments")
     public void ExpressionStatement_ExprBinaryOpConcat_ComputeTaintFromInput_NoTaintedArguments() {
         // Arrange
-        ExpressionStatement StatementWithNoTaint = new ExpressionStatement("Expr_BinaryOp_Concat");
+        ExpressionStatement StatementWithNoTaint = new Expr_BinaryOp_Concat("Expr_BinaryOp_Concat");
 
         HashMap<Variable, Variable> TaintMap = new HashMap<>();
         Variable Var2 = new Variable("Var2", new HashSet<>());
@@ -249,7 +253,7 @@ public class UnitTests {
     @DisplayName("Check that Expr_ConcatList passes on taint correctly when given tainted arguments")
     public void ExpressionStatement_ExprConcatList_ComputeTaintFromInput_WithTaintedArguments() {
         // Arrange
-        ExpressionStatement StatementWithTaint = new ExpressionStatement("Expr_ConcatList");
+        ExpressionStatement StatementWithTaint = new Expr_ConcatList("Expr_ConcatList");
 
         HashMap<Variable, Variable> TaintMap = new HashMap<>();
         Variable Var3 = new Variable("Var3", new HashSet<>());
@@ -273,7 +277,7 @@ public class UnitTests {
     @DisplayName("Check that Expr_ConcatList passes on taint correctly when given untainted arguments")
     public void ExpressionStatement_ExprConcatList_ComputeTaintFromInput_NoTaintedArguments() {
         // Arrange
-        ExpressionStatement StatementWithNoTaint = new ExpressionStatement("Expr_ConcatList");
+        ExpressionStatement StatementWithNoTaint = new Expr_ConcatList("Expr_ConcatList");
 
         HashMap<Variable, Variable> TaintMap = new HashMap<>();
         Variable Var3 = new Variable("Var3", new HashSet<>());
@@ -294,7 +298,7 @@ public class UnitTests {
     @DisplayName("Check that Expr_Assign passes on taint correctly when given tainted arguments")
     public void ExpressionStatement_ExprAssign_ComputeTaintFromInput_WithTaintedArguments() {
         // Arrange
-        ExpressionStatement StatementWithTaint = new ExpressionStatement("Expr_Assign");
+        ExpressionStatement StatementWithTaint = new Expr_Assign("Expr_Assign");
 
         HashMap<Variable, Variable> TaintMap = new HashMap<>();
         Variable Var3 = new Variable("Var3", new HashSet<>());
@@ -319,7 +323,7 @@ public class UnitTests {
     @DisplayName("Check that Expr_Assign passes on taint correctly when given untainted arguments")
     public void ExpressionStatement_ExprAssign_ComputeTaintFromInput_NoTaintedArguments() {
         // Arrange
-        ExpressionStatement StatementWithNoTaint = new ExpressionStatement("Expr_ConcatList");
+        ExpressionStatement StatementWithNoTaint = new Expr_ConcatList("Expr_ConcatList");
 
         HashMap<Variable, Variable> TaintMap = new HashMap<>();
         Variable Var3 = new Variable("Var3", new HashSet<>());
@@ -340,7 +344,7 @@ public class UnitTests {
     @DisplayName("Check that Expr_Assign passes on taint correctly when given untainted arguments and already tainted variables")
     public void ExpressionStatement_ExprAssign_ComputeTaintFromInput_TaintedResults() {
         // Arrange
-        ExpressionStatement StatementWithNoTaint = new ExpressionStatement("Expr_ConcatList");
+        ExpressionStatement StatementWithNoTaint = new Expr_ConcatList("Expr_ConcatList");
 
         HashMap<Variable, Variable> TaintMap = new HashMap<>();
         Variable Var3 = new Variable("Var3", new HashSet<>());

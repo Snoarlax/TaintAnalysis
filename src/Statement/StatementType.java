@@ -1,26 +1,25 @@
 package Statement;
 
+import Statement.Expression.*;
+
 public enum StatementType {
+    Expr,
+    Stmt,
+    Terminal,
     DEFAULT,
     PROPERTY,
-    ASSIGNMENT,
-    EXPRESSION,
-    STATEMENT,
-    TERMINAL;
+    ASSIGNMENT;
 
     public static StatementType ParseStatementType(String rawStatement) {
         // Determine type of statement given a raw statement
-        // TODO: implement means of finding all types
-        if (rawStatement.split(":",2)[0].equals("Parent"))
-            return PROPERTY;
-        else if (rawStatement.split("_",2)[0].equals("Expr"))
-            return EXPRESSION;
-        else if (rawStatement.split("=", 2).length == 2)
+        if (rawStatement.split("=", 2).length == 2)
             return ASSIGNMENT;
-        else if (rawStatement.split("_",2)[0].equals("Stmt"))
-            return STATEMENT;
-        else if (rawStatement.split("_",2)[0].equals("Terminal"))
-            return TERMINAL;
+        if (rawStatement.split(":", 2)[0].equals("Parent"))
+            return PROPERTY;
+
+        for (StatementType type : values())
+            if (type.name().equals(rawStatement.split("_",2)[0]))
+                return type;
 
         return DEFAULT;
     }
@@ -38,7 +37,22 @@ public enum StatementType {
     }
 
     public static ExpressionStatement ConstructExpressionStatement(String rawStatement) {
-        return new ExpressionStatement(rawStatement);
+        ExpressionType ExprType = ExpressionType.ParseExpressionType(rawStatement);
+
+        if (ExprType == ExpressionType.Expr_ConcatList){
+            return new Expr_ConcatList(rawStatement);
+        }
+        else if (ExprType == ExpressionType.Expr_Assign){
+            return new Expr_Assign(rawStatement);
+        }
+        else if (ExprType == ExpressionType.Expr_BinaryOp_Concat){
+            return new Expr_BinaryOp_Concat(rawStatement);
+        }
+        else if (ExprType == ExpressionType.Expr_ArrayDimFetch){
+            return new Expr_ArrayDimFetch(rawStatement);
+        }
+
+        return new Expr_Default(rawStatement);
     }
 
     public static StatementStatement ConstructStatementStatement(String rawStatement) {

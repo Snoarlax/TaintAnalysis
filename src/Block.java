@@ -39,11 +39,11 @@ public class Block {
                 Statements[i] = StatementType.ConstructPropertyStatement(rawStatement);
             else if (statementType == StatementType.ASSIGNMENT)
                 Statements[i] = StatementType.ConstructAssignmentStatement(rawStatement);
-            else if (statementType == StatementType.EXPRESSION)
+            else if (statementType == StatementType.Expr)
                 Statements[i] = StatementType.ConstructExpressionStatement(rawStatement);
-            else if (statementType == StatementType.STATEMENT)
+            else if (statementType == StatementType.Stmt)
                 Statements[i] = StatementType.ConstructStatementStatement(rawStatement);
-            else if (statementType == StatementType.TERMINAL)
+            else if (statementType == StatementType.Terminal)
                 Statements[i] = StatementType.ConstructTerminalStatement(rawStatement);
             else {
                 Statements[i] = StatementType.ConstructDefaultStatement(rawStatement);

@@ -29,7 +29,7 @@ public class TerminalStatement extends Statement{
 
     @Override
     public StatementType getStatementType() {
-        return StatementType.TERMINAL;
+        return StatementType.Terminal;
     }
 
     public String getTerminalName() {

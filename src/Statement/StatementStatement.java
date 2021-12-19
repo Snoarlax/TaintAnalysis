@@ -16,7 +16,7 @@ public class StatementStatement extends Statement{
 
     @Override
     public StatementType getStatementType() {
-        return StatementType.STATEMENT;
+        return StatementType.Stmt;
     }
 
     public String getStatementName() {
