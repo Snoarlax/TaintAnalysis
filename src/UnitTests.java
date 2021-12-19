@@ -208,7 +208,7 @@ public class UnitTests {
 
     @Test
     @DisplayName("Check that Expr_BinaryOp_Concat passes on taint correctly when given tainted arguments")
-    public void ExpressionStatement_ExprBinaryOpConcat_ComputeTaintFromInput_WithTaintedArguments() {
+    public void ExpressionStatement_ExprBinaryOpConcat_computeTaintFromInput_WithTaintedArguments() {
         // Arrange
         ExpressionStatement StatementWithTaint = new Expr_BinaryOp_Concat("Expr_BinaryOp_Concat");
 
@@ -231,7 +231,7 @@ public class UnitTests {
 
     @Test
     @DisplayName("Check that Expr_BinaryOp_Concat passes on taint correctly when given untainted arguments")
-    public void ExpressionStatement_ExprBinaryOpConcat_ComputeTaintFromInput_NoTaintedArguments() {
+    public void ExpressionStatement_ExprBinaryOpConcat_computeTaintFromInput_NoTaintedArguments() {
         // Arrange
         ExpressionStatement StatementWithNoTaint = new Expr_BinaryOp_Concat("Expr_BinaryOp_Concat");
 
@@ -251,7 +251,7 @@ public class UnitTests {
 
     @Test
     @DisplayName("Check that Expr_ConcatList passes on taint correctly when given tainted arguments")
-    public void ExpressionStatement_ExprConcatList_ComputeTaintFromInput_WithTaintedArguments() {
+    public void ExpressionStatement_ExprConcatList_computeTaintFromInput_WithTaintedArguments() {
         // Arrange
         ExpressionStatement StatementWithTaint = new Expr_ConcatList("Expr_ConcatList");
 
@@ -275,7 +275,7 @@ public class UnitTests {
 
     @Test
     @DisplayName("Check that Expr_ConcatList passes on taint correctly when given untainted arguments")
-    public void ExpressionStatement_ExprConcatList_ComputeTaintFromInput_NoTaintedArguments() {
+    public void ExpressionStatement_ExprConcatList_computeTaintFromInput_NoTaintedArguments() {
         // Arrange
         ExpressionStatement StatementWithNoTaint = new Expr_ConcatList("Expr_ConcatList");
 
@@ -296,7 +296,7 @@ public class UnitTests {
 
     @Test
     @DisplayName("Check that Expr_Assign passes on taint correctly when given tainted arguments")
-    public void ExpressionStatement_ExprAssign_ComputeTaintFromInput_WithTaintedArguments() {
+    public void ExpressionStatement_ExprAssign_computeTaintFromInput_WithTaintedArguments() {
         // Arrange
         ExpressionStatement StatementWithTaint = new Expr_Assign("Expr_Assign");
 
@@ -321,7 +321,7 @@ public class UnitTests {
 
     @Test
     @DisplayName("Check that Expr_Assign passes on taint correctly when given untainted arguments")
-    public void ExpressionStatement_ExprAssign_ComputeTaintFromInput_NoTaintedArguments() {
+    public void ExpressionStatement_ExprAssign_computeTaintFromInput_NoTaintedArguments() {
         // Arrange
         ExpressionStatement StatementWithNoTaint = new Expr_ConcatList("Expr_ConcatList");
 
@@ -342,7 +342,7 @@ public class UnitTests {
 
     @Test
     @DisplayName("Check that Expr_Assign passes on taint correctly when given untainted arguments and already tainted variables")
-    public void ExpressionStatement_ExprAssign_ComputeTaintFromInput_TaintedResults() {
+    public void ExpressionStatement_ExprAssign_computeTaintFromInput_TaintedResults() {
         // Arrange
         ExpressionStatement StatementWithNoTaint = new Expr_ConcatList("Expr_ConcatList");
 
@@ -363,5 +363,53 @@ public class UnitTests {
         assertFalse(!TaintMap.containsKey(Var2) && TaintMap.containsKey(Var3) && TaintMap.containsKey(Var1));
     }
 
+    @Test
+    @DisplayName("Check that Terminal statements correctly mark themselves as tainted if given a tainted argument. ")
+    public void TerminalStatement_computeTaintFromInput_CorrectlyRegistersTaintedArguments() {
+        // Arrange
+        TerminalStatement StatementWithTaint = new TerminalStatement("Terminal_Echo");
+
+        HashMap<Variable, Variable> TaintMap = new HashMap<>();
+        Variable Var1 = new Variable("Var1", new HashSet<>());
+
+        String[] Arguments = new String[]{"expr: Var1"};
+
+        Var1.setTainted(TaintType.Default);
+        TaintMap.put(Var1, Var1);
+
+        // Act
+        StatementWithTaint.computeTaintFromInput(TaintMap, Arguments);
+
+        // Assert
+        assertTrue(StatementWithTaint.isTainted());
+    }
+
+    @Test
+    @DisplayName("Check that Terminal statements correctly mark themselves as untainted if given an untainted argument. ")
+    public void TerminalStatement_computeTaintFromInput_CorrectlyRegistersUntaintedArguments() {
+        // Arrange
+        TerminalStatement StatementWithTaint = new TerminalStatement("Terminal_Echo");
+
+        HashMap<Variable, Variable> TaintMap = new HashMap<>();
+        Variable Var1 = new Variable("Var1", new HashSet<>());
+
+        String[] Arguments = new String[]{"expr: Var1"};
+
+        // Act
+        StatementWithTaint.computeTaintFromInput(TaintMap, Arguments);
+
+        // Assert
+        assertFalse(StatementWithTaint.isTainted());
+    }
+
+    @Test
+    @DisplayName("Check that Terminal statements correctly mark themselves as a sink if it is Terminal_Echo. ")
+    public void TerminalStatement_TerminalEcho_MarkedAs_Sink() {
+        // Arrange + Act
+        TerminalStatement Statement = new TerminalStatement("Terminal_Echo");
+
+        // Assert
+        assertTrue(Statement.isSink());
+    }
 // TODO: Tests for terminal statements
 }

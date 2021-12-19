@@ -35,4 +35,12 @@ public class TerminalStatement extends Statement{
     public String getTerminalName() {
         return TerminalName;
     }
+
+    public boolean isSink() {
+        return Sink;
+    }
+
+    public boolean isTainted() {
+        return tainted;
+    }
 }
