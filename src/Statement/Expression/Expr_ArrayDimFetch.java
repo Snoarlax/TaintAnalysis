@@ -11,11 +11,11 @@ public class Expr_ArrayDimFetch extends ExpressionStatement{
 
     public Expr_ArrayDimFetch(String Expression){
         super(Expression);
-        source = computeSink();
+        source = computeSource();
     }
 
-    private boolean computeSink(){
-        // TODO: Compute if the object is a sink or not from the Expression
+    private boolean computeSource(){
+        // TODO: Compute if the object is a source or not from the Expression
 
         return false;
     }
