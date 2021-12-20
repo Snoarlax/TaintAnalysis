@@ -30,25 +30,10 @@ public class Block {
                                         .split("\n( {4})(?=[^\s])", 2)[1]
                                             .split("\n( {4})(?=[^\s])"); // 4 character indent + non-whitespace character delimits Statements
 
+        // Construct the Statements by finding their arguments and then the type of statement.
         Statements = new Statement[StatementsCombined.length];
         for (int i = 0; i < Statements.length; i++) {
-            String rawStatement = StatementsCombined[i].split("\n( {8})(?=[^\s])", 2)[0];
-
-            StatementType statementType = StatementType.ParseStatementType(rawStatement);
-            if (statementType == StatementType.PROPERTY)
-                Statements[i] = StatementType.ConstructPropertyStatement(rawStatement);
-            else if (statementType == StatementType.ASSIGNMENT)
-                Statements[i] = StatementType.ConstructAssignmentStatement(rawStatement);
-            else if (statementType == StatementType.Expr)
-                Statements[i] = StatementType.ConstructExpressionStatement(rawStatement);
-            else if (statementType == StatementType.Stmt)
-                Statements[i] = StatementType.ConstructStatementStatement(rawStatement);
-            else if (statementType == StatementType.Terminal)
-                Statements[i] = StatementType.ConstructTerminalStatement(rawStatement);
-            else {
-                Statements[i] = StatementType.ConstructDefaultStatement(rawStatement);
-            }
-
+            String[] ArgumentsArray = new String[0];
             if (StatementsCombined[i].split("\n( {8})(?=[^\s])", 2).length > 1) { // If there are arguments, then parse them
                 // Array of Arguments
                 String[] ArgumentsArray_Unchecked = StatementsCombined[i]
@@ -67,10 +52,26 @@ public class Block {
                             value.append(ArgumentsArray_Unchecked[++j]);
                     ArgumentList.add(arg + value);
                 }
-                String[] ArgumentsArray = ArgumentList.toArray(String[]::new);
-                for (int j = 0; j < ArgumentsArray.length; j++)
-                    Arguments.put(Statements[i], ArgumentsArray);
+
+                ArgumentsArray = ArgumentList.toArray(String[]::new);
             }
+                // Construct the statement using the type and arguments if necessary.
+                String rawStatement = StatementsCombined[i].split("\n( {8})(?=[^\s])", 2)[0];
+
+                StatementType statementType = StatementType.ParseStatementType(rawStatement);
+                if (statementType == StatementType.PROPERTY)
+                    Statements[i] = StatementType.ConstructPropertyStatement(rawStatement);
+                else if (statementType == StatementType.ASSIGNMENT)
+                    Statements[i] = StatementType.ConstructAssignmentStatement(rawStatement);
+                else if (statementType == StatementType.Expr)
+                    Statements[i] = StatementType.ConstructExpressionStatement(rawStatement, ArgumentsArray);
+                else if (statementType == StatementType.Stmt)
+                    Statements[i] = StatementType.ConstructStatementStatement(rawStatement);
+                else if (statementType == StatementType.Terminal)
+                    Statements[i] = StatementType.ConstructTerminalStatement(rawStatement);
+                else
+                    Statements[i] = StatementType.ConstructDefaultStatement(rawStatement);
+                Arguments.put(Statements[i], ArgumentsArray);
         }
     }
 

@@ -7,12 +7,12 @@ import java.util.HashMap;
 public class Expr_FuncCall extends ExpressionStatement{
     private final boolean sink;
 
-    Expr_FuncCall(String Expression) {
+    public Expr_FuncCall(String Expression, String[] Arguments) {
         super(Expression);
-        sink = computeSink();
+        sink = computeSink(Arguments);
     }
 
-    private boolean computeSink(){
+    private boolean computeSink(String[] Arguments){
         // TODO: Compute if the object is a sink or not from the Expression
 
         return false;

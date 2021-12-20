@@ -1,6 +1,7 @@
 package Statement;
 
 import Statement.Expression.*;
+import org.junit.jupiter.params.provider.Arguments;
 
 public enum StatementType {
     Expr,
@@ -36,7 +37,7 @@ public enum StatementType {
         return new AssignmentStatement(AssignedVariable, AssignedValue);
     }
 
-    public static ExpressionStatement ConstructExpressionStatement(String rawStatement) {
+    public static ExpressionStatement ConstructExpressionStatement(String rawStatement, String[] Arguments) {
         ExpressionType ExprType = ExpressionType.ParseExpressionType(rawStatement);
 
         if (ExprType == ExpressionType.Expr_ConcatList){
@@ -49,7 +50,10 @@ public enum StatementType {
             return new Expr_BinaryOp_Concat(rawStatement);
         }
         else if (ExprType == ExpressionType.Expr_ArrayDimFetch){
-            return new Expr_ArrayDimFetch(rawStatement);
+            return new Expr_ArrayDimFetch(rawStatement, Arguments);
+        }
+        else if (ExprType == ExpressionType.Expr_FuncCall){
+            return new Expr_FuncCall(rawStatement, Arguments);
         }
 
         return new Expr_Default(rawStatement);

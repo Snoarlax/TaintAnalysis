@@ -87,8 +87,8 @@ public class UnitTests {
         CFGParser parser = new CFGParser("test1.dat");
 
         // Act
-        Block Block4 = parser.getBlock("Block#3");
-        Statement[] statements = Block4.getStatements();
+        Block Block3 = parser.getBlock("Block#3");
+        Statement[] statements = Block3.getStatements();
         StatementType[] types = new StatementType[statements.length];
         for (int i = 0; i < statements.length; i++)
             types[i] = statements[i].getStatementType();

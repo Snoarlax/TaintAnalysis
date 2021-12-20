@@ -9,13 +9,13 @@ public class Expr_ArrayDimFetch extends ExpressionStatement{
 
     private final boolean source;
 
-    public Expr_ArrayDimFetch(String Expression){
+    public Expr_ArrayDimFetch(String Expression, String[] Arguments){
         super(Expression);
-        source = computeSource();
+        source = computeSource(Arguments);
     }
 
-    private boolean computeSource(){
-        // TODO: Compute if the object is a source or not from the Expression
+    private boolean computeSource(String[] Arguments){
+        // TODO: Compute if the object is a source or not from the Arguments
 
         return false;
     }
