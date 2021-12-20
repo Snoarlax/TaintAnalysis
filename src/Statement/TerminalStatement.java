@@ -11,7 +11,9 @@ public class TerminalStatement extends Statement{
     public TerminalStatement(String terminalName) {
         TerminalName = terminalName;
         tainted = false;
-        // TODO: Determine if statement is Sink
+
+        if (terminalName.equals("Terminal_Echo"))
+            Sink = true;
     }
 
     @Override
@@ -19,7 +21,7 @@ public class TerminalStatement extends Statement{
         // TODO: if it is a return, need to implement tracking of taint between php functions later
         if (Sink) {
             // the only Terminal sink i know of is Terminal_Echo, which has only one argument
-            Variable expr = new Variable(Arguments[0]);
+            Variable expr = new Variable(Arguments[0].split(": ", 2)[1]);
             expr = inputTaint.getOrDefault(expr, expr);
 
             if (expr.isTainted())

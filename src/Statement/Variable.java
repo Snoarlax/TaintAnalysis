@@ -16,7 +16,6 @@ public class Variable {
     }
 
     public Variable(String VariableName) {
-        // TODO: implement detection of sources and update Taints accordingly
         this.VariableName = VariableName;
         this.Taints = new HashSet<>();
     }

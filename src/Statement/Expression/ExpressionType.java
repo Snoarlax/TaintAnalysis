@@ -7,12 +7,13 @@ public enum ExpressionType {
     Expr_ConcatList,
     Expr_BinaryOp_Concat,
     Expr_ArrayDimFetch,
+    Expr_FuncCall,
     Expr_Default;
 
     public static ExpressionType ParseExpressionType(String rawStatement) {
         // Determine type of statement given a raw statement
         for (ExpressionType type : values())
-            if (type.name().equals(rawStatement.split("_",2)[0]))
+            if (type.name().equals(rawStatement))
                 return type;
 
         return Expr_Default;

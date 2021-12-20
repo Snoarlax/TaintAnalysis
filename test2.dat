@@ -1,0 +1,27 @@
+
+Block#1
+    Expr_Assign
+        var: Var#1<$a>
+        expr: LITERAL(2)
+        result: Var#2
+    Expr_BinaryOp_Concat
+        left: LITERAL('This is your string: ')
+        right: Var#2
+        result: Var#3
+    Expr_ConcatList
+        list[0]: Var#4<$a>
+        list[1]: LITERAL(' > 1')
+        result: Var#5
+    Expr_ArrayDimFetch
+        var: Var#1<$_GET>
+        dim: LITERAL('str')
+        result: Var#2
+    Expr_Default
+    Expr_ConcatList
+        list[0]: Var#6<$a>
+        list[1]: LITERAL(' <= 1')
+        result: Var#7
+    Expr_FuncCall
+        name: LITERAL('shell_exec')
+        args[0]: LITERAL('ls -la')
+        result: Var#4

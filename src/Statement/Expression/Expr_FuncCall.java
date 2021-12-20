@@ -1,17 +1,15 @@
 package Statement.Expression;
 
-import Statement.StatementType;
 import Statement.Variable;
 
 import java.util.HashMap;
 
-public class Expr_ArrayDimFetch extends ExpressionStatement{
+public class Expr_FuncCall extends ExpressionStatement{
+    private final boolean sink;
 
-    private final boolean source;
-
-    public Expr_ArrayDimFetch(String Expression){
+    Expr_FuncCall(String Expression) {
         super(Expression);
-        source = computeSink();
+        sink = computeSink();
     }
 
     private boolean computeSink(){
@@ -26,15 +24,17 @@ public class Expr_ArrayDimFetch extends ExpressionStatement{
     }
 
     @Override
-    public ExpressionType getExpressionType() { return ExpressionType.Expr_ArrayDimFetch; }
+    public ExpressionType getExpressionType() {
+        return ExpressionType.Expr_FuncCall;
+    }
 
     @Override
     public boolean isSink() {
-        return false;
+        return sink;
     }
 
     @Override
     public boolean isSource() {
-        return source;
+        return false;
     }
 }

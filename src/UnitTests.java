@@ -1,7 +1,4 @@
-import Statement.Expression.Expr_Assign;
-import Statement.Expression.Expr_BinaryOp_Concat;
-import Statement.Expression.Expr_ConcatList;
-import Statement.Expression.ExpressionStatement;
+import Statement.Expression.*;
 import Statement.Statement;
 import org.junit.Assert;
 import org.junit.Test;
@@ -22,7 +19,7 @@ public class UnitTests {
     @DisplayName("Tests that CFGParser returns a block for each block in the .dat file")
     public void CFGParser_TestParsing() throws InvalidFileException {
         // Arrange
-        CFGParser parser = new CFGParser("graph.dat");
+        CFGParser parser = new CFGParser("test1.dat");
         // Act
         int NoBlocks = parser.getBlocks().length;
         // Assert
@@ -50,7 +47,7 @@ public class UnitTests {
     @DisplayName("Test getBlock from CFGParser")
     public void CFGParser_TestGetBlock() throws InvalidFileException {
         // Arrange
-        CFGParser parser = new CFGParser("graph.dat");
+        CFGParser parser = new CFGParser("test1.dat");
         // Act
         Block Block2 = parser.getBlock("Block#2");
         // Assert
@@ -61,7 +58,7 @@ public class UnitTests {
     @DisplayName("Test getSucc from CFGParser")
     public void CFGParser_TestGetSucc() throws InvalidFileException {
         // Arrange
-        CFGParser parser = new CFGParser("graph.dat");
+        CFGParser parser = new CFGParser("test1.dat");
         // Act
         Block Block1 = parser.getBlock("Block#1");
         Block[] Successors = Block1.getSucc();
@@ -74,7 +71,7 @@ public class UnitTests {
     @DisplayName("Test getPred from CFGParser")
     public void CFGParser_TestGetPred() throws InvalidFileException {
         // Arrange
-        CFGParser parser = new CFGParser("graph.dat");
+        CFGParser parser = new CFGParser("test1.dat");
         // Act
         Block Block4 = parser.getBlock("Block#4");
         Block[] Predecessors = Block4.getPred();
@@ -87,7 +84,7 @@ public class UnitTests {
     @DisplayName("Test GetStatementType from Statement.StatementType")
     public void StatementType_TestGetStatementType() throws InvalidFileException {
         // Arrange
-        CFGParser parser = new CFGParser("graph.dat");
+        CFGParser parser = new CFGParser("test1.dat");
 
         // Act
         Block Block4 = parser.getBlock("Block#3");
@@ -98,6 +95,25 @@ public class UnitTests {
 
         // Assert
         assertTrue(types[0] == StatementType.PROPERTY && types[1] == StatementType.ASSIGNMENT && types[2] == StatementType.Expr && types[3] == StatementType.Terminal && types[4] == StatementType.Stmt);
+    }
+
+    @Test
+    @DisplayName("Test ParseExpressionType from Expression.ExpressionType")
+    public void ExpressionType_TestParseExpressionType() throws InvalidFileException {
+
+        // Arrange
+        CFGParser parser = new CFGParser("test2.dat");
+
+        // Act
+        Block Block = parser.getBlock("Block#1");
+        Statement[] statements = Block.getStatements();
+        ExpressionType[] types = new ExpressionType[statements.length];
+        for (int i = 0; i < statements.length; i++) {
+            if (statements[i].getStatementType() == StatementType.Expr)
+                types[i] = ((ExpressionStatement) statements[i]).getExpressionType();
+        }
+        // Assert
+        assertTrue(types[0] == ExpressionType.Expr_Assign && types[1] == ExpressionType.Expr_BinaryOp_Concat && types[2] == ExpressionType.Expr_ConcatList && types[3] == ExpressionType.Expr_ArrayDimFetch && types[4] == ExpressionType.Expr_Default);
     }
 
     @Test
@@ -411,5 +427,14 @@ public class UnitTests {
         // Assert
         assertTrue(Statement.isSink());
     }
-// TODO: Tests for terminal statements
+
+    @Test
+    @DisplayName("Check that Terminal statements correctly mark themselves as a not a sink if it is not Terminal_Echo. ")
+    public void TerminalStatement_NotTerminalEcho_NotMarkedAs_Sink() {
+        // Arrange + Act
+        TerminalStatement Statement = new TerminalStatement("Terminal_NotEcho");
+
+        // Assert
+        assertFalse(Statement.isSink());
+    }
 }
