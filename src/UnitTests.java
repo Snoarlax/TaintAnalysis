@@ -122,9 +122,8 @@ public class UnitTests {
         // Arrange
         AssignmentStatement StatementWithTaint = new AssignmentStatement("Var1", "Var2");
 
-        HashMap<Variable, Variable> TaintMap = new HashMap<>();
+        TaintMap TaintMap = new TaintMap();
         Variable Var2 = new Variable("Var2", new HashSet<>());
-        Variable Var1 = new Variable("Var1", new HashSet<>());
         Var2.setTainted(TaintType.Default);
 
         TaintMap.put(Var2, Var2);
@@ -134,7 +133,7 @@ public class UnitTests {
         StatementWithTaint.computeTaintFromInput(TaintMap, new String[0]);
 
         // Assert
-        assertTrue(TaintMap.get(Var1).isTainted() && TaintMap.get(Var1).isTainted());
+        assertTrue(TaintMap.isTainted("Var1"));
     }
 
     @Test
@@ -143,18 +142,14 @@ public class UnitTests {
         // Arrange
         AssignmentStatement StatementWithNoTaint = new AssignmentStatement("Var1", "Var2");
 
-        HashMap<Variable, Variable> TaintMap = new HashMap<>();
+        TaintMap TaintMap = new TaintMap();
         Variable Var2 = new Variable("Var2", new HashSet<>());
-        Variable Var1 = new Variable("Var1", new HashSet<>());
-
-        TaintMap.put(Var2, Var2);
-
 
         // Act
         StatementWithNoTaint.computeTaintFromInput(TaintMap, new String[0]);
 
         // Assert
-        assertFalse(TaintMap.containsKey(Var1));
+        assertFalse(TaintMap.isTainted("Var1"));
     }
 
     @Test
@@ -163,11 +158,10 @@ public class UnitTests {
         // Arrange
         AssignmentStatement StatementWithTaint = new AssignmentStatement("Var1", "Phi(Var2,Var3,Var4,Var5)");
 
-        HashMap<Variable, Variable> TaintMap = new HashMap<>();
+        TaintMap TaintMap = new TaintMap();
         Variable Var2 = new Variable("Var2", new HashSet<>());
-        Variable Var1 = new Variable("Var1", new HashSet<>());
-        Var2.setTainted(TaintType.Default);
 
+        Var2.setTainted(TaintType.Default);
         TaintMap.put(Var2, Var2);
 
 
@@ -175,7 +169,7 @@ public class UnitTests {
         StatementWithTaint.computeTaintFromInput(TaintMap, new String[0]);
 
         // Assert
-        assertTrue(TaintMap.get(Var1).isTainted() && TaintMap.get(Var1).isTainted());
+        assertTrue(TaintMap.isTainted("Var1"));
     }
 
     @Test
@@ -184,18 +178,14 @@ public class UnitTests {
         // Arrange
         AssignmentStatement StatementWithNoTaint = new AssignmentStatement("Var1", "Phi(Var2,Var3,Var4,Var5)");
 
-        HashMap<Variable, Variable> TaintMap = new HashMap<>();
+        TaintMap TaintMap = new TaintMap();
         Variable Var2 = new Variable("Var2", new HashSet<>());
-        Variable Var1 = new Variable("Var1", new HashSet<>());
-
-        TaintMap.put(Var2, Var2);
-
 
         // Act
         StatementWithNoTaint.computeTaintFromInput(TaintMap, new String[0]);
 
         // Assert
-        assertFalse(TaintMap.containsKey(Var1));
+        assertFalse(TaintMap.isTainted("Var1"));
     }
 
     @Test
@@ -228,9 +218,8 @@ public class UnitTests {
         // Arrange
         ExpressionStatement StatementWithTaint = new Expr_BinaryOp_Concat("Expr_BinaryOp_Concat");
 
-        HashMap<Variable, Variable> TaintMap = new HashMap<>();
-        Variable Var2 = new Variable("Var2", new HashSet<>());
-        Variable Var1 = new Variable("Var1", new HashSet<>());
+        TaintMap TaintMap = new TaintMap();
+        Variable Var1 = new Variable("Var1");
 
         Var1.setTainted(TaintType.Default);
         TaintMap.put(Var1, Var1);
@@ -242,7 +231,7 @@ public class UnitTests {
         StatementWithTaint.computeTaintFromInput(TaintMap, Arguments);
 
         // Assert
-        assertTrue(TaintMap.containsKey(Var2) && TaintMap.get(Var2).isTainted());
+        assertTrue(TaintMap.isTainted("Var2"));
     }
 
     @Test
@@ -251,9 +240,9 @@ public class UnitTests {
         // Arrange
         ExpressionStatement StatementWithNoTaint = new Expr_BinaryOp_Concat("Expr_BinaryOp_Concat");
 
-        HashMap<Variable, Variable> TaintMap = new HashMap<>();
-        Variable Var2 = new Variable("Var2", new HashSet<>());
-        Variable Var1 = new Variable("Var1", new HashSet<>());
+        TaintMap TaintMap = new TaintMap();
+        Variable Var2 = new Variable("Var2");
+        Variable Var1 = new Variable("Var1");
 
         String[] Arguments = new String[]{"left: Var1","right: LITERAL('')", "result: Var2"};
 
@@ -262,7 +251,7 @@ public class UnitTests {
         StatementWithNoTaint.computeTaintFromInput(TaintMap, Arguments);
 
         // Assert
-        assertFalse(TaintMap.containsKey(Var2));
+        assertFalse(TaintMap.isTainted(Var2));
     }
 
     @Test
@@ -271,10 +260,8 @@ public class UnitTests {
         // Arrange
         ExpressionStatement StatementWithTaint = new Expr_ConcatList("Expr_ConcatList");
 
-        HashMap<Variable, Variable> TaintMap = new HashMap<>();
-        Variable Var3 = new Variable("Var3", new HashSet<>());
-        Variable Var2 = new Variable("Var2", new HashSet<>());
-        Variable Var1 = new Variable("Var1", new HashSet<>());
+        TaintMap TaintMap = new TaintMap();
+        Variable Var1 = new Variable("Var1");
 
         Var1.setTainted(TaintType.Default);
         TaintMap.put(Var1, Var1);
@@ -286,7 +273,7 @@ public class UnitTests {
         StatementWithTaint.computeTaintFromInput(TaintMap, Arguments);
 
         // Assert
-        assertTrue(TaintMap.containsKey(Var3) && TaintMap.get(Var3).isTainted());
+        assertTrue(TaintMap.isTainted("Var3"));
     }
 
     @Test
@@ -295,10 +282,7 @@ public class UnitTests {
         // Arrange
         ExpressionStatement StatementWithNoTaint = new Expr_ConcatList("Expr_ConcatList");
 
-        HashMap<Variable, Variable> TaintMap = new HashMap<>();
-        Variable Var3 = new Variable("Var3", new HashSet<>());
-        Variable Var2 = new Variable("Var2", new HashSet<>());
-        Variable Var1 = new Variable("Var1", new HashSet<>());
+        TaintMap TaintMap = new TaintMap();
 
         String[] Arguments = new String[]{"list[0]: Var1","list[1]: LITERAL('')","list[0]: Var2", "result: Var3"};
 
@@ -307,7 +291,7 @@ public class UnitTests {
         StatementWithNoTaint.computeTaintFromInput(TaintMap, Arguments);
 
         // Assert
-        assertFalse(TaintMap.containsKey(Var3));
+        assertFalse(TaintMap.isTainted("Var3"));
     }
 
     @Test
@@ -316,9 +300,7 @@ public class UnitTests {
         // Arrange
         ExpressionStatement StatementWithTaint = new Expr_Assign("Expr_Assign");
 
-        HashMap<Variable, Variable> TaintMap = new HashMap<>();
-        Variable Var3 = new Variable("Var3", new HashSet<>());
-        Variable Var2 = new Variable("Var2", new HashSet<>());
+        TaintMap TaintMap = new TaintMap();
         Variable Var1 = new Variable("Var1", new HashSet<>());
 
         Var1.setTainted(TaintType.Default);
@@ -331,8 +313,8 @@ public class UnitTests {
         StatementWithTaint.computeTaintFromInput(TaintMap, Arguments);
 
         // Assert
-        assertTrue(TaintMap.containsKey(Var2) && TaintMap.get(Var2).isTainted() &&
-                TaintMap.containsKey(Var3) && TaintMap.get(Var3).isTainted());
+        assertTrue(TaintMap.isTainted("Var2") &&
+                TaintMap.isTainted("Var3"));
     }
 
     @Test
@@ -341,10 +323,7 @@ public class UnitTests {
         // Arrange
         ExpressionStatement StatementWithNoTaint = new Expr_ConcatList("Expr_ConcatList");
 
-        HashMap<Variable, Variable> TaintMap = new HashMap<>();
-        Variable Var3 = new Variable("Var3", new HashSet<>());
-        Variable Var2 = new Variable("Var2", new HashSet<>());
-        Variable Var1 = new Variable("Var1", new HashSet<>());
+        TaintMap TaintMap = new TaintMap();
 
         String[] Arguments = new String[]{"var: Var2", "expr: Var1", "result: Var3"};
 
@@ -353,8 +332,8 @@ public class UnitTests {
         StatementWithNoTaint.computeTaintFromInput(TaintMap, Arguments);
 
         // Assert
-        assertFalse(TaintMap.containsKey(Var2) && TaintMap.containsKey(Var3)
-                && TaintMap.get(Var2).isTainted() && TaintMap.get(Var3).isTainted());
+        assertFalse(TaintMap.isTainted("Var2")
+               && TaintMap.isTainted("Var3"));
     }
 
     @Test
@@ -363,10 +342,9 @@ public class UnitTests {
         // Arrange
         ExpressionStatement StatementWithNoTaint = new Expr_Assign("Expr_Assign");
 
-        HashMap<Variable, Variable> TaintMap = new HashMap<>();
-        Variable Var3 = new Variable("Var3", new HashSet<>());
-        Variable Var2 = new Variable("Var2", new HashSet<>());
-        Variable Var1 = new Variable("Var1", new HashSet<>());
+        TaintMap TaintMap = new TaintMap();
+        Variable Var2 = new Variable("Var2");
+
 
         String[] Arguments = new String[]{"var: Var2", "expr: Var1", "result: Var3"};
 
@@ -377,8 +355,7 @@ public class UnitTests {
         StatementWithNoTaint.computeTaintFromInput(TaintMap, Arguments);
 
         // Assert
-        assertTrue(TaintMap.containsKey(Var2) && !TaintMap.containsKey(Var3) && !TaintMap.containsKey(Var1)
-                            && TaintMap.get(Var2).isTainted());
+        assertTrue(TaintMap.isTainted("Var2") && !TaintMap.isTainted("Var3") && !TaintMap.isTainted("Var1"));
     }
 
     @Test
@@ -387,7 +364,7 @@ public class UnitTests {
         // Arrange
         TerminalStatement StatementWithTaint = new TerminalStatement("Terminal_Echo");
 
-        HashMap<Variable, Variable> TaintMap = new HashMap<>();
+        TaintMap TaintMap = new TaintMap();
         Variable Var1 = new Variable("Var1", new HashSet<>());
 
         String[] Arguments = new String[]{"expr: Var1"};
@@ -408,8 +385,8 @@ public class UnitTests {
         // Arrange
         TerminalStatement StatementWithTaint = new TerminalStatement("Terminal_Echo");
 
-        HashMap<Variable, Variable> TaintMap = new HashMap<>();
-        Variable Var1 = new Variable("Var1", new HashSet<>());
+        TaintMap TaintMap = new TaintMap();
+        Variable Var1 = new Variable("Var1");
 
         String[] Arguments = new String[]{"expr: Var1"};
 
@@ -445,13 +422,13 @@ public class UnitTests {
     public void ExprArrayDimFetch_MarksOnSource() {
         // Arrange
         String[] Arguments = new String[] {"var: Var#1<$_GET>","dim: LITERAL('str')","result: Var#2"};
-        HashMap<Variable, Variable> TaintMap = new HashMap<>();
+        TaintMap TaintMap = new TaintMap();
         Expr_ArrayDimFetch SourceStatement = new Expr_ArrayDimFetch("Expr_ArrayDimFetch");
 
         // Act
         SourceStatement.computeTaintFromInput(TaintMap,Arguments);
         // Assert
-        assertTrue(TaintMap.containsKey(new Variable("Var#2")));
+        assertTrue(TaintMap.isTainted("Var#2"));
     }
 
     @Test
@@ -459,13 +436,13 @@ public class UnitTests {
     public void ExprArrayDimFetch_NoMarkOnNonSource() {
         // Arrange
         String[] Arguments = new String[] {"var: Var#1<SAFE>","dim: LITERAL('str')","result: Var#2"};
-        HashMap<Variable, Variable> TaintMap = new HashMap<>();
+        TaintMap TaintMap = new TaintMap();
         Expr_ArrayDimFetch SourceStatement = new Expr_ArrayDimFetch("Expr_ArrayDimFetch");
 
         // Act
         SourceStatement.computeTaintFromInput(TaintMap,Arguments);
         // Assert
-        assertFalse(TaintMap.containsKey(new Variable("Var#2")));
+        assertFalse(TaintMap.isTainted("Var#2"));
     }
 
     @Test
@@ -473,9 +450,8 @@ public class UnitTests {
     public void ExprPrint_computeTaintFromInput_withTaint() {
         // Arrange
         String[] Arguments = new String[] { "expr: Var1", "result: Var2"};
-        HashMap<Variable, Variable> TaintMap = new HashMap<>();
+        TaintMap TaintMap = new TaintMap();
         Variable Var1 = new Variable("Var1");
-        Variable Var2 = new Variable("Var2");
         Var1.setTainted(TaintType.Default);
         TaintMap.put(Var1, Var1);
         Expr_Print PrintStatement = new Expr_Print("Expr_Print");
@@ -485,7 +461,7 @@ public class UnitTests {
 
         // Assert
 
-        assertTrue(TaintMap.containsKey(Var2) && TaintMap.get(Var2).isTainted());
+        assertTrue(TaintMap.isTainted("Var2"));
     }
 
     @Test
@@ -493,9 +469,7 @@ public class UnitTests {
     public void ExprPrint_computeTaintFromInput_noTaint() {
         // Arrange
         String[] Arguments = new String[] { "expr: Var1", "result: Var2"};
-        HashMap<Variable, Variable> TaintMap = new HashMap<>();
-        Variable Var1 = new Variable("Var1");
-        Variable Var2 = new Variable("Var2");
+        TaintMap TaintMap = new TaintMap();
         Expr_Print PrintStatement = new Expr_Print("Expr_Print");
 
         // Act
@@ -503,7 +477,7 @@ public class UnitTests {
 
         // Assert
 
-        assertFalse(TaintMap.containsKey(Var2));
+        assertFalse(TaintMap.isTainted("Var2"));
     }
 
     @Test
@@ -511,9 +485,8 @@ public class UnitTests {
     public void FuncCall_computeTaintFromInput_withTaint() {
         // Arrange
         String[] Arguments = new String[] { "name: LITERAL('function')", "args[0]: Var1", "result: Var2"};
-        HashMap<Variable, Variable> TaintMap = new HashMap<>();
+        TaintMap TaintMap = new TaintMap();
         Variable Var1 = new Variable("Var1");
-        Variable Var2 = new Variable("Var2");
         Var1.setTainted(TaintType.Default);
         TaintMap.put(Var1, Var1);
         Expr_FuncCall PrintStatement = new Expr_FuncCall("Expr_FuncCall", Arguments);
@@ -523,7 +496,7 @@ public class UnitTests {
 
         // Assert
 
-        assertTrue(TaintMap.containsKey(Var2) && TaintMap.get(Var2).isTainted());
+        assertTrue(TaintMap.isTainted("Var2"));
     }
 
     @Test
@@ -531,9 +504,7 @@ public class UnitTests {
     public void FuncCall_computeTaintFromInput_noTaint() {
         // Arrange
         String[] Arguments = new String[] { "name: LITERAL('function')", "args[0]: Var1", "result: Var2"};
-        HashMap<Variable, Variable> TaintMap = new HashMap<>();
-        Variable Var1 = new Variable("Var1");
-        Variable Var2 = new Variable("Var2");
+        TaintMap TaintMap = new TaintMap();
         Expr_FuncCall FuncCallStatement = new Expr_FuncCall("Expr_FuncCall", Arguments);
 
         // Act
@@ -541,7 +512,7 @@ public class UnitTests {
 
         // Assert
 
-        assertFalse(TaintMap.containsKey(Var2));
+        assertFalse(TaintMap.isTainted("Var2"));
     }
 
     @Test

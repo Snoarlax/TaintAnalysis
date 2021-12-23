@@ -1,8 +1,7 @@
 package Statement.Expression;
 
+import Statement.TaintMap;
 import Statement.Variable;
-
-import java.util.HashMap;
 
 public class Expr_BinaryOp_Concat extends ExpressionStatement{
 
@@ -11,19 +10,19 @@ public class Expr_BinaryOp_Concat extends ExpressionStatement{
     }
 
     @Override
-    public void computeTaintFromInput(HashMap<Variable, Variable> inputTaint, String[] Arguments) {
+    public void computeTaintFromInput(TaintMap inputTaint, String[] Arguments) {
         // Arguments are left, right and result
-        Variable left = Variable.getVariableFromTaintMap(Arguments[0].split(": ",2)[1], inputTaint);
-        Variable right = Variable.getVariableFromTaintMap(Arguments[1].split(": ",2)[1], inputTaint);
+        Variable left = inputTaint.get(Arguments[0].split(": ",2)[1]);
+        Variable right = inputTaint.get(Arguments[1].split(": ",2)[1]);
 
         if (left.isTainted() || right.isTainted()) {
-            // Check if the resultant variable is already in the TaintMap, if not create a new Variable.
-            Variable result = Variable.getVariableFromTaintMap(Arguments[2].split(": ", 2)[1], inputTaint);
+            // Check if the resultant variable is already in the Statement.TaintMap, if not create a new Variable.
+            Variable result = inputTaint.get(Arguments[2].split(": ", 2)[1]);
 
             result.setAllTainted(left.getTaints());
             result.setAllTainted(right.getTaints());
 
-            inputTaint.put(result, result);
+            inputTaint.put(result);
         }
     }
 

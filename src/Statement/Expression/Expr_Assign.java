@@ -1,8 +1,7 @@
 package Statement.Expression;
 
+import Statement.TaintMap;
 import Statement.Variable;
-
-import java.util.HashMap;
 
 public class Expr_Assign extends ExpressionStatement{
 
@@ -10,20 +9,20 @@ public class Expr_Assign extends ExpressionStatement{
         super(Expression);
     }
     @Override
-    public void computeTaintFromInput(HashMap<Variable, Variable> inputTaint, String[] Arguments) {
+    public void computeTaintFromInput(TaintMap inputTaint, String[] Arguments) {
         // Arguments are var, expr, result. Var and Result inherit taint from expr
 
-        Variable expr = Variable.getVariableFromTaintMap(Arguments[1].split(": ",2)[1], inputTaint);
+        Variable expr = inputTaint.get(Arguments[1].split(": ",2)[1]);
 
         if (expr.isTainted()) {
-            Variable var = Variable.getVariableFromTaintMap(Arguments[0].split(": ", 2)[1], inputTaint);
-            Variable result = Variable.getVariableFromTaintMap(Arguments[2].split(": ", 2)[1], inputTaint);
+            Variable var = inputTaint.get(Arguments[0].split(": ", 2)[1]);
+            Variable result = inputTaint.get(Arguments[2].split(": ", 2)[1]);
 
             var.setAllTainted(expr.getTaints());
             result.setAllTainted(expr.getTaints());
 
-            inputTaint.put(var, var);
-            inputTaint.put(result, result);
+            inputTaint.put(var);
+            inputTaint.put(result);
         }
     }
 

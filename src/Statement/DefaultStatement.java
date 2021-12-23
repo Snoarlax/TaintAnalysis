@@ -1,8 +1,5 @@
 package Statement;
 
-import java.util.HashMap;
-import java.util.HashSet;
-
 public class DefaultStatement extends Statement{
     private final String rawStatement;
 
@@ -12,7 +9,7 @@ public class DefaultStatement extends Statement{
 
     // Does nothing by Default
     @Override
-    public void computeTaintFromInput(HashMap<Variable,Variable> inputTaint, String[] Arguments) {}
+    public void computeTaintFromInput(TaintMap inputTaint, String[] Arguments) {}
 
     @Override
     public StatementType getStatementType() {

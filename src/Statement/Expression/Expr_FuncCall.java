@@ -1,9 +1,9 @@
 package Statement.Expression;
 
+import Statement.TaintMap;
 import Statement.Variable;
 
 import java.util.Arrays;
-import java.util.HashMap;
 
 public class Expr_FuncCall extends ExpressionStatement{
     private final boolean sink;
@@ -12,6 +12,7 @@ public class Expr_FuncCall extends ExpressionStatement{
         super(Expression);
         tainted = false;
         sink = computeSink(Arguments);
+
     }
 
     private boolean computeSink(String[] Arguments){
@@ -29,20 +30,20 @@ public class Expr_FuncCall extends ExpressionStatement{
     }
 
     @Override
-    public void computeTaintFromInput(HashMap<Variable, Variable> inputTaint, String[] Arguments) {
+    public void computeTaintFromInput(TaintMap inputTaint, String[] Arguments) {
         // todo: implement detection of sanitisation functions!
         // need to analyse function, in this case, by default a tainted argument will mean its a tainted result
         Variable[] FunctionArguments = new Variable[Arguments.length-2];
         // iterate through the arguments of the function, which are the Arguments of the statement excluding the first and last
         for (int i = 1; i < Arguments.length-1; i++)
-            FunctionArguments[i-1] = Variable.getVariableFromTaintMap(Arguments[i].split(": ",2)[1], inputTaint);
+            FunctionArguments[i-1] = inputTaint.get(Arguments[i].split(": ",2)[1]);
 
-        Variable result = Variable.getVariableFromTaintMap(Arguments[Arguments.length-1].split(": ",2)[1], inputTaint);
+        Variable result = inputTaint.get(Arguments[Arguments.length-1].split(": ",2)[1]);
         for (Variable arg : FunctionArguments)
             result.setAllTainted(arg.getTaints());
 
         if (result.isTainted())
-            inputTaint.put(result, result);
+            inputTaint.put(result);
     }
 
     @Override

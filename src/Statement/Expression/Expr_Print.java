@@ -1,8 +1,7 @@
 package Statement.Expression;
 
+import Statement.TaintMap;
 import Statement.Variable;
-
-import java.util.HashMap;
 
 public class Expr_Print extends ExpressionStatement{
     // Print is basically FuncCall that is always a sink, I have no idea why Print is not automatically marked as FuncCall as I believe it should.
@@ -14,13 +13,13 @@ public class Expr_Print extends ExpressionStatement{
     }
 
     @Override
-    public void computeTaintFromInput(HashMap<Variable, Variable> inputTaint, String[] Arguments) {
-        Variable expr = Variable.getVariableFromTaintMap(Arguments[0].split(": ", 2)[1], inputTaint);
+    public void computeTaintFromInput(TaintMap inputTaint, String[] Arguments) {
+        Variable expr = inputTaint.get(Arguments[0].split(": ", 2)[1]);
         if (expr.isTainted()){
             tainted = true;
-            Variable result = Variable.getVariableFromTaintMap(Arguments[1].split(": ", 2)[1], inputTaint);
+            Variable result = inputTaint.get(Arguments[1].split(": ", 2)[1]);
             result.setAllTainted(expr.getTaints());
-            inputTaint.put(result, result);
+            inputTaint.put(result);
         }
     }
 

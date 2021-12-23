@@ -1,8 +1,6 @@
 package Statement.Expression;
 
-import Statement.Variable;
-
-import java.util.HashMap;
+import Statement.TaintMap;
 
 public class Expr_Default extends ExpressionStatement{
     public Expr_Default(String Expression) {
@@ -10,7 +8,7 @@ public class Expr_Default extends ExpressionStatement{
     }
 
     @Override
-    public void computeTaintFromInput(HashMap<Variable, Variable> inputTaint, String[] Arguments) {
+    public void computeTaintFromInput(TaintMap inputTaint, String[] Arguments) {
 
     }
 

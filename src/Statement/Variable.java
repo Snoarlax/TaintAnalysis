@@ -67,9 +67,6 @@ public class Variable {
         return Objects.hash(VariableName);
     }
 
-    public static Variable getVariableFromTaintMap(String VariableName, HashMap<Variable, Variable> TaintMap) {
-        Variable var = new Variable(VariableName);
-        return TaintMap.getOrDefault(var,var);
-    }
+
 
 }

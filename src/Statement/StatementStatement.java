@@ -1,7 +1,5 @@
 package Statement;
 
-import java.util.HashMap;
-
 public class StatementStatement extends Statement{
     private final String StatementName;
 
@@ -9,7 +7,7 @@ public class StatementStatement extends Statement{
         StatementName = statementName;
     }
     @Override
-    public void computeTaintFromInput(HashMap<Variable,Variable> inputTaint, String[] Arguments) {
+    public void computeTaintFromInput(TaintMap inputTaint, String[] Arguments) {
         // From experimentation, it seems statements do not transfer taint, but manage control flow
         // TODO: May have to consider "Property"
     }

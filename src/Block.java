@@ -11,14 +11,14 @@ public class Block {
     private final Statement[] Statements;
     private final HashMap<Statement, String[]> Arguments; // Maps from Property to Argument
 
-    private final HashMap<Variable, Variable> Tainted;
+    private final TaintMap Tainted;
     // Used when resolving dataflow equations to test if equations have reached a stable point (TaintedChanged == False)
     private boolean TaintedChanged = true;
 
     // Block has Statements, which each have Arguments
     public Block(String rawBlock) throws InvalidFileException {
         Arguments = new HashMap<>();
-        Tainted = new HashMap<>();
+        Tainted = new TaintMap();
 
         if (!Pattern.compile("\n( {4})(?=[^\s])").matcher(rawBlock).find()) // check for regex matches for the Statement Delimiter
             throw new InvalidFileException("The file is not a valid CFG .dat file. ");
@@ -76,12 +76,16 @@ public class Block {
     }
 
     public void updateTaintedVariables(){
-        for (Block block : Pred)
-            Tainted.putAll(block.getTainted());
+        if (TaintedChanged) {
+            for (Block block : Pred)
+                Tainted.putAll(block.getTainted());
 
-        // The taint function of the block should be equal to the application of all sequential taint functions of the statements that make up the block
-        for (Statement statement: Statements)
-            statement.computeTaintFromInput(Tainted, Arguments.get(statement));
+            // The taint function of the block should be equal to the application of all sequential taint functions of the statements that make up the block
+            for (Statement statement : Statements)
+                statement.computeTaintFromInput(Tainted, Arguments.get(statement));
+
+            TaintedChanged = false;
+        }
     }
 
     public String getBlockName() {

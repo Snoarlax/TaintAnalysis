@@ -1,8 +1,5 @@
 package Statement;
 
-import java.util.HashMap;
-import java.util.HashSet;
-
 public class TerminalStatement extends Statement{
     private final String TerminalName;
     private boolean Sink;
@@ -17,11 +14,11 @@ public class TerminalStatement extends Statement{
     }
 
     @Override
-    public void computeTaintFromInput(HashMap<Variable,Variable> inputTaint, String[] Arguments) {
+    public void computeTaintFromInput(TaintMap inputTaint, String[] Arguments) {
         // TODO: if it is a return, need to implement tracking of taint between php functions later
         if (Sink) {
             // the only Terminal sink i know of is Terminal_Echo, which has only one argument
-            Variable expr = Variable.getVariableFromTaintMap(Arguments[0].split(": ", 2)[1], inputTaint);
+            Variable expr = inputTaint.get(Arguments[0].split(": ", 2)[1]);
 
             if (expr.isTainted())
                 tainted = true;
