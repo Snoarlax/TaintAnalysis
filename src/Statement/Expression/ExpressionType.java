@@ -8,6 +8,7 @@ public enum ExpressionType {
     Expr_BinaryOp_Concat,
     Expr_ArrayDimFetch,
     Expr_FuncCall,
+    Expr_Print,
     Expr_Default;
 
     public static ExpressionType ParseExpressionType(String rawStatement) {

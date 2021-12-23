@@ -353,14 +353,15 @@ public class UnitTests {
         StatementWithNoTaint.computeTaintFromInput(TaintMap, Arguments);
 
         // Assert
-        assertFalse(TaintMap.containsKey(Var2) && TaintMap.containsKey(Var3));
+        assertFalse(TaintMap.containsKey(Var2) && TaintMap.containsKey(Var3)
+                && TaintMap.get(Var2).isTainted() && TaintMap.get(Var3).isTainted());
     }
 
     @Test
     @DisplayName("Check that Expr_Assign passes on taint correctly when given untainted arguments and already tainted variables")
     public void ExpressionStatement_ExprAssign_computeTaintFromInput_TaintedResults() {
         // Arrange
-        ExpressionStatement StatementWithNoTaint = new Expr_ConcatList("Expr_ConcatList");
+        ExpressionStatement StatementWithNoTaint = new Expr_Assign("Expr_Assign");
 
         HashMap<Variable, Variable> TaintMap = new HashMap<>();
         Variable Var3 = new Variable("Var3", new HashSet<>());
@@ -376,7 +377,8 @@ public class UnitTests {
         StatementWithNoTaint.computeTaintFromInput(TaintMap, Arguments);
 
         // Assert
-        assertFalse(!TaintMap.containsKey(Var2) && TaintMap.containsKey(Var3) && TaintMap.containsKey(Var1));
+        assertTrue(TaintMap.containsKey(Var2) && !TaintMap.containsKey(Var3) && !TaintMap.containsKey(Var1)
+                            && TaintMap.get(Var2).isTainted());
     }
 
     @Test
@@ -440,7 +442,7 @@ public class UnitTests {
 
     @Test
     @DisplayName("Check that Expr_ArrayDimFetch correctly assigns sources. ")
-    public void ExprArrayDimFetch_ComputeSource_MarksOnSource() {
+    public void ExprArrayDimFetch_MarksOnSource() {
         // Arrange
         String[] Arguments = new String[] {"var: Var#1<$_GET>","dim: LITERAL('str')","result: Var#2"};
         HashMap<Variable, Variable> TaintMap = new HashMap<>();
@@ -454,7 +456,7 @@ public class UnitTests {
 
     @Test
     @DisplayName("Check that Expr_ArrayDimFetch correctly assigns non sources. ")
-    public void ExprArrayDimFetch_ComputeSource_NoMarkOnNonSource() {
+    public void ExprArrayDimFetch_NoMarkOnNonSource() {
         // Arrange
         String[] Arguments = new String[] {"var: Var#1<SAFE>","dim: LITERAL('str')","result: Var#2"};
         HashMap<Variable, Variable> TaintMap = new HashMap<>();
@@ -465,4 +467,106 @@ public class UnitTests {
         // Assert
         assertFalse(TaintMap.containsKey(new Variable("Var#2")));
     }
+
+    @Test
+    @DisplayName("Check that Expr_Print computeTaintFromInput works correctly on a tainted argument. ")
+    public void ExprPrint_computeTaintFromInput_withTaint() {
+        // Arrange
+        String[] Arguments = new String[] { "expr: Var1", "result: Var2"};
+        HashMap<Variable, Variable> TaintMap = new HashMap<>();
+        Variable Var1 = new Variable("Var1");
+        Variable Var2 = new Variable("Var2");
+        Var1.setTainted(TaintType.Default);
+        TaintMap.put(Var1, Var1);
+        Expr_Print PrintStatement = new Expr_Print("Expr_Print");
+
+        // Act
+        PrintStatement.computeTaintFromInput(TaintMap, Arguments);
+
+        // Assert
+
+        assertTrue(TaintMap.containsKey(Var2) && TaintMap.get(Var2).isTainted());
+    }
+
+    @Test
+    @DisplayName("Check that Expr_Print computeTaintFromInput works correctly on a untainted argument. ")
+    public void ExprPrint_computeTaintFromInput_noTaint() {
+        // Arrange
+        String[] Arguments = new String[] { "expr: Var1", "result: Var2"};
+        HashMap<Variable, Variable> TaintMap = new HashMap<>();
+        Variable Var1 = new Variable("Var1");
+        Variable Var2 = new Variable("Var2");
+        Expr_Print PrintStatement = new Expr_Print("Expr_Print");
+
+        // Act
+        PrintStatement.computeTaintFromInput(TaintMap, Arguments);
+
+        // Assert
+
+        assertFalse(TaintMap.containsKey(Var2));
+    }
+
+    @Test
+    @DisplayName("Check that Expr_Print computeTaintFromInput works correctly on a tainted argument. ")
+    public void FuncCall_computeTaintFromInput_withTaint() {
+        // Arrange
+        String[] Arguments = new String[] { "name: LITERAL('function')", "args[0]: Var1", "result: Var2"};
+        HashMap<Variable, Variable> TaintMap = new HashMap<>();
+        Variable Var1 = new Variable("Var1");
+        Variable Var2 = new Variable("Var2");
+        Var1.setTainted(TaintType.Default);
+        TaintMap.put(Var1, Var1);
+        Expr_FuncCall PrintStatement = new Expr_FuncCall("Expr_FuncCall", Arguments);
+
+        // Act
+        PrintStatement.computeTaintFromInput(TaintMap, Arguments);
+
+        // Assert
+
+        assertTrue(TaintMap.containsKey(Var2) && TaintMap.get(Var2).isTainted());
+    }
+
+    @Test
+    @DisplayName("Check that Expr_Print computeTaintFromInput works correctly on a untainted argument. ")
+    public void FuncCall_computeTaintFromInput_noTaint() {
+        // Arrange
+        String[] Arguments = new String[] { "name: LITERAL('function')", "args[0]: Var1", "result: Var2"};
+        HashMap<Variable, Variable> TaintMap = new HashMap<>();
+        Variable Var1 = new Variable("Var1");
+        Variable Var2 = new Variable("Var2");
+        Expr_FuncCall FuncCallStatement = new Expr_FuncCall("Expr_FuncCall", Arguments);
+
+        // Act
+        FuncCallStatement.computeTaintFromInput(TaintMap, Arguments);
+
+        // Assert
+
+        assertFalse(TaintMap.containsKey(Var2));
+    }
+
+    @Test
+    @DisplayName("Check that FuncCalls get correctly marked as sinks. ")
+    public void FuncCall_MarkedAsSink() {
+        // Arrange
+        String[] Arguments = new String[] { "name: LITERAL('exec')" };
+        // Act
+        Expr_FuncCall FuncCallStatement = new Expr_FuncCall("Expr_FuncCall", Arguments);
+        // Assert
+        assertTrue(FuncCallStatement.isSink());
+
+    }
+
+    @Test
+    @DisplayName("Check that FuncCalls get correctly marked as not a sink. ")
+    public void FuncCall_NotMarkedAsSink() {
+        // Arrange
+        String[] Arguments = new String[] { "name: LITERAL('notsink')" };
+        // Act
+        Expr_FuncCall FuncCallStatement = new Expr_FuncCall("Expr_FuncCall", Arguments);
+        // Assert
+        assertFalse(FuncCallStatement.isSink());
+
+    }
+
+    // todo : double check tests work
 }

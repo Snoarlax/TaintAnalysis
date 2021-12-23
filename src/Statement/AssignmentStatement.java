@@ -20,8 +20,7 @@ public class AssignmentStatement extends Statement{
 
         // put a new Variable in the Taint Set passed on to the next Statement. Make it have no types of taint registered.
         // Check if it is already in the taint map first, and if it is use that one
-        Variable AssignedVar = new Variable(AssignedVariable);
-        AssignedVar = inputTaint.getOrDefault(AssignedVar, AssignedVar);
+        Variable AssignedVar = Variable.getVariableFromTaintMap(AssignedVariable, inputTaint);
 
         // Determine Type[s] of taint present in the variable
 
@@ -35,10 +34,9 @@ public class AssignmentStatement extends Statement{
 
         // For each of the potential values, see if it is tainted. If it is, the AssignedVariable could be tainted, so pass it on.
         for (String Value : Values){
-            Variable key = new Variable(Value);
-            if (inputTaint.containsKey(key) && inputTaint.get(key).isTainted()) {
-                AssignedVar.setAllTainted(inputTaint.get(key).getTaints());
-            }
+            Variable var = Variable.getVariableFromTaintMap(Value, inputTaint);
+            if (var.isTainted())
+                AssignedVar.setAllTainted(var.getTaints());
         }
 
 
