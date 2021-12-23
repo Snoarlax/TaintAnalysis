@@ -1,16 +1,15 @@
 package Statement;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Objects;
+import Statement.Expression.Sources;
+
+import java.util.*;
 
 public class Variable {
-    // TODO: implement flags for different types of taint
-
     private final String VariableName;
     private final HashSet<TaintType> Taints;
 
     public Variable(String VariableName, Collection<TaintType> Tainted) {
+        // assumption that calling this with a sources' variable name chooses the programmers Tainted set over the default, which is all tainted.
         this.VariableName = VariableName;
         this.Taints = new HashSet<>(Tainted);
     }
@@ -18,7 +17,17 @@ public class Variable {
     public Variable(String VariableName) {
         this.VariableName = VariableName;
         this.Taints = new HashSet<>();
+        if (computeSource(VariableName))
+            Taints.addAll(List.of(TaintType.values()));
     }
+
+    private boolean computeSource(String variableName) {
+        // returns true if the variable name matches a sources name.
+        // Arguments[0] should be the array that the element is being fetched from
+        return Arrays.stream(Sources.values()).anyMatch(x -> variableName.endsWith("<" + x.name() + ">"));
+    }
+
+
 
     public String getVariableName() {
         return VariableName;
@@ -57,6 +66,11 @@ public class Variable {
     public int hashCode() {
         // State equality is equivalent to equality in the name of the Variable, not the taint status.
         return Objects.hash(VariableName);
+    }
+
+    public static Variable getVariableFromTaintMap(String VariableName, HashMap<Variable, Variable> TaintMap) {
+        Variable var = new Variable(VariableName);
+        return TaintMap.getOrDefault(var,var);
     }
 
 }

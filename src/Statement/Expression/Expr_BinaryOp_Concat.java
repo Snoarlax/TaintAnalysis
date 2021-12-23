@@ -32,14 +32,4 @@ public class Expr_BinaryOp_Concat extends ExpressionStatement{
 
     @Override
     public ExpressionType getExpressionType() { return ExpressionType.Expr_BinaryOp_Concat; }
-
-    @Override
-    public boolean isSink() {
-        return false;
-    }
-
-    @Override
-    public boolean isSource() {
-        return false;
-    }
 }

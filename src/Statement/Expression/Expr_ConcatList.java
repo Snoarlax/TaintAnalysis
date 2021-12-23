@@ -40,14 +40,4 @@ public class Expr_ConcatList extends ExpressionStatement{
 
     @Override
     public ExpressionType getExpressionType() { return ExpressionType.Expr_ConcatList; }
-
-    @Override
-    public boolean isSink() {
-        return false;
-    }
-
-    @Override
-    public boolean isSource() {
-        return false;
-    }
 }

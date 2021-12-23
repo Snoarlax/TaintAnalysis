@@ -22,10 +22,4 @@ public abstract class ExpressionStatement extends Statement {
     }
 
     public abstract ExpressionType getExpressionType();
-
-    public abstract  boolean isSink();
-
-    public abstract  boolean isSource();
-
-
 }

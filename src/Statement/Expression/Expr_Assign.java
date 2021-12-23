@@ -31,14 +31,4 @@ public class Expr_Assign extends ExpressionStatement{
 
     @Override
     public ExpressionType getExpressionType() { return ExpressionType.Expr_Assign; }
-
-    @Override
-    public boolean isSink() {
-        return false;
-    }
-
-    @Override
-    public boolean isSource() {
-        return false;
-    }
 }

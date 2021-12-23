@@ -18,14 +18,4 @@ public class Expr_Default extends ExpressionStatement{
     public ExpressionType getExpressionType() {
         return ExpressionType.Expr_Default;
     }
-
-    @Override
-    public boolean isSink() {
-        return false;
-    }
-
-    @Override
-    public boolean isSource() {
-        return false;
-    }
 }

@@ -28,13 +28,4 @@ public class Expr_FuncCall extends ExpressionStatement{
         return ExpressionType.Expr_FuncCall;
     }
 
-    @Override
-    public boolean isSink() {
-        return sink;
-    }
-
-    @Override
-    public boolean isSource() {
-        return false;
-    }
 }

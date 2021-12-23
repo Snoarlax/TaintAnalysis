@@ -437,4 +437,32 @@ public class UnitTests {
         // Assert
         assertFalse(Statement.isSink());
     }
+
+    @Test
+    @DisplayName("Check that Expr_ArrayDimFetch correctly assigns sources. ")
+    public void ExprArrayDimFetch_ComputeSource_MarksOnSource() {
+        // Arrange
+        String[] Arguments = new String[] {"var: Var#1<$_GET>","dim: LITERAL('str')","result: Var#2"};
+        HashMap<Variable, Variable> TaintMap = new HashMap<>();
+        Expr_ArrayDimFetch SourceStatement = new Expr_ArrayDimFetch("Expr_ArrayDimFetch");
+
+        // Act
+        SourceStatement.computeTaintFromInput(TaintMap,Arguments);
+        // Assert
+        assertTrue(TaintMap.containsKey(new Variable("Var#2")));
+    }
+
+    @Test
+    @DisplayName("Check that Expr_ArrayDimFetch correctly assigns non sources. ")
+    public void ExprArrayDimFetch_ComputeSource_NoMarkOnNonSource() {
+        // Arrange
+        String[] Arguments = new String[] {"var: Var#1<SAFE>","dim: LITERAL('str')","result: Var#2"};
+        HashMap<Variable, Variable> TaintMap = new HashMap<>();
+        Expr_ArrayDimFetch SourceStatement = new Expr_ArrayDimFetch("Expr_ArrayDimFetch");
+
+        // Act
+        SourceStatement.computeTaintFromInput(TaintMap,Arguments);
+        // Assert
+        assertFalse(TaintMap.containsKey(new Variable("Var#2")));
+    }
 }

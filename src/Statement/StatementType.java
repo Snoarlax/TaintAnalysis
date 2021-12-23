@@ -50,7 +50,7 @@ public enum StatementType {
             return new Expr_BinaryOp_Concat(rawStatement);
         }
         else if (ExprType == ExpressionType.Expr_ArrayDimFetch){
-            return new Expr_ArrayDimFetch(rawStatement, Arguments);
+            return new Expr_ArrayDimFetch(rawStatement);
         }
         else if (ExprType == ExpressionType.Expr_FuncCall){
             return new Expr_FuncCall(rawStatement, Arguments);
