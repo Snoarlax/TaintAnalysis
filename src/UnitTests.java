@@ -19,7 +19,7 @@ public class UnitTests {
     @DisplayName("Tests that CFGParser returns a block for each block in the .dat file")
     public void CFGParser_TestParsing() throws InvalidFileException {
         // Arrange
-        CFGParser parser = new CFGParser("test1.dat");
+        CFGParser parser = new CFGParser("tests/test1.dat");
         // Act
         int NoBlocks = parser.getBlocks().length;
         // Assert
@@ -34,7 +34,7 @@ public class UnitTests {
 
         // Act
         Exception exception = assertThrows(InvalidFileException.class, () -> {
-            CFGParser parser = new CFGParser("InvalidFile.dat");
+            CFGParser parser = new CFGParser("tests/InvalidFile.dat");
         });
         String actualMessage = exception.getMessage();
 
@@ -47,7 +47,7 @@ public class UnitTests {
     @DisplayName("Test getBlock from CFGParser")
     public void CFGParser_TestGetBlock() throws InvalidFileException {
         // Arrange
-        CFGParser parser = new CFGParser("test1.dat");
+        CFGParser parser = new CFGParser("tests/test1.dat");
         // Act
         Block Block2 = parser.getBlock("Block#2");
         // Assert
@@ -58,7 +58,7 @@ public class UnitTests {
     @DisplayName("Test getSucc from CFGParser")
     public void CFGParser_TestGetSucc() throws InvalidFileException {
         // Arrange
-        CFGParser parser = new CFGParser("test1.dat");
+        CFGParser parser = new CFGParser("tests/test1.dat");
         // Act
         Block Block1 = parser.getBlock("Block#1");
         Block[] Successors = Block1.getSucc();
@@ -71,7 +71,7 @@ public class UnitTests {
     @DisplayName("Test getPred from CFGParser")
     public void CFGParser_TestGetPred() throws InvalidFileException {
         // Arrange
-        CFGParser parser = new CFGParser("test1.dat");
+        CFGParser parser = new CFGParser("tests/test1.dat");
         // Act
         Block Block4 = parser.getBlock("Block#4");
         Block[] Predecessors = Block4.getPred();
@@ -84,7 +84,7 @@ public class UnitTests {
     @DisplayName("Test GetStatementType from Statement.StatementType")
     public void StatementType_TestGetStatementType() throws InvalidFileException {
         // Arrange
-        CFGParser parser = new CFGParser("test1.dat");
+        CFGParser parser = new CFGParser("tests/test1.dat");
 
         // Act
         Block Block3 = parser.getBlock("Block#3");
@@ -102,7 +102,7 @@ public class UnitTests {
     public void ExpressionType_TestParseExpressionType() throws InvalidFileException {
 
         // Arrange
-        CFGParser parser = new CFGParser("test2.dat");
+        CFGParser parser = new CFGParser("tests/test2.dat");
 
         // Act
         Block Block = parser.getBlock("Block#1");
@@ -141,10 +141,7 @@ public class UnitTests {
     public void AssignmentStatement_computeTaintFromInput_noPhi_NoTaint(){
         // Arrange
         AssignmentStatement StatementWithNoTaint = new AssignmentStatement("Var1", "Var2");
-
         TaintMap TaintMap = new TaintMap();
-        Variable Var2 = new Variable("Var2", new HashSet<>());
-
         // Act
         StatementWithNoTaint.computeTaintFromInput(TaintMap, new String[0]);
 
@@ -179,7 +176,6 @@ public class UnitTests {
         AssignmentStatement StatementWithNoTaint = new AssignmentStatement("Var1", "Phi(Var2,Var3,Var4,Var5)");
 
         TaintMap TaintMap = new TaintMap();
-        Variable Var2 = new Variable("Var2", new HashSet<>());
 
         // Act
         StatementWithNoTaint.computeTaintFromInput(TaintMap, new String[0]);
@@ -191,11 +187,11 @@ public class UnitTests {
     @Test
     @DisplayName("Found a bug when including new Lines in Literals, this checks a file with the bug to check for correct parsing. ")
     public void Test_NewLineInLiteral_BugFix() throws InvalidFileException {
-        // Upon Experimenting with the bug, it seems you cannot inject an injection that looks like a normally parsed program (See ExprTest.dat for my attempt,
+        // Upon Experimenting with the bug, it seems you cannot inject an injection for this bug that results in a normally parsed program (See ExprTest.dat for my attempt,
         // Created by parsing [ echo $a."fake')\nFakeArgument : LITERAL('FakeValue"; ]
 
         // Arrange
-        CFGParser parser = new CFGParser("ExprTest.dat");
+        CFGParser parser = new CFGParser("tests/ExprTest.dat");
         // Act + Assert
         for (Block block : parser.getBlocks()){
             for (String[] arguments : block.getArguments().values()){
@@ -239,11 +235,8 @@ public class UnitTests {
     public void ExpressionStatement_ExprBinaryOpConcat_computeTaintFromInput_NoTaintedArguments() {
         // Arrange
         ExpressionStatement StatementWithNoTaint = new Expr_BinaryOp_Concat("Expr_BinaryOp_Concat");
-
         TaintMap TaintMap = new TaintMap();
         Variable Var2 = new Variable("Var2");
-        Variable Var1 = new Variable("Var1");
-
         String[] Arguments = new String[]{"left: Var1","right: LITERAL('')", "result: Var2"};
 
 
@@ -281,11 +274,8 @@ public class UnitTests {
     public void ExpressionStatement_ExprConcatList_computeTaintFromInput_NoTaintedArguments() {
         // Arrange
         ExpressionStatement StatementWithNoTaint = new Expr_ConcatList("Expr_ConcatList");
-
         TaintMap TaintMap = new TaintMap();
-
         String[] Arguments = new String[]{"list[0]: Var1","list[1]: LITERAL('')","list[0]: Var2", "result: Var3"};
-
 
         // Act
         StatementWithNoTaint.computeTaintFromInput(TaintMap, Arguments);
@@ -333,7 +323,7 @@ public class UnitTests {
 
         // Assert
         assertFalse(TaintMap.isTainted("Var2")
-               && TaintMap.isTainted("Var3"));
+               || TaintMap.isTainted("Var3"));
     }
 
     @Test
@@ -386,8 +376,6 @@ public class UnitTests {
         TerminalStatement StatementWithTaint = new TerminalStatement("Terminal_Echo");
 
         TaintMap TaintMap = new TaintMap();
-        Variable Var1 = new Variable("Var1");
-
         String[] Arguments = new String[]{"expr: Var1"};
 
         // Act
@@ -451,9 +439,11 @@ public class UnitTests {
         // Arrange
         String[] Arguments = new String[] { "expr: Var1", "result: Var2"};
         TaintMap TaintMap = new TaintMap();
+
         Variable Var1 = new Variable("Var1");
         Var1.setTainted(TaintType.Default);
         TaintMap.put(Var1, Var1);
+
         Expr_Print PrintStatement = new Expr_Print("Expr_Print");
 
         // Act
@@ -486,9 +476,11 @@ public class UnitTests {
         // Arrange
         String[] Arguments = new String[] { "name: LITERAL('function')", "args[0]: Var1", "result: Var2"};
         TaintMap TaintMap = new TaintMap();
+
         Variable Var1 = new Variable("Var1");
         Var1.setTainted(TaintType.Default);
         TaintMap.put(Var1, Var1);
+
         Expr_FuncCall PrintStatement = new Expr_FuncCall("Expr_FuncCall", Arguments);
 
         // Act
@@ -539,5 +531,4 @@ public class UnitTests {
 
     }
 
-    // todo : double check tests work
 }
