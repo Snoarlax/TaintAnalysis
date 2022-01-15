@@ -16,6 +16,11 @@ public class DefaultStatement extends Statement{
         return StatementType.DEFAULT;
     }
 
+    @Override
+    public boolean isTaintedSink() {
+        return false;
+    }
+
     public String getRawStatement() {
         return rawStatement;
     }

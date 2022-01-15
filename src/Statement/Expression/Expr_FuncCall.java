@@ -25,7 +25,8 @@ public class Expr_FuncCall extends ExpressionStatement{
         return sink;
     }
 
-    public boolean isTainted() {
+    @Override
+    public boolean isTaintedSink() {
         return sink && tainted;
     }
 

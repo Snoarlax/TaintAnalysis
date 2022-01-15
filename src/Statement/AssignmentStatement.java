@@ -21,7 +21,7 @@ public class AssignmentStatement extends Statement{
         String[] Values;
         // Check if it is a Phi() assignment
         if (AssignedValue.startsWith("Phi(") && AssignedValue.endsWith(")"))
-            Values = AssignedValue.substring(4,AssignedValue.length()-1).split(",");
+            Values = AssignedValue.substring(4,AssignedValue.length()-1).split(", ");
 
         else
             Values = new String[] {AssignedValue};
@@ -43,6 +43,11 @@ public class AssignmentStatement extends Statement{
     @Override
     public StatementType getStatementType() {
         return StatementType.ASSIGNMENT;
+    }
+
+    @Override
+    public boolean isTaintedSink() {
+        return false;
     }
 
     public String getAssignedValue() {

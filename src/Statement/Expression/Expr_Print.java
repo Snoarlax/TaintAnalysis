@@ -24,6 +24,11 @@ public class Expr_Print extends ExpressionStatement{
     }
 
     @Override
+    public boolean isTaintedSink() {
+        return tainted;
+    }
+
+    @Override
     public ExpressionType getExpressionType() {
         return ExpressionType.Expr_Print;
     }

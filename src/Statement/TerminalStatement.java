@@ -9,6 +9,7 @@ public class TerminalStatement extends Statement{
         TerminalName = terminalName;
         tainted = false;
 
+        // the only Terminal sink i know of is Terminal_Echo, which has only one argument
         if (terminalName.equals("Terminal_Echo"))
             Sink = true;
     }
@@ -17,7 +18,6 @@ public class TerminalStatement extends Statement{
     public void computeTaintFromInput(TaintMap inputTaint, String[] Arguments) {
         // TODO: if it is a return, need to implement tracking of taint between php functions later
         if (Sink) {
-            // the only Terminal sink i know of is Terminal_Echo, which has only one argument
             Variable expr = inputTaint.get(Arguments[0].split(": ", 2)[1]);
 
             if (expr.isTainted())
@@ -28,6 +28,11 @@ public class TerminalStatement extends Statement{
     @Override
     public StatementType getStatementType() {
         return StatementType.Terminal;
+    }
+
+    @Override
+    public boolean isTaintedSink() {
+        return Sink && tainted;
     }
 
     public String getTerminalName() {

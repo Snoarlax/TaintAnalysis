@@ -19,6 +19,11 @@ public class PropertyStatement extends Statement {
         return StatementType.PROPERTY;
     }
 
+    @Override
+    public boolean isTaintedSink() {
+        return false;
+    }
+
     public String getPropertyName() {
         return PropertyName;
     }

@@ -153,7 +153,7 @@ public class UnitTests {
     @DisplayName("Test computeTaintFromInput for an AssignmentStatement for an assignment with a Phi function and tainted assignments")
     public void AssignmentStatement_computeTaintFromInput_Phi_WithTaint(){
         // Arrange
-        AssignmentStatement StatementWithTaint = new AssignmentStatement("Var1", "Phi(Var2,Var3,Var4,Var5)");
+        AssignmentStatement StatementWithTaint = new AssignmentStatement("Var1", "Phi(Var2, Var3, Var4, Var5)");
 
         TaintMap TaintMap = new TaintMap();
         Variable Var2 = new Variable("Var2", new HashSet<>());
@@ -173,7 +173,7 @@ public class UnitTests {
     @DisplayName("Test computeTaintFromInput for an AssignmentStatement for an assignment with a Phi function and no tainted assignments")
     public void AssignmentStatement_computeTaintFromInput_Phi_NoTaint(){
         // Arrange
-        AssignmentStatement StatementWithNoTaint = new AssignmentStatement("Var1", "Phi(Var2,Var3,Var4,Var5)");
+        AssignmentStatement StatementWithNoTaint = new AssignmentStatement("Var1", "Phi(Var2, Var3, Var4, Var5)");
 
         TaintMap TaintMap = new TaintMap();
 

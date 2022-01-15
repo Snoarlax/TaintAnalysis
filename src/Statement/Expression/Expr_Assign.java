@@ -27,5 +27,10 @@ public class Expr_Assign extends ExpressionStatement{
     }
 
     @Override
+    public boolean isTaintedSink() {
+        return false;
+    }
+
+    @Override
     public ExpressionType getExpressionType() { return ExpressionType.Expr_Assign; }
 }

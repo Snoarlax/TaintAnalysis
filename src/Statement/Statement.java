@@ -6,5 +6,6 @@ public abstract class Statement {
     // Use HashMap so we can get the Variable (cannot do this with HashSet)
     abstract public void computeTaintFromInput(TaintMap inputTaint, String[] Arguments);
     abstract public StatementType getStatementType();
+    abstract public boolean isTaintedSink();
 
 }

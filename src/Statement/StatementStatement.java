@@ -17,6 +17,11 @@ public class StatementStatement extends Statement{
         return StatementType.Stmt;
     }
 
+    @Override
+    public boolean isTaintedSink() {
+        return false;
+    }
+
     public String getStatementName() {
         return StatementName;
     }

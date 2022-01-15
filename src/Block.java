@@ -13,7 +13,9 @@ public class Block {
 
     private final TaintMap Tainted;
     // Used when resolving dataflow equations to test if equations have reached a stable point (TaintedChanged == False)
-    private boolean TaintedChanged = true;
+    private boolean TaintedChanged = false;
+    // todo: consider alternative ways of reporting TaintedSinks
+    private boolean TaintedSink = false;
 
     // Block has Statements, which each have Arguments
     public Block(String rawBlock) throws InvalidFileException {
@@ -73,19 +75,38 @@ public class Block {
                     Statements[i] = StatementType.ConstructDefaultStatement(rawStatement);
                 Arguments.put(Statements[i], ArgumentsArray);
         }
+
+        // If the block is the entry point, then mark the TaintedChanged as true
+        // The parser seems to mark the entry point as Block#1, so I will test the name for this.
+        if (BlockName.equals("Block#1"))
+            TaintedChanged = true;
+
     }
 
     public void updateTaintedVariables(){
         if (TaintedChanged) {
+            HashSet<Variable> oldTainted = new HashSet<Variable>(Tainted.keySet());
             for (Block block : Pred)
                 Tainted.putAll(block.getTainted());
 
             // The taint function of the block should be equal to the application of all sequential taint functions of the statements that make up the block
-            for (Statement statement : Statements)
+            for (Statement statement : Statements) {
                 statement.computeTaintFromInput(Tainted, Arguments.get(statement));
+                // if the statement is a sink which gets tainted, mark the block as containing a tainted sink
+                if (statement.isTaintedSink())
+                    TaintedSink = true;
+            }
+
+
+// mark successors as changed, so they recompute the tainted set
+            if (!oldTainted.equals(Tainted.keySet()))
+                for (Block successor : Succ)
+                    successor.markedAsChanged();
 
             TaintedChanged = false;
         }
+
+
     }
 
     public String getBlockName() {
@@ -125,7 +146,11 @@ public class Block {
         return TaintedChanged;
     }
 
-    public void setTaintedChanged(boolean taintedChanged) {
-        TaintedChanged = taintedChanged;
+    public void markedAsChanged() {
+        TaintedChanged = true;
+    }
+
+    public boolean isTaintedSink() {
+        return TaintedSink;
     }
 }

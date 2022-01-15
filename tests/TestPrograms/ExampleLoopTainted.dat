@@ -1,0 +1,72 @@
+
+Block#1
+    Expr_ArrayDimFetch
+        var: Var#1<$_GET>
+        dim: LITERAL('n')
+        result: Var#2
+    Expr_Assign
+        var: Var#3<$a>
+        expr: Var#2
+        result: Var#4
+    Expr_Assign
+        var: Var#5<$b>
+        expr: LITERAL('Test')
+        result: Var#6
+    Stmt_Jump
+        target: Block#2
+
+Block#2
+    Parent: Block#1
+    Parent: Block#3
+    Parent: Block#5
+    Var#7<$a> = Phi(Var#3<$a>, Var#8<$a>)
+    Var#9<$b> = Phi(Var#5<$b>, Var#10<$b>)
+    Expr_BinaryOp_Smaller
+        left: Var#7<$a>
+        right: LITERAL(10)
+        result: Var#11
+    Stmt_JumpIf
+        cond: Var#11
+        if: Block#3
+        else: Block#4
+
+Block#3
+    Parent: Block#2
+    Expr_BinaryOp_Plus
+        left: Var#7<$a>
+        right: LITERAL(1)
+        result: Var#12
+    Expr_Assign
+        var: Var#8<$a>
+        expr: Var#12
+        result: Var#13
+    Expr_BinaryOp_Equal
+        left: Var#8<$a>
+        right: LITERAL(5)
+        result: Var#14
+    Stmt_JumpIf
+        cond: Var#14
+        if: Block#5
+        else: Block#2
+
+Block#4
+    Parent: Block#2
+    Terminal_Echo
+        expr: Var#9<$b>
+    Terminal_Echo
+        expr: LITERAL('
+        ')
+    Terminal_Return
+
+Block#5
+    Parent: Block#3
+    Expr_ArrayDimFetch
+        var: Var#1<$_GET>
+        dim: LITERAL('str')
+        result: Var#15
+    Expr_Assign
+        var: Var#10<$b>
+        expr: Var#15
+        result: Var#16
+    Stmt_Jump
+        target: Block#2
