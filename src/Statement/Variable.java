@@ -18,7 +18,7 @@ public class Variable {
         this.VariableName = VariableName;
         this.Taints = new HashSet<>();
         if (computeSource(VariableName))
-            Taints.addAll(List.of(TaintType.values()));
+            Collections.addAll(Taints, TaintType.values());
     }
 
     private boolean computeSource(String variableName) {

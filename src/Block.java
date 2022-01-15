@@ -12,8 +12,6 @@ public class Block {
     private final HashMap<Statement, String[]> Arguments; // Maps from Property to Argument
 
     private final TaintMap Tainted;
-    // Used when resolving dataflow equations to test if equations have reached a stable point (TaintedChanged == False)
-    private boolean TaintedChanged = false;
     // todo: consider alternative ways of reporting TaintedSinks
     private boolean TaintedSink = false;
 
@@ -78,35 +76,20 @@ public class Block {
 
         // If the block is the entry point, then mark the TaintedChanged as true
         // The parser seems to mark the entry point as Block#1, so I will test the name for this.
-        if (BlockName.equals("Block#1"))
-            TaintedChanged = true;
 
     }
 
-    public void updateTaintedVariables(){
-        if (TaintedChanged) {
-            HashSet<Variable> oldTainted = new HashSet<Variable>(Tainted.keySet());
-            for (Block block : Pred)
-                Tainted.putAll(block.getTainted());
+    public void updateTaintedVariables() {
+        for (Block block : Pred)
+            Tainted.putAll(block.getTainted());
 
-            // The taint function of the block should be equal to the application of all sequential taint functions of the statements that make up the block
-            for (Statement statement : Statements) {
-                statement.computeTaintFromInput(Tainted, Arguments.get(statement));
-                // if the statement is a sink which gets tainted, mark the block as containing a tainted sink
-                if (statement.isTaintedSink())
-                    TaintedSink = true;
-            }
-
-
-// mark successors as changed, so they recompute the tainted set
-            if (!oldTainted.equals(Tainted.keySet()))
-                for (Block successor : Succ)
-                    successor.markedAsChanged();
-
-            TaintedChanged = false;
+        // The taint function of the block should be equal to the application of all sequential taint functions of the statements that make up the block
+        for (Statement statement : Statements) {
+            statement.computeTaintFromInput(Tainted, Arguments.get(statement));
+            // if the statement is a sink which gets tainted, mark the block as containing a tainted sink
+            if (statement.isTaintedSink())
+                TaintedSink = true;
         }
-
-
     }
 
     public String getBlockName() {
@@ -140,14 +123,6 @@ public class Block {
     public HashMap<Variable,Variable> getTainted() {
         // It is important the result is a copy of the tainted Values, so the taint application is a serializable flow.
         return new HashMap<>(Tainted);
-    }
-
-    public boolean hasTaintedChanged() {
-        return TaintedChanged;
-    }
-
-    public void markedAsChanged() {
-        TaintedChanged = true;
     }
 
     public boolean isTaintedSink() {
