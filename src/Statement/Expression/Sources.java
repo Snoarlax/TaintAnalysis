@@ -1,5 +1,7 @@
 package Statement.Expression;
-// TODO: Fill in sources
 public enum Sources {
-    $_GET
+    $_GET,
+    $_POST,
+    $_COOKIE,
+    $_REQUEST
 }

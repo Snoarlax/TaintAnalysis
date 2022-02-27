@@ -1,0 +1,9 @@
+
+Block#1
+    Expr_ArrayDimFetch
+        var: Var#1<$_GET>
+        dim: LITERAL('str')
+        result: Var#2
+    Terminal_Echo
+        expr: Var#2
+    Terminal_Return

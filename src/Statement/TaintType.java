@@ -1,6 +1,9 @@
 package Statement;
 
 public enum TaintType {
-    // TODO: implement flags for different types of taint
-    Default
+    Default,
+    SQLI, // can do " or '
+    XSS, // can do <, >
+    INJECTION, // can do ;, ||, &&
+    DIRECTORY // can do .. , /
 }
