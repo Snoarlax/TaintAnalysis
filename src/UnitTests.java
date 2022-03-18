@@ -520,6 +520,20 @@ public class UnitTests {
     }
 
     @Test
+    @DisplayName("Check that FuncCalls over all the sinks are marked as sinks. ")
+    public void AllSinks_FuncCall_MarkedAsSink() {
+        // Arrange
+        String[] Sinks = new String[] {"eval","include","include_once","require","require_once","echo","print","printf","file_put_contents","fopen","opendir","file","mysql_query","mysqli_query","sqlite_query","sqlite_single_query","oci_parse","query","prepare","system","exec","proc_open","passthru","shell_exec"};
+        for (String sink : Sinks) {
+            String[] Arguments = new String[] { "name: LITERAL('" + sink + "')" };
+            // Act
+            Expr_FuncCall FuncCallStatement = new Expr_FuncCall("Expr_FuncCall", Arguments);
+            // Assert
+            assertTrue(FuncCallStatement.isSink());
+        }
+
+    }
+    @Test
     @DisplayName("Check that FuncCalls get correctly marked as not a sink. ")
     public void FuncCall_NotMarkedAsSink() {
         // Arrange

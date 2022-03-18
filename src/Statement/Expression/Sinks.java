@@ -22,19 +22,16 @@ public enum Sinks {
         file,
 
     // XSS
-        // echo
-        // print
+        echo,
+        print,
         printf,
     // SQLI
         mysql_query,
-        msqli_query,
-        // MySQLi::query Cant write as enum ToDO
+        mysqli_query,
         sqlite_query,
-        // SqliteDataBase::query cant write as enum ToDO
         sqlite_single_query,
-        // SqliteDataBase::singleQuery cant write as enum ToDO
-        oci_parse
-
-
+        oci_parse,
+        query,
+        prepare
 
 }
