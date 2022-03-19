@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 
 public enum Sinks {
+    // todo: Check if the fact that some methods have common names becomes a problem; if it is implement flag to change output on error detection.
     // Echo is detected in the TerminalStatement class, as it is labelled differently in the .dat files. The same goes for print and Expr_Print
 
     // Injection
@@ -37,6 +38,7 @@ public enum Sinks {
         mysqli_query(new TaintType[] {TaintType.Default, TaintType.SQLI}),
         sqlite_query(new TaintType[] {TaintType.Default, TaintType.SQLI}),
         sqlite_single_query(new TaintType[] {TaintType.Default, TaintType.SQLI}),
+        single_query(new TaintType[] {TaintType.Default, TaintType.SQLI}),
         oci_parse(new TaintType[] {TaintType.Default, TaintType.SQLI}),
         query(new TaintType[] {TaintType.Default, TaintType.SQLI}),
         prepare(new TaintType[] {TaintType.Default, TaintType.SQLI});
@@ -47,7 +49,7 @@ public enum Sinks {
             this.SinkType = new HashSet<>(List.of(TaintTypes));
     }
 
-    public HashSet<TaintType> getSinkType() {
+    public HashSet<TaintType> getVulnerableTaints() {
         return new HashSet<>(SinkType);
     }
 }

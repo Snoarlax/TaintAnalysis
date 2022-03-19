@@ -1,18 +1,28 @@
 package Statement.Expression;
 
 import Statement.TaintMap;
+import Statement.TaintType;
 import Statement.Variable;
 
 import java.util.Arrays;
+import java.util.HashSet;
 
 public class Expr_FuncCall extends ExpressionStatement{
-    private final boolean sink;
-    private boolean tainted;
+    private final boolean isSink;
+    private final boolean isSanitization;
+    private boolean isTainted;
+
     public Expr_FuncCall(String Expression, String[] Arguments) {
         super(Expression);
-        tainted = false;
-        sink = computeSink(Arguments);
+        isTainted = false;
+        isSink = computeSink(Arguments);
+        isSanitization = computeSanitization(Arguments);
+    }
 
+    private boolean computeSanitization(String[] Arguments) {
+        // returns true if the variable name matches a Sanitizers name.
+        // Arguments[0] should be the array that the element is being fetched from
+        return Arrays.stream(Sanitizations.values()).anyMatch(x -> Arguments[0].endsWith("LITERAL('" + x.name() + "')"));
     }
 
     private boolean computeSink(String[] Arguments){
@@ -22,14 +32,15 @@ public class Expr_FuncCall extends ExpressionStatement{
     }
 
     public boolean isSink() {
-        return sink;
+        return isSink;
     }
 
     @Override
     public boolean isTaintedSink() {
-        return sink && tainted;
+        return isSink && isTainted;
     }
 
+    // Follows dataflow equation, Taintout = Taintout(pred) U gen(pred) / kill(pred)
     @Override
     public void computeTaintFromInput(TaintMap inputTaint, String[] Arguments) {
         // todo: implement detection of sanitisation functions!
@@ -43,6 +54,33 @@ public class Expr_FuncCall extends ExpressionStatement{
         for (Variable arg : FunctionArguments)
             result.setAllTainted(arg.getTaints());
 
+
+
+        // if the statement is a sink and is not already tainted, check if the any taint matches sinktype, and mark statement as tainted if this is the case
+        if (!isTaintedSink() && isSink()) {
+            Sinks sinkType = Arrays.stream(Sinks.values())
+                    .filter(x -> Arguments[0].endsWith("LITERAL('" + x.name() + "')"))
+                    .findFirst()
+                    .get();
+            if (result.getTaints().stream()
+                    .anyMatch(x -> sinkType.getVulnerableTaints().contains((TaintType)x))) {
+                isTainted = true;
+            }
+        }
+
+        // if statement is a sanitisation function, remove the relevant taints from the result.
+
+        else if (isSanitization) {
+             HashSet<TaintType> TaintsToClear = Arrays.stream(Sanitizations.values())
+                    .filter(x -> Arguments[0].endsWith("LITERAL('" + x.name() + "')"))
+                    .findFirst()
+                    .get()
+                    .getTaintTypeSanitizations();
+
+             result.clearAllTainted(TaintsToClear);
+        }
+
+        // put the resultant variable with its taints into the TaintMap
         if (result.isTainted())
             inputTaint.put(result);
     }

@@ -48,8 +48,16 @@ public class Variable {
         Taints.add(newTaint);
     }
 
-    public void setAllTainted(Collection<? extends TaintType> newTaint){
-        Taints.addAll(newTaint);
+    public void setAllTainted(Collection<? extends TaintType> newTaints){
+        Taints.addAll(newTaints);
+    }
+
+    public void clearTainted(TaintType Taint){
+        Taints.remove(Taint);
+    }
+
+    public void clearAllTainted(Collection<? extends TaintType> Taints){
+        Taints.removeAll(Taints);
     }
 
     @Override

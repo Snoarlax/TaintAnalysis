@@ -519,6 +519,18 @@ public class UnitTests {
     }
 
     @Test
+    @DisplayName("Check that FuncCalls get correctly marked as not a sink. ")
+    public void FuncCall_NotMarkedAsSink() {
+        // Arrange
+        String[] Arguments = new String[] { "name: LITERAL('notsink')" };
+        // Act
+        Expr_FuncCall FuncCallStatement = new Expr_FuncCall("Expr_FuncCall", Arguments);
+        // Assert
+        assertFalse(FuncCallStatement.isSink());
+
+    }
+
+    @Test
     @DisplayName("Check that FuncCalls over all the sinks are marked as sinks. ")
     public void AllSinks_FuncCall_MarkedAsSink() {
         // Arrange
@@ -531,20 +543,8 @@ public class UnitTests {
             assertTrue(FuncCallStatement.isSink());
         }
 
-    }
-
-    @Test
-    @DisplayName("Check that FuncCalls get correctly marked as not a sink. ")
-    public void FuncCall_NotMarkedAsSink() {
-        // Arrange
-        String[] Arguments = new String[] { "name: LITERAL('notsink')" };
-        // Act
-        Expr_FuncCall FuncCallStatement = new Expr_FuncCall("Expr_FuncCall", Arguments);
-        // Assert
-        assertFalse(FuncCallStatement.isSink());
 
     }
-
     @Test
     @DisplayName("Check that getTaintTypes() works for different sinks. ")
     public void getTaintTypes_Sinks(){
@@ -560,7 +560,64 @@ public class UnitTests {
         // ACT + ASSERT
 
         for (int i = 0; i < SinksToTest.length; i++)
-            assertEquals(SinksToTest[i].getSinkType(), TaintTypesToCheck.get(i));
+            assertEquals(SinksToTest[i].getVulnerableTaints(), TaintTypesToCheck.get(i));
     }
+
+    @Test
+    @DisplayName("Check the XSS sanitizations return the correct set of Sanitizations. ")
+    public void Sanitizations_XSS_MarkedCorrectly() {
+        // Arrange
+        Sanitizations[] XSSSanitizations = new Sanitizations[] {Sanitizations.htmlspecialchars, Sanitizations.htmlentities};
+        HashSet<TaintType> TaintsToRemove = new HashSet<>(List.of(TaintType.Default, TaintType.XSS));
+
+        // Act + Assert
+        assertTrue(Arrays.stream(XSSSanitizations).allMatch(x -> x.getTaintTypeSanitizations().equals(TaintsToRemove)));
+    }
+
+    @Test
+    @DisplayName("Check the Injection sanitizations return the correct set of Sanitizations. ")
+    public void Sanitizations_Injection_MarkedCorrectly() {
+        // Arrange
+        Sanitizations[] InjectionSanitizations = new Sanitizations[] {Sanitizations.escapeshellcmd};
+        HashSet<TaintType> TaintsToRemove = new HashSet<>(List.of(TaintType.Default, TaintType.INJECTION));
+
+        // Act + Assert
+        assertTrue(Arrays.stream(InjectionSanitizations).allMatch(x -> x.getTaintTypeSanitizations().equals(TaintsToRemove)));
+    }
+
+    @Test
+    @DisplayName("Check the Injection sanitizations return the correct set of Sanitizations. ")
+    public void Sanitizations_Traversal_MarkedCorrectly() {
+        // Arrange
+        Sanitizations[] TraversalSanitizations = new Sanitizations[] {Sanitizations.realpath};
+        HashSet<TaintType> TaintsToRemove = new HashSet<>(List.of(TaintType.Default, TaintType.DIRECTORY));
+
+        // Act + Assert
+        assertTrue(Arrays.stream(TraversalSanitizations).allMatch(x -> x.getTaintTypeSanitizations().equals(TaintsToRemove)));
+    }
+
+    @Test
+    @DisplayName("Check the Injection sanitizations return the correct set of Sanitizations. ")
+    public void Sanitizations_SQLI_MarkedCorrectly() {
+        // Arrange
+        Sanitizations[] SQLISanitizations = new Sanitizations[] {    Sanitizations.addcslashes, //unsure
+                Sanitizations.addslashes, //unsure,
+                Sanitizations.mysql_escape_string,
+                Sanitizations.mysql_real_escape_string,
+                Sanitizations.mysqli_escape_string,
+                Sanitizations.escape_string,
+                Sanitizations.mysqli_real_escape_string,
+                Sanitizations.real_escape_string,
+                Sanitizations.sqlite_escape_string,
+                Sanitizations.escapeString,
+                Sanitizations.quote };
+        HashSet<TaintType> TaintsToRemove = new HashSet<>(List.of(TaintType.Default, TaintType.SQLI));
+
+        // Act + Assert
+        assertTrue(Arrays.stream(SQLISanitizations).allMatch(x -> x.getTaintTypeSanitizations().equals(TaintsToRemove)));
+    }
+
+    //todo : check sanitization functions work correctly.
+
 
 }

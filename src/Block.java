@@ -5,6 +5,7 @@ import java.util.*;
 import java.util.regex.Pattern;
 
 public class Block {
+    // todo: implement expr_methodcall
     private final String BlockName;
     private Block[] Pred;
     private Block[] Succ;
@@ -73,9 +74,6 @@ public class Block {
                     Statements[i] = StatementType.ConstructDefaultStatement(rawStatement);
                 Arguments.put(Statements[i], ArgumentsArray);
         }
-
-        // If the block is the entry point, then mark the TaintedChanged as true
-        // The parser seems to mark the entry point as Block#1, so I will test the name for this.
 
     }
 
