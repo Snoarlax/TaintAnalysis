@@ -11,8 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import Statement.*;
 
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.*;
 
 public class UnitTests {
     @Test
@@ -533,6 +532,7 @@ public class UnitTests {
         }
 
     }
+
     @Test
     @DisplayName("Check that FuncCalls get correctly marked as not a sink. ")
     public void FuncCall_NotMarkedAsSink() {
@@ -543,6 +543,24 @@ public class UnitTests {
         // Assert
         assertFalse(FuncCallStatement.isSink());
 
+    }
+
+    @Test
+    @DisplayName("Check that getTaintTypes() works for different sinks. ")
+    public void getTaintTypes_Sinks(){
+        // Arrange
+        Sinks[] SinksToTest = new Sinks[] {Sinks.shell_exec, Sinks.include, Sinks.echo, Sinks.mysql_query};
+        List<HashSet<TaintType>> TaintTypesToCheck = List.of(
+                new HashSet<TaintType>(Arrays.asList(TaintType.Default, TaintType.INJECTION)),
+                new HashSet<TaintType>(Arrays.asList(TaintType.Default, TaintType.DIRECTORY)),
+                new HashSet<TaintType>(Arrays.asList(TaintType.Default, TaintType.XSS)),
+                new HashSet<TaintType>(Arrays.asList(TaintType.Default, TaintType.SQLI))
+        );
+
+        // ACT + ASSERT
+
+        for (int i = 0; i < SinksToTest.length; i++)
+            assertEquals(SinksToTest[i].getSinkType(), TaintTypesToCheck.get(i));
     }
 
 }
