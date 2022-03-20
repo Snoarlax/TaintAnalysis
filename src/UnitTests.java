@@ -358,7 +358,7 @@ public class UnitTests {
 
         String[] Arguments = new String[]{"expr: Var1"};
 
-        Var1.setTainted(TaintType.Default);
+        Var1.setTainted(TaintType.XSS);
         TaintMap.put(Var1, Var1);
 
         // Act
@@ -586,7 +586,7 @@ public class UnitTests {
     }
 
     @Test
-    @DisplayName("Check the Injection sanitizations return the correct set of Sanitizations. ")
+    @DisplayName("Check the Traversal sanitizations return the correct set of Sanitizations. ")
     public void Sanitizations_Traversal_MarkedCorrectly() {
         // Arrange
         Sanitizations[] TraversalSanitizations = new Sanitizations[] {Sanitizations.realpath};
@@ -597,7 +597,7 @@ public class UnitTests {
     }
 
     @Test
-    @DisplayName("Check the Injection sanitizations return the correct set of Sanitizations. ")
+    @DisplayName("Check the SQLI sanitizations return the correct set of Sanitizations. ")
     public void Sanitizations_SQLI_MarkedCorrectly() {
         // Arrange
         Sanitizations[] SQLISanitizations = new Sanitizations[] {    Sanitizations.addcslashes, //unsure
@@ -617,7 +617,177 @@ public class UnitTests {
         assertTrue(Arrays.stream(SQLISanitizations).allMatch(x -> x.getTaintTypeSanitizations().equals(TaintsToRemove)));
     }
 
-    //todo : check sanitization functions work correctly.
+    @Test
+    @DisplayName("Check the sanitisation functions work for SQLI. ")
+    public void Sanitizations_SQLI_Works() {
+        // Arrange
+        Sanitizations[] SQLISanitizations = new Sanitizations[] {    Sanitizations.addcslashes, //unsure
+                Sanitizations.addslashes, //unsure,
+                Sanitizations.mysql_escape_string,
+                Sanitizations.mysql_real_escape_string,
+                Sanitizations.mysqli_escape_string,
+                Sanitizations.escape_string,
+                Sanitizations.mysqli_real_escape_string,
+                Sanitizations.real_escape_string,
+                Sanitizations.sqlite_escape_string,
+                Sanitizations.escapeString,
+                Sanitizations.quote };
+
+        for (Sanitizations SQLISan : SQLISanitizations) {
+            TaintMap SQLITaintedMap = new TaintMap();
+            Variable tainted = new Variable("tainted", List.of(TaintType.SQLI));
+            SQLITaintedMap.put(tainted);
+            String[] Arguments = new String[]{"name: LITERAL('" + SQLISan.name() + "')", "args[0]: tainted", "result: result"};
+            Expr_FuncCall FuncCallStatement = new Expr_FuncCall("Expr_FuncCall", Arguments);
+            // Act
+            FuncCallStatement.computeTaintFromInput(SQLITaintedMap, Arguments);
+            // Assert
+            Assert.assertFalse(SQLITaintedMap.isTainted("result"));
+        }
+    }
+
+    @Test
+    @DisplayName("Check the sanitisation functions work for Traversal. ")
+    public void Sanitizations_Traversal_Works() {
+        // Arrange
+        Sanitizations[] DirectorySanitizations = new Sanitizations[] {Sanitizations.realpath};
+
+        for (Sanitizations TraversalSan : DirectorySanitizations) {
+            TaintMap TraversalSanitization = new TaintMap();
+            Variable tainted = new Variable("tainted", List.of(TaintType.DIRECTORY));
+            TraversalSanitization.put(tainted);
+            String[] Arguments = new String[]{"name: LITERAL('" + TraversalSan.name() + "')", "args[0]: tainted", "result: result"};
+            Expr_FuncCall FuncCallStatement = new Expr_FuncCall("Expr_FuncCall", Arguments);
+            // Act
+            FuncCallStatement.computeTaintFromInput(TraversalSanitization, Arguments);
+            // Assert
+            Assert.assertFalse(TraversalSanitization.isTainted("result"));
+        }
+    }
+
+    @Test
+    @DisplayName("Check the sanitisation functions work for Injection. ")
+    public void Sanitizations_Injection_Works() {
+        // Arrange
+        Sanitizations[] InjectionSanitizations = new Sanitizations[] {Sanitizations.escapeshellcmd};
+
+        for (Sanitizations InjectionSan : InjectionSanitizations) {
+            TaintMap InjectionTaintedMap = new TaintMap();
+            Variable tainted = new Variable("tainted", List.of(TaintType.INJECTION));
+            InjectionTaintedMap.put(tainted);
+            String[] Arguments = new String[]{"name: LITERAL('" + InjectionSan.name() + "')", "args[0]: tainted", "result: result"};
+            Expr_FuncCall FuncCallStatement = new Expr_FuncCall("Expr_FuncCall", Arguments);
+            // Act
+            FuncCallStatement.computeTaintFromInput(InjectionTaintedMap, Arguments);
+            // Assert
+            Assert.assertFalse(InjectionTaintedMap.isTainted("result"));
+        }
+    }
+
+    @Test
+    @DisplayName("Check the sanitisation functions work for XSS. ")
+    public void Sanitizations_XSS_Works() {
+        // Arrange
+        Sanitizations[] XSSSanitizations = new Sanitizations[] {Sanitizations.htmlspecialchars, Sanitizations.htmlentities};
+
+        for (Sanitizations XSSsan : XSSSanitizations) {
+            TaintMap XSSTaintedMap = new TaintMap();
+            Variable tainted = new Variable("tainted", List.of(TaintType.XSS));
+            XSSTaintedMap.put(tainted);
+            String[] Arguments = new String[]{"name: LITERAL('" + XSSsan.name() + "')", "args[0]: tainted", "result: result"};
+            Expr_FuncCall FuncCallStatement = new Expr_FuncCall("Expr_FuncCall", Arguments);
+            // Act
+            FuncCallStatement.computeTaintFromInput(XSSTaintedMap, Arguments);
+            // Assert
+            Assert.assertFalse(XSSTaintedMap.isTainted("result"));
+        }
+    }
+
+    @Test
+    @DisplayName("Check the sanitisation functions fails correctly for SQLI. ")
+    public void Sanitizations_SQLI_Fails() {
+        // Arrange
+        Sanitizations[] SQLISanitizations = new Sanitizations[] {    Sanitizations.addcslashes, //unsure
+                Sanitizations.addslashes, //unsure,
+                Sanitizations.mysql_escape_string,
+                Sanitizations.mysql_real_escape_string,
+                Sanitizations.mysqli_escape_string,
+                Sanitizations.escape_string,
+                Sanitizations.mysqli_real_escape_string,
+                Sanitizations.real_escape_string,
+                Sanitizations.sqlite_escape_string,
+                Sanitizations.escapeString,
+                Sanitizations.quote };
+
+        for (Sanitizations SQLISan : SQLISanitizations) {
+            TaintMap SQLITaintedMap = new TaintMap();
+            Variable tainted = new Variable("tainted", List.of(TaintType.XSS));
+            SQLITaintedMap.put(tainted);
+            String[] Arguments = new String[]{"name: LITERAL('" + SQLISan.name() + "')", "args[0]: tainted", "result: result"};
+            Expr_FuncCall FuncCallStatement = new Expr_FuncCall("Expr_FuncCall", Arguments);
+            // Act
+            FuncCallStatement.computeTaintFromInput(SQLITaintedMap, Arguments);
+            // Assert
+            Assert.assertTrue(SQLITaintedMap.isTainted("result"));
+        }
+    }
+
+    @Test
+    @DisplayName("Check the sanitisation functions fails correctly for Traversal. ")
+    public void Sanitizations_Traversal_Fails() {
+        // Arrange
+        Sanitizations[] DirectorySanitizations = new Sanitizations[] {Sanitizations.realpath};
+
+        for (Sanitizations TraversalSan : DirectorySanitizations) {
+            TaintMap TraversalSanitization = new TaintMap();
+            Variable tainted = new Variable("tainted", List.of(TaintType.XSS));
+            TraversalSanitization.put(tainted);
+            String[] Arguments = new String[]{"name: LITERAL('" + TraversalSan.name() + "')", "args[0]: tainted", "result: result"};
+            Expr_FuncCall FuncCallStatement = new Expr_FuncCall("Expr_FuncCall", Arguments);
+            // Act
+            FuncCallStatement.computeTaintFromInput(TraversalSanitization, Arguments);
+            // Assert
+            Assert.assertTrue(TraversalSanitization.isTainted("result"));
+        }
+    }
+
+    @Test
+    @DisplayName("Check the sanitisation functions fails for Injection. ")
+    public void Sanitizations_Injection_Fails() {
+        // Arrange
+        Sanitizations[] InjectionSanitizations = new Sanitizations[] {Sanitizations.escapeshellcmd};
+
+        for (Sanitizations InjectionSan : InjectionSanitizations) {
+            TaintMap InjectionTaintedMap = new TaintMap();
+            Variable tainted = new Variable("tainted", List.of(TaintType.XSS));
+            InjectionTaintedMap.put(tainted);
+            String[] Arguments = new String[]{"name: LITERAL('" + InjectionSan.name() + "')", "args[0]: tainted", "result: result"};
+            Expr_FuncCall FuncCallStatement = new Expr_FuncCall("Expr_FuncCall", Arguments);
+            // Act
+            FuncCallStatement.computeTaintFromInput(InjectionTaintedMap, Arguments);
+            // Assert
+            Assert.assertTrue(InjectionTaintedMap.isTainted("result"));
+        }
+    }
+
+    @Test
+    @DisplayName("Check the sanitisation functions fails for XSS. ")
+    public void Sanitizations_XSS_Fails() {
+        // Arrange
+        Sanitizations[] XSSSanitizations = new Sanitizations[] {Sanitizations.htmlspecialchars, Sanitizations.htmlentities};
+
+        for (Sanitizations XSSsan : XSSSanitizations) {
+            TaintMap XSSTaintedMap = new TaintMap();
+            Variable tainted = new Variable("tainted", List.of(TaintType.SQLI));
+            XSSTaintedMap.put(tainted);
+            String[] Arguments = new String[]{"name: LITERAL('" + XSSsan.name() + "')", "args[0]: tainted", "result: result"};
+            Expr_FuncCall FuncCallStatement = new Expr_FuncCall("Expr_FuncCall", Arguments);
+            // Act
+            FuncCallStatement.computeTaintFromInput(XSSTaintedMap, Arguments);
+            // Assert
+            Assert.assertTrue(XSSTaintedMap.isTainted("result"));
+        }
+    }
 
 
 }

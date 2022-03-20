@@ -20,7 +20,7 @@ public class TerminalStatement extends Statement{
         if (Sink) {
             Variable expr = inputTaint.get(Arguments[0].split(": ", 2)[1]);
 
-            if (expr.isTainted())
+            if (expr.hasTainted(TaintType.XSS))
                 tainted = true;
         }
     }

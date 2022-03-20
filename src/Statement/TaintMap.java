@@ -23,6 +23,7 @@ public class TaintMap extends HashMap<Variable, Variable> {
         return getOrDefault(var,var);
     }
 
+    // shorthand for getting variable by name first
     public boolean isTainted(String VariableName) {
         return get(VariableName).isTainted();
     }

@@ -52,12 +52,12 @@ public class Variable {
         Taints.addAll(newTaints);
     }
 
-    public void clearTainted(TaintType Taint){
-        Taints.remove(Taint);
+    public void clearTainted(TaintType TaintToRemove){
+        Taints.remove(TaintToRemove);
     }
 
-    public void clearAllTainted(Collection<? extends TaintType> Taints){
-        Taints.removeAll(Taints);
+    public void clearAllTainted(Collection<? extends TaintType> TaintsToRemove){
+        Taints.removeAll(TaintsToRemove);
     }
 
     @Override
