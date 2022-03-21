@@ -55,6 +55,9 @@ public enum StatementType {
         else if (ExprType == ExpressionType.Expr_FuncCall){
             return new Expr_FuncCall(rawStatement, Arguments);
         }
+        else if (ExprType == ExpressionType.Expr_MethodCall){
+            return new Expr_MethodCall(rawStatement, Arguments);
+        }
 
         return new Expr_Default(rawStatement);
     }

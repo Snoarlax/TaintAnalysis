@@ -470,7 +470,7 @@ public class UnitTests {
     }
 
     @Test
-    @DisplayName("Check that Expr_Print computeTaintFromInput works correctly on a tainted argument. ")
+    @DisplayName("Check that Expr_FuncCall computeTaintFromInput works correctly on a tainted argument. ")
     public void FuncCall_computeTaintFromInput_withTaint() {
         // Arrange
         String[] Arguments = new String[] { "name: LITERAL('function')", "args[0]: Var1", "result: Var2"};
@@ -480,10 +480,10 @@ public class UnitTests {
         Var1.setTainted(TaintType.Default);
         TaintMap.put(Var1, Var1);
 
-        Expr_FuncCall PrintStatement = new Expr_FuncCall("Expr_FuncCall", Arguments);
+        Expr_FuncCall FuncCall = new Expr_FuncCall("Expr_FuncCall", Arguments);
 
         // Act
-        PrintStatement.computeTaintFromInput(TaintMap, Arguments);
+        FuncCall.computeTaintFromInput(TaintMap, Arguments);
 
         // Assert
 
@@ -542,19 +542,93 @@ public class UnitTests {
             // Assert
             assertTrue(FuncCallStatement.isSink());
         }
+    }
 
+    @Test
+    @DisplayName("Check that Expr_MethodCall computeTaintFromInput works correctly on a tainted argument. ")
+    public void MethodCall_computeTaintFromInput_withTaint() {
+        // Arrange
+        String[] Arguments = new String[] { "var: var","name: LITERAL('function')", "args[0]: Var1", "result: Var2"};
+        TaintMap TaintMap = new TaintMap();
+
+        Variable Var1 = new Variable("Var1");
+        Var1.setTainted(TaintType.Default);
+        TaintMap.put(Var1, Var1);
+
+        Expr_MethodCall MethodCall = new Expr_MethodCall("Expr_MethodCall", Arguments);
+
+        // Act
+        MethodCall.computeTaintFromInput(TaintMap, Arguments);
+
+        // Assert
+
+        assertTrue(TaintMap.isTainted("Var2"));
+    }
+
+    @Test
+    @DisplayName("Check that Expr_MethodCall computeTaintFromInput works correctly on a untainted argument. ")
+    public void MethodCall_computeTaintFromInput_noTaint() {
+        // Arrange
+        String[] Arguments = new String[] { "var: var","name: LITERAL('function')", "args[0]: Var1", "result: Var2"};
+        TaintMap TaintMap = new TaintMap();
+        Expr_MethodCall MethodCallStatement = new Expr_MethodCall("Expr_MethodCall", Arguments);
+
+        // Act
+        MethodCallStatement.computeTaintFromInput(TaintMap, Arguments);
+
+        // Assert
+
+        assertFalse(TaintMap.isTainted("Var2"));
+    }
+
+    @Test
+    @DisplayName("Check that FuncCalls get correctly marked as sinks. ")
+    public void MethodCall_MarkedAsSink() {
+        // Arrange
+        String[] Arguments = new String[] { "var: var","name: LITERAL('exec')" };
+        // Act
+        Expr_MethodCall MethodCallStatement = new Expr_MethodCall("Expr_MethodCall", Arguments);
+        // Assert
+        assertTrue(MethodCallStatement.isSink());
 
     }
+
+    @Test
+    @DisplayName("Check that MethodCalls get correctly marked as not a sink. ")
+    public void MethodCall_NotMarkedAsSink() {
+        // Arrange
+        String[] Arguments = new String[] { "var: Var#2<$conn>","name: LITERAL('notsink')" };
+        // Act
+        Expr_MethodCall MethodCallStatement = new Expr_MethodCall("Expr_MethodCall", Arguments);
+        // Assert
+        assertFalse(MethodCallStatement.isSink());
+
+    }
+
+    @Test
+    @DisplayName("Check that MethodCalls over all the sinks are marked as sinks. ")
+    public void AllSinks_MethodCall_MarkedAsSink() {
+        // Arrange
+        String[] Sinks = new String[] {"eval","include","include_once","require","require_once","echo","print","printf","file_put_contents","fopen","opendir","file","mysql_query","mysqli_query","sqlite_query","sqlite_single_query","oci_parse","query","prepare","system","exec","proc_open","passthru","shell_exec"};
+        for (String sink : Sinks) {
+            String[] Arguments = new String[] { "var: var","name: LITERAL('" + sink + "')" };
+            // Act
+            Expr_MethodCall MethodCallStatement = new Expr_MethodCall("Expr_MethodCall", Arguments);
+            // Assert
+            assertTrue(MethodCallStatement.isSink());
+        }
+    }
+
     @Test
     @DisplayName("Check that getTaintTypes() works for different sinks. ")
     public void getTaintTypes_Sinks(){
         // Arrange
         Sinks[] SinksToTest = new Sinks[] {Sinks.shell_exec, Sinks.include, Sinks.echo, Sinks.mysql_query};
         List<HashSet<TaintType>> TaintTypesToCheck = List.of(
-                new HashSet<TaintType>(Arrays.asList(TaintType.Default, TaintType.INJECTION)),
-                new HashSet<TaintType>(Arrays.asList(TaintType.Default, TaintType.DIRECTORY)),
-                new HashSet<TaintType>(Arrays.asList(TaintType.Default, TaintType.XSS)),
-                new HashSet<TaintType>(Arrays.asList(TaintType.Default, TaintType.SQLI))
+                new HashSet<>(Arrays.asList(TaintType.Default, TaintType.INJECTION)),
+                new HashSet<>(Arrays.asList(TaintType.Default, TaintType.DIRECTORY)),
+                new HashSet<>(Arrays.asList(TaintType.Default, TaintType.XSS)),
+                new HashSet<>(Arrays.asList(TaintType.Default, TaintType.SQLI))
         );
 
         // ACT + ASSERT

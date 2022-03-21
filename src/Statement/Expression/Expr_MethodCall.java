@@ -7,12 +7,12 @@ import Statement.Variable;
 import java.util.Arrays;
 import java.util.HashSet;
 
-public class Expr_FuncCall extends ExpressionStatement{
+public class Expr_MethodCall extends ExpressionStatement{
     private final boolean isSink;
     private final boolean isSanitization;
     private boolean isTainted;
 
-    public Expr_FuncCall(String Expression, String[] Arguments) {
+    public Expr_MethodCall(String Expression, String[] Arguments) {
         super(Expression);
         isTainted = false;
         isSink = computeSink(Arguments);
@@ -22,13 +22,13 @@ public class Expr_FuncCall extends ExpressionStatement{
     private boolean computeSanitization(String[] Arguments) {
         // returns true if the variable name matches a Sanitizers name.
         // Arguments[0] should be the array that the element is being fetched from
-        return Arrays.stream(Sanitizations.values()).anyMatch(x -> Arguments[0].endsWith("LITERAL('" + x.name() + "')"));
+        return Arrays.stream(Sanitizations.values()).anyMatch(x -> Arguments[1].endsWith("LITERAL('" + x.name() + "')"));
     }
 
     private boolean computeSink(String[] Arguments){
         // returns true if the variable name matches a sinks name.
         // Arguments[0] should be the array that the element is being fetched from
-        return Arrays.stream(Sinks.values()).anyMatch(x -> Arguments[0].endsWith("LITERAL('" + x.name() + "')"));
+        return Arrays.stream(Sinks.values()).anyMatch(x -> Arguments[1].endsWith("LITERAL('" + x.name() + "')"));
     }
 
     public boolean isSink() {
@@ -44,10 +44,10 @@ public class Expr_FuncCall extends ExpressionStatement{
     @Override
     public void computeTaintFromInput(TaintMap inputTaint, String[] Arguments) {
         // need to analyse function, in this case, by default a tainted argument will mean its a tainted result
-        Variable[] FunctionArguments = new Variable[Arguments.length-2];
+        Variable[] FunctionArguments = new Variable[Arguments.length-3];
         // iterate through the arguments of the function, which are the Arguments of the statement excluding the first and last
-        for (int i = 1; i < Arguments.length-1; i++)
-            FunctionArguments[i-1] = inputTaint.get(Arguments[i].split(": ",2)[1]);
+        for (int i = 2; i < Arguments.length-1; i++)
+            FunctionArguments[i-2] = inputTaint.get(Arguments[i].split(": ",2)[1]);
 
         Variable result = inputTaint.get(Arguments[Arguments.length-1].split(": ",2)[1]);
         for (Variable arg : FunctionArguments)
