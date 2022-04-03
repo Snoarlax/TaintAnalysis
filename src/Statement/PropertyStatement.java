@@ -1,5 +1,7 @@
 package Statement;
 
+import java.util.HashSet;
+
 public class PropertyStatement extends Statement {
     private final String PropertyName;
     private final String PropertyValue;
@@ -24,9 +26,15 @@ public class PropertyStatement extends Statement {
         return false;
     }
 
+    @Override
+    public HashSet<Variable> TaintedBy() {
+        return null;
+    }
+
     public String getPropertyName() {
         return PropertyName;
     }
+
 
     public String getPropertyValue() {
         return PropertyValue;

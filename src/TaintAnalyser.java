@@ -8,7 +8,6 @@ public class TaintAnalyser {
         CFGParser parser = new CFGParser(args[0]);
         // Use a FiFo queue to manage which blocks need to be analysed.
         LinkedList<Block> workSet = new LinkedList<>();
-        // todo: think about whether this is correct
         workSet.add(parser.getBlocks()[0]);
         while (!workSet.isEmpty()) {
             Block block = workSet.pop();

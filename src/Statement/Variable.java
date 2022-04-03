@@ -8,10 +8,15 @@ public class Variable {
     private final String VariableName;
     private final HashSet<TaintType> Taints;
 
+
+    private final HashSet<Variable> TaintedFrom;
+
     public Variable(String VariableName, Collection<TaintType> Tainted) {
         // assumption that calling this with a sources' variable name chooses the programmers Tainted set over the default, which is all tainted.
         this.VariableName = VariableName;
         this.Taints = new HashSet<>(Tainted);
+
+        TaintedFrom = new HashSet<>();
     }
 
     public Variable(String VariableName) {
@@ -19,6 +24,8 @@ public class Variable {
         this.Taints = new HashSet<>();
         if (computeSource(VariableName))
             Collections.addAll(Taints, TaintType.values());
+
+        TaintedFrom = new HashSet<>();
     }
 
     private boolean computeSource(String variableName) {
@@ -59,6 +66,17 @@ public class Variable {
     public void clearAllTainted(Collection<? extends TaintType> TaintsToRemove){
         Taints.removeAll(TaintsToRemove);
     }
+
+    public void TaintedFrom(Variable VariableTaintedBy) {TaintedFrom.add(VariableTaintedBy);}
+
+    public void TaintedFrom(HashSet<Variable> VariableTaintedBy) {TaintedFrom.addAll(VariableTaintedBy);}
+
+    public HashSet<Variable> getTaintedFrom() {
+        return new HashSet<>(TaintedFrom);
+    }
+
+
+
 
     @Override
     public boolean equals(Object o) {

@@ -1,5 +1,7 @@
 package Statement;
 
+import java.util.HashSet;
+
 public class StatementStatement extends Statement{
     private final String StatementName;
 
@@ -9,7 +11,6 @@ public class StatementStatement extends Statement{
     @Override
     public void computeTaintFromInput(TaintMap inputTaint, String[] Arguments) {
         // From experimentation, it seems statements do not transfer taint, but manage control flow
-        // TODO: May have to consider "Property"
     }
 
     @Override
@@ -20,6 +21,11 @@ public class StatementStatement extends Statement{
     @Override
     public boolean isTaintedSink() {
         return false;
+    }
+
+    @Override
+    public HashSet<Variable> TaintedBy() {
+        return null;
     }
 
     public String getStatementName() {

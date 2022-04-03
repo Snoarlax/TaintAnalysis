@@ -1,5 +1,6 @@
 import Statement.Expression.*;
 import Statement.Statement;
+import com.sun.source.tree.AssertTree;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.jupiter.api.DisplayName;
@@ -863,5 +864,503 @@ public class UnitTests {
         }
     }
 
+    @Test
+    @DisplayName("Check that the Assignment statement result tracks where it gets its taint from. ")
+    public void AssignmentStatement_NoPhi_TracksTaintedFrom() {
+        // Arrange
+        AssignmentStatement statement = new AssignmentStatement("Var2", "Var1");
 
+        Variable Var1 = new Variable("Var1");
+        Var1.setTainted(TaintType.Default);
+
+        TaintMap inputTaint = new TaintMap();
+        inputTaint.put(Var1);
+
+        // Act
+
+        statement.computeTaintFromInput(inputTaint, null);
+        Variable Var2 = inputTaint.get("Var2");
+
+        // Assert
+
+        Assert.assertTrue(Var2.getTaintedFrom().contains(Var1));
+    }
+
+    @Test
+    @DisplayName("Check that the Assignment statement result tracks where it gets its taint from. ")
+    public void AssignmentStatement_NoPhi_TracksTaintedFrom_NoTaint() {
+        // Arrange
+        AssignmentStatement statement = new AssignmentStatement("Var2", "Var1");
+
+        Variable Var1 = new Variable("Var1");
+
+        TaintMap inputTaint = new TaintMap();
+        inputTaint.put(Var1);
+
+        // Act
+
+        statement.computeTaintFromInput(inputTaint, null);
+        Variable Var2 = inputTaint.get("Var2");
+
+        // Assert
+
+        Assert.assertFalse(Var2.getTaintedFrom().contains(Var1));
+    }
+
+    @Test
+    @DisplayName("Check that the Assignment statement result tracks where it gets its taint from. ")
+    public void AssignmentStatement_Phi_TracksTaintedFrom() {
+        // Arrange
+        AssignmentStatement statement = new AssignmentStatement("Var2", "Phi(Var1, Var3, Var4)");
+
+        Variable Var1 = new Variable("Var1");
+        Var1.setTainted(TaintType.Default);
+        Variable Var3 = new Variable("Var3");
+        Var3.setTainted(TaintType.XSS);
+
+        TaintMap inputTaint = new TaintMap();
+        inputTaint.put(Var1);
+        inputTaint.put(Var3);
+
+        // Act
+
+        statement.computeTaintFromInput(inputTaint, null);
+        Variable Var2 = inputTaint.get("Var2");
+
+        // Assert
+
+        Assert.assertTrue(Var2.getTaintedFrom().contains(Var1) && Var2.getTaintedFrom().contains(Var3));
+    }
+
+    @Test
+    @DisplayName("Check that the Assignment statement result tracks where it gets its taint from. ")
+    public void AssignmentStatement_Phi_TracksTaintedFrom_NoTaint() {
+        // Arrange
+        AssignmentStatement statement = new AssignmentStatement("Var2", "Phi(Var1, Var3, Var4)");
+
+        Variable Var1 = new Variable("Var1");
+        Variable Var3 = new Variable("Var3");
+
+        TaintMap inputTaint = new TaintMap();
+        inputTaint.put(Var1);
+        inputTaint.put(Var3);
+
+        // Act
+
+        statement.computeTaintFromInput(inputTaint, null);
+        Variable Var2 = inputTaint.get("Var2");
+
+        // Assert
+
+        Assert.assertTrue(!Var2.getTaintedFrom().contains(Var1) && !Var2.getTaintedFrom().contains(Var3));
+    }
+
+    @Test
+    @DisplayName("Check that the Terminal statement result tracks which variable it gets its taint from. ")
+    public void TerminalStatement_TracksTaintedBy() {
+        // Arrange
+        TerminalStatement statement = new TerminalStatement("Terminal_Echo");
+
+        Variable Var1 = new Variable("Var1");
+        Var1.setTainted(TaintType.XSS);
+
+        TaintMap inputTaint = new TaintMap();
+        inputTaint.put(Var1);
+
+        // Act
+
+        statement.computeTaintFromInput(inputTaint, new String[] {"expr: Var1"});
+
+        // Assert
+
+        Assert.assertTrue(statement.TaintedBy().contains(Var1));
+    }
+
+    @Test
+    @DisplayName("Check that the Terminal statement result does not track where it gets its taint from if the expression is untainted. ")
+    public void TerminalStatement_DoesNotTrackTaintedBy() {
+        // Arrange
+        TerminalStatement statement = new TerminalStatement("Terminal_Echo");
+
+        Variable Var1 = new Variable("Var1");
+        Var1.setTainted(TaintType.Default);
+
+        TaintMap inputTaint = new TaintMap();
+        inputTaint.put(Var1);
+
+        // Act
+
+        statement.computeTaintFromInput(inputTaint, new String[] {"expr: Var1"});
+
+        // Assert
+
+        Assert.assertFalse(statement.TaintedBy().contains(Var1));
+    }
+
+    @Test
+    @DisplayName("Check that the ExprArrayDimFetch statement result tracks where variables get tainted from. ")
+    public void ExprArrayDimFetch_Tracks_TaintedFrom() {
+        // Arrange
+        Expr_ArrayDimFetch statement = new Expr_ArrayDimFetch("Expr_ArrayDimFetch");
+
+        Variable Var1 = new Variable("Var1");
+        Var1.setTainted(TaintType.Default);
+
+        TaintMap inputTaint = new TaintMap();
+        inputTaint.put(Var1);
+
+        // Act
+
+        statement.computeTaintFromInput(inputTaint, new String[] {"var: Var1", "dim: 2", "result: Var2"});
+
+        // Assert
+
+        Assert.assertTrue(inputTaint.get("Var2").getTaintedFrom().contains(Var1));
+    }
+
+    @Test
+    @DisplayName("Check that the ExprArrayDimFetch statement result does not track where it gets its taint from if the expression is untainted. ")
+    public void ExprArrayDimFetch_DoesNotTrack_TaintedFrom_NoTaint() {
+        // Arrange
+        Expr_ArrayDimFetch statement = new Expr_ArrayDimFetch("Expr_ArrayDimFetch");
+
+        Variable Var1 = new Variable("Var1");
+
+        TaintMap inputTaint = new TaintMap();
+        inputTaint.put(Var1);
+
+        // Act
+
+        statement.computeTaintFromInput(inputTaint, new String[] {"var: Var1", "dim: 2", "result: Var2"});
+
+        // Assert
+
+        Assert.assertFalse(inputTaint.get("Var2").getTaintedFrom().contains(Var1));
+    }
+
+    @Test
+    @DisplayName("Check that the ExprAssign statement result tracks where variables are tainted from. ")
+    public void ExprAssign_TracksTaintedFrom() {
+        // Arrange
+        Expr_Assign statement = new Expr_Assign("Expr_Assign");
+
+        Variable Var1 = new Variable("Var1");
+        Var1.setTainted(TaintType.Default);
+
+        TaintMap inputTaint = new TaintMap();
+        inputTaint.put(Var1);
+
+        // Act
+
+        statement.computeTaintFromInput(inputTaint, new String[] {"var: Var2", "expr: Var1", "result: Var3"});
+
+        // Assert
+
+        Assert.assertTrue(inputTaint.get("Var2").getTaintedFrom().contains(Var1)
+                && inputTaint.get("Var3").getTaintedFrom().contains(Var1));
+    }
+
+    @Test
+    @DisplayName("Check that the ExprAssign statement result does not track where untainted variables are tainted from. ")
+    public void ExprAssign_DoesNotTrack_TaintedFrom() {
+        // Arrange
+        Expr_Assign statement = new Expr_Assign("Expr_Assign");
+
+        Variable Var1 = new Variable("Var1");
+
+        TaintMap inputTaint = new TaintMap();
+        inputTaint.put(Var1);
+
+        // Act
+
+        statement.computeTaintFromInput(inputTaint, new String[] {"var: Var2", "expr: Var1", "result: Var3"});
+
+        // Assert
+
+        Assert.assertTrue(!inputTaint.get("Var2").getTaintedFrom().contains(Var1)
+                && !inputTaint.get("Var3").getTaintedFrom().contains(Var1));
+    }
+
+    @Test
+    @DisplayName("Check that the Expr_BinaryOp statement result tracks where variables are tainted from. ")
+    public void Expr_BinaryOp_TracksTaintedFrom() {
+        // Arrange
+        Expr_BinaryOp_Concat statement = new Expr_BinaryOp_Concat("Expr_BinaryOp_Concat");
+
+        Variable Var1 = new Variable("Var1");
+        Var1.setTainted(TaintType.Default);
+        Variable Var2 = new Variable("Var2");
+        Var2.setTainted(TaintType.Default);
+
+        TaintMap inputTaint = new TaintMap();
+        inputTaint.put(Var1);
+        inputTaint.put(Var2);
+
+        // Act
+
+        statement.computeTaintFromInput(inputTaint, new String[] {"left: Var1", "right: Var2", "result: Var3"});
+
+        // Assert
+
+        Assert.assertTrue(inputTaint.get("Var3").getTaintedFrom().contains(Var1)
+                && inputTaint.get("Var3").getTaintedFrom().contains(Var2));
+    }
+
+    @Test
+    @DisplayName("Check that the Expr_BinaryOp statement result does not track where untainted variables are tainted from. ")
+    public void Expr_BinaryOp_DoesNotTrack_TaintedFrom() {
+        // Arrange
+        Expr_BinaryOp_Concat statement = new Expr_BinaryOp_Concat("Expr_BinaryOp_Concat");
+
+        Variable Var1 = new Variable("Var1");
+        Variable Var2 = new Variable("Var2");
+
+        TaintMap inputTaint = new TaintMap();
+        inputTaint.put(Var1);
+        inputTaint.put(Var2);
+
+        // Act
+
+        statement.computeTaintFromInput(inputTaint, new String[] {"var: Var2", "expr: Var1", "result: Var3"});
+
+        // Assert
+
+        Assert.assertTrue(!inputTaint.get("Var3").getTaintedFrom().contains(Var1)
+                && !inputTaint.get("Var3").getTaintedFrom().contains(Var2));
+    }
+
+    @Test
+    @DisplayName("Check that the Expr_ConcatList statement result tracks where variables are tainted from. ")
+    public void Expr_ConcatList_TracksTaintedFrom() {
+        // Arrange
+        Expr_ConcatList statement = new Expr_ConcatList("Expr_ConcatList");
+
+        Variable Var1 = new Variable("Var1");
+        Var1.setTainted(TaintType.Default);
+        Variable Var2 = new Variable("Var2");
+        Var2.setTainted(TaintType.Default);
+
+        TaintMap inputTaint = new TaintMap();
+        inputTaint.put(Var1);
+        inputTaint.put(Var2);
+
+        // Act
+
+        statement.computeTaintFromInput(inputTaint, new String[] {"list[0]: Var1", "list[1]: Var2", "result: Var3"});
+
+        // Assert
+
+        Assert.assertTrue(inputTaint.get("Var3").getTaintedFrom().contains(Var1)
+                && inputTaint.get("Var3").getTaintedFrom().contains(Var2));
+    }
+
+    @Test
+    @DisplayName("Check that the Expr_ConcatList statement result does not track where untainted variables are tainted from. ")
+    public void Expr_ConcatList_DoesNotTrack_TaintedFrom() {
+        // Arrange
+        Expr_ConcatList statement = new Expr_ConcatList("Expr_ConcatList");
+
+        Variable Var1 = new Variable("Var1");
+        Variable Var2 = new Variable("Var2");
+
+
+        TaintMap inputTaint = new TaintMap();
+        inputTaint.put(Var1);
+        inputTaint.put(Var2);
+
+        // Act
+
+        statement.computeTaintFromInput(inputTaint, new String[] {"list[0]: Var1", "list[1]: Var2", "result: Var3"});
+
+        // Assert
+
+        Assert.assertTrue(!inputTaint.get("Var3").getTaintedFrom().contains(Var1)
+                && !inputTaint.get("Var3").getTaintedFrom().contains(Var2));
+    }
+
+    @Test
+    @DisplayName("Check that the Expr_FuncCall statement result tracks where variables are tainted from. ")
+    public void Expr_FuncCall_TracksTaintedFrom() {
+        // Arrange
+        Expr_FuncCall statement = new Expr_FuncCall("Expr_FuncCall", new String[] {"name: LITERAL('shell_exec')", "args[0]: Var1", "result: Var2"});
+
+        Variable Var1 = new Variable("Var1");
+        Var1.setTainted(TaintType.Default);
+
+        TaintMap inputTaint = new TaintMap();
+        inputTaint.put(Var1);
+
+        // Act
+
+        statement.computeTaintFromInput(inputTaint, new String[] {"name: LITERAL('shell_exec')", "args[0]: Var1", "result: Var2"});
+
+        // Assert
+
+        Assert.assertTrue(inputTaint.get("Var2").getTaintedFrom().contains(Var1));
+    }
+
+    @Test
+    @DisplayName("Check that the Expr_FuncCall statement result does not track where untainted variables are tainted from. ")
+    public void Expr_FuncCall_DoesNotTrack_TaintedFrom() {
+        // Arrange
+        Expr_FuncCall statement = new Expr_FuncCall("Expr_FuncCall", new String[] {"name: LITERAL('shell_exec')", "args[0]: Var1", "result: Var2"});
+
+        Variable Var1 = new Variable("Var1");
+
+        TaintMap inputTaint = new TaintMap();
+        inputTaint.put(Var1);
+
+        // Act
+
+        statement.computeTaintFromInput(inputTaint, new String[] {"name: LITERAL('shell_exec')", "args[0]: Var1", "result: Var2"});
+
+        // Assert
+
+        Assert.assertFalse(inputTaint.get("Var2").getTaintedFrom().contains(Var1));
+    }
+
+    @Test
+    @DisplayName("Check that the Expr_FuncCall statement result tracks the variable the sink was tainted By. ")
+    public void Expr_FuncCall_TracksTaintedBy() {
+        // Arrange
+        Expr_FuncCall statement = new Expr_FuncCall("Expr_FuncCall", new String[] {"name: LITERAL('shell_exec')", "args[0]: Var1", "result: Var2"});
+
+        Variable Var1 = new Variable("Var1");
+        Var1.setTainted(TaintType.Default);
+
+        TaintMap inputTaint = new TaintMap();
+        inputTaint.put(Var1);
+
+        // Act
+
+        statement.computeTaintFromInput(inputTaint, new String[] {"name: LITERAL('shell_exec')", "args[0]: Var1", "result: Var2"});
+
+        // Assert
+
+        Assert.assertTrue(statement.TaintedBy().contains(Var1));
+    }
+
+    @Test
+    @DisplayName("Check that the Expr_MethodCall statement result tracks where variables are tainted from. ")
+    public void Expr_MethodCall_TracksTaintedFrom() {
+        // Arrange
+        Expr_MethodCall statement = new Expr_MethodCall("Expr_MethodCall", new String[] {"var: object", "name: LITERAL('shell_exec')", "args[0]: Var1", "result: Var2"});
+
+        Variable Var1 = new Variable("Var1");
+        Var1.setTainted(TaintType.Default);
+
+        TaintMap inputTaint = new TaintMap();
+        inputTaint.put(Var1);
+
+        // Act
+
+        statement.computeTaintFromInput(inputTaint, new String[] {"var: object", "name: LITERAL('shell_exec')", "args[0]: Var1", "result: Var2"});
+
+        // Assert
+
+        Assert.assertTrue(inputTaint.get("Var2").getTaintedFrom().contains(Var1));
+    }
+
+    @Test
+    @DisplayName("Check that the Expr_MethodCall statement result does not track where untainted variables are tainted from. ")
+    public void Expr_MethodCall_DoesNotTrack_TaintedFrom() {
+        // Arrange
+        Expr_MethodCall statement = new Expr_MethodCall("Expr_MethodCall", new String[] {"var: object", "name: LITERAL('shell_exec')", "args[0]: Var1", "result: Var2"});
+
+        Variable Var1 = new Variable("Var1");
+
+        TaintMap inputTaint = new TaintMap();
+        inputTaint.put(Var1);
+
+        // Act
+
+        statement.computeTaintFromInput(inputTaint, new String[] {"var: object", "name: LITERAL('shell_exec')", "args[0]: Var1", "result: Var2"});
+
+        // Assert
+
+        Assert.assertFalse(inputTaint.get("Var2").getTaintedFrom().contains(Var1));
+    }
+
+    @Test
+    @DisplayName("Check that the Expr_MethodCall statement result tracks the variable the sink was tainted By. ")
+    public void Expr_MethodCall_TracksTaintedBy() {
+        // Arrange
+        Expr_MethodCall statement = new Expr_MethodCall("Expr_MethodCall", new String[] {"var: object", "name: LITERAL('shell_exec')", "args[0]: Var1", "result: Var2"});
+
+        Variable Var1 = new Variable("Var1");
+        Var1.setTainted(TaintType.Default);
+
+        TaintMap inputTaint = new TaintMap();
+        inputTaint.put(Var1);
+
+        // Act
+
+        statement.computeTaintFromInput(inputTaint, new String[] {"var: object", "name: LITERAL('shell_exec')", "args[0]: Var1", "result: Var2"});
+
+        // Assert
+
+        Assert.assertTrue(statement.TaintedBy().contains(Var1));
+    }
+
+    @Test
+    @DisplayName("Check that the Expr_Print statement result tracks where variables are tainted from. ")
+    public void Expr_Print_TracksTaintedFrom() {
+        // Arrange
+        Expr_Print statement = new Expr_Print("Expr_Print");
+
+        Variable Var1 = new Variable("Var1");
+        Var1.setTainted(TaintType.Default);
+
+        TaintMap inputTaint = new TaintMap();
+        inputTaint.put(Var1);
+
+        // Act
+
+        statement.computeTaintFromInput(inputTaint, new String[] {"expr: Var1", "result: Var2"});
+
+        // Assert
+
+        Assert.assertTrue(inputTaint.get("Var2").getTaintedFrom().contains(Var1));
+    }
+
+    @Test
+    @DisplayName("Check that the Expr_Print statement result does not track where untainted variables are tainted from. ")
+    public void Expr_Print_DoesNotTrack_TaintedFrom() {
+        // Arrange
+        Expr_Print statement = new Expr_Print("Expr_Print");
+
+        Variable Var1 = new Variable("Var1");
+
+        TaintMap inputTaint = new TaintMap();
+        inputTaint.put(Var1);
+
+        // Act
+
+        statement.computeTaintFromInput(inputTaint, new String[] {"expr: Var1", "result: Var2"});
+
+        // Assert
+
+        Assert.assertFalse(inputTaint.get("Var2").getTaintedFrom().contains(Var1));
+    }
+
+    @Test
+    @DisplayName("Check that the Expr_Print statement result tracks the variable the sink was tainted By. ")
+    public void Expr_Print_TracksTaintedBy() {
+        // Arrange
+        Expr_Print statement = new Expr_Print("Expr_Print");
+
+        Variable Var1 = new Variable("Var1");
+        Var1.setTainted(TaintType.Default);
+
+        TaintMap inputTaint = new TaintMap();
+        inputTaint.put(Var1);
+
+        // Act
+
+        statement.computeTaintFromInput(inputTaint, new String[] {"expr: Var1", "result: Var2"});
+
+        // Assert
+
+        Assert.assertTrue(statement.TaintedBy().contains(Var1));
+    }
 }

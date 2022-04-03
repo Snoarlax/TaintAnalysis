@@ -6,19 +6,18 @@ import java.util.HashSet;
 import java.util.List;
 
 public enum Sanitizations {
-    // todo: add flag which means unsure for some
     // Injection
     escapeshellcmd(new TaintType[] {TaintType.Default, TaintType.INJECTION}),
 
     // Traversal
-    realpath(new TaintType[] {TaintType.Default, TaintType.DIRECTORY}), //unsure
+    realpath(new TaintType[] {TaintType.Default, TaintType.DIRECTORY}, true), //unsure, needs to be checked manually
     // XSS
     htmlspecialchars(new TaintType[] {TaintType.Default, TaintType.XSS}),
     htmlentities(new TaintType[] {TaintType.Default, TaintType.XSS}),
 
     // SQLI
-    addcslashes(new TaintType[] {TaintType.Default, TaintType.SQLI}), //unsure
-    addslashes(new TaintType[] {TaintType.Default, TaintType.SQLI}), //unsure,
+    addcslashes(new TaintType[] {TaintType.Default, TaintType.SQLI}, true), //unsure, needs to be checked manually
+    addslashes(new TaintType[] {TaintType.Default, TaintType.SQLI}, true), //unsure, needs to be checked manually
     mysql_escape_string(new TaintType[] {TaintType.Default, TaintType.SQLI}),
     mysql_real_escape_string(new TaintType[] {TaintType.Default, TaintType.SQLI}),
     mysqli_escape_string(new TaintType[] {TaintType.Default, TaintType.SQLI}),
@@ -32,12 +31,25 @@ public enum Sanitizations {
 
     private final HashSet<TaintType> TaintTypeSanitizations;
 
+    private final boolean NeedsManualVerification;
+
 
     Sanitizations(TaintType[] TaintTypesToRemove) {
         this.TaintTypeSanitizations = new HashSet<>(List.of(TaintTypesToRemove));
+        this.NeedsManualVerification = false;
+    }
+
+    Sanitizations(TaintType[] TaintTypesToRemove, boolean ManualCheckingFlag) {
+        this.TaintTypeSanitizations = new HashSet<>(List.of(TaintTypesToRemove));
+        this.NeedsManualVerification = ManualCheckingFlag;
     }
 
     public HashSet<TaintType> getTaintTypeSanitizations() {
         return new HashSet<>(TaintTypeSanitizations);
     }
+
+    public boolean NeedsManualVerification() {
+        return NeedsManualVerification;
+    }
+
 }

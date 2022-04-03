@@ -1,9 +1,13 @@
 package Statement;
 
+import java.util.HashSet;
+
 public class TerminalStatement extends Statement{
     private final String TerminalName;
     private boolean Sink;
     private boolean tainted;
+
+    private HashSet<Variable> TaintedBy;
 
     public TerminalStatement(String terminalName) {
         TerminalName = terminalName;
@@ -12,16 +16,19 @@ public class TerminalStatement extends Statement{
         // the only Terminal sink i know of is Terminal_Echo, which has only one argument
         if (terminalName.equals("Terminal_Echo"))
             Sink = true;
+
+        TaintedBy = new HashSet<>();
     }
 
     @Override
     public void computeTaintFromInput(TaintMap inputTaint, String[] Arguments) {
-        // TODO: if it is a return, need to implement tracking of taint between php functions later
-        if (Sink) {
+        if (Sink && !tainted) {
             Variable expr = inputTaint.get(Arguments[0].split(": ", 2)[1]);
 
-            if (expr.hasTainted(TaintType.XSS))
+            if (expr.hasTainted(TaintType.XSS)) {
                 tainted = true;
+                TaintedBy.add(expr);
+            }
         }
     }
 
@@ -33,6 +40,11 @@ public class TerminalStatement extends Statement{
     @Override
     public boolean isTaintedSink() {
         return Sink && tainted;
+    }
+
+    @Override
+    public HashSet<Variable> TaintedBy() {
+        return new HashSet<>(TaintedBy);
     }
 
     public String getTerminalName() {

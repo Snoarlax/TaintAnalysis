@@ -1,5 +1,7 @@
 package Statement;
 
+import java.util.HashSet;
+
 public class DefaultStatement extends Statement{
     private final String rawStatement;
 
@@ -19,6 +21,11 @@ public class DefaultStatement extends Statement{
     @Override
     public boolean isTaintedSink() {
         return false;
+    }
+
+    @Override
+    public HashSet<Variable> TaintedBy() {
+        return null;
     }
 
     public String getRawStatement() {

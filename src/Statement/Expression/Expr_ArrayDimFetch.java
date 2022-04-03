@@ -3,6 +3,8 @@ package Statement.Expression;
 import Statement.TaintMap;
 import Statement.Variable;
 
+import java.util.HashSet;
+
 public class Expr_ArrayDimFetch extends ExpressionStatement{
 
     public Expr_ArrayDimFetch(String Expression){
@@ -18,6 +20,8 @@ public class Expr_ArrayDimFetch extends ExpressionStatement{
             Variable result = inputTaint.get(Arguments[2].split(": ", 2)[1]);
             result.setAllTainted(var.getTaints());
 
+            result.TaintedFrom(var);
+
             inputTaint.put(result);
         }
     }
@@ -25,6 +29,11 @@ public class Expr_ArrayDimFetch extends ExpressionStatement{
     @Override
     public boolean isTaintedSink() {
         return false;
+    }
+
+    @Override
+    public HashSet<Variable> TaintedBy() {
+        return null;
     }
 
     @Override

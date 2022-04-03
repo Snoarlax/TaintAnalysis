@@ -1,6 +1,9 @@
 package Statement.Expression;
 
 import Statement.TaintMap;
+import Statement.Variable;
+
+import java.util.HashSet;
 
 public class Expr_Default extends ExpressionStatement{
     public Expr_Default(String Expression) {
@@ -15,6 +18,11 @@ public class Expr_Default extends ExpressionStatement{
     @Override
     public boolean isTaintedSink() {
         return false;
+    }
+
+    @Override
+    public HashSet<Variable> TaintedBy() {
+        return null;
     }
 
     @Override

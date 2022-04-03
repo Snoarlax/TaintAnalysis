@@ -3,13 +3,19 @@ package Statement.Expression;
 import Statement.TaintMap;
 import Statement.Variable;
 
+import java.util.HashSet;
+
 public class Expr_Print extends ExpressionStatement{
     // Print is basically FuncCall that is always a sink, I have no idea why Print is not automatically marked as FuncCall as I believe it should.
     private boolean tainted;
 
+    private final HashSet<Variable> TaintedBy;
+
     public Expr_Print(String Expression) {
         super(Expression);
         tainted = false;
+
+        TaintedBy = new HashSet<>();
     }
 
     @Override
@@ -20,12 +26,20 @@ public class Expr_Print extends ExpressionStatement{
             Variable result = inputTaint.get(Arguments[1].split(": ", 2)[1]);
             result.setAllTainted(expr.getTaints());
             inputTaint.put(result);
+
+            TaintedBy.add(expr);
+            result.TaintedFrom(expr);
         }
     }
 
     @Override
     public boolean isTaintedSink() {
         return tainted;
+    }
+
+    @Override
+    public HashSet<Variable> TaintedBy() {
+        return new HashSet<>(TaintedBy);
     }
 
     @Override

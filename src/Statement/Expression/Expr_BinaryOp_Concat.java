@@ -3,6 +3,8 @@ package Statement.Expression;
 import Statement.TaintMap;
 import Statement.Variable;
 
+import java.util.HashSet;
+
 public class Expr_BinaryOp_Concat extends ExpressionStatement{
 
     public Expr_BinaryOp_Concat(String Expression){
@@ -23,12 +25,23 @@ public class Expr_BinaryOp_Concat extends ExpressionStatement{
             result.setAllTainted(right.getTaints());
 
             inputTaint.put(result);
+
+            if (left.isTainted())
+                result.TaintedFrom(left);
+
+            if (right.isTainted())
+                result.TaintedFrom(right);
         }
     }
 
     @Override
     public boolean isTaintedSink() {
         return false;
+    }
+
+    @Override
+    public HashSet<Variable> TaintedBy() {
+        return null;
     }
 
     @Override

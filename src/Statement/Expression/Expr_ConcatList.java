@@ -4,6 +4,7 @@ import Statement.TaintMap;
 import Statement.Variable;
 
 import java.util.Arrays;
+import java.util.HashSet;
 
 public class Expr_ConcatList extends ExpressionStatement{
 
@@ -27,8 +28,12 @@ public class Expr_ConcatList extends ExpressionStatement{
             Variable result = inputTaint.get(Arguments[Arguments.length-1].split(": ", 2)[1]);
 
             // Gets taint from all arguments into the result
-            for (Variable var : Variables)
-                result.setAllTainted(var.getTaints());
+            for (Variable var : Variables) {
+                if (var.isTainted()) {
+                    result.setAllTainted(var.getTaints());
+                    result.TaintedFrom(var);
+                }
+            }
 
             inputTaint.put(result);
         }
@@ -37,6 +42,11 @@ public class Expr_ConcatList extends ExpressionStatement{
     @Override
     public boolean isTaintedSink() {
         return false;
+    }
+
+    @Override
+    public HashSet<Variable> TaintedBy() {
+        return null;
     }
 
     @Override

@@ -1,12 +1,16 @@
 package Statement;
 
+import java.util.HashSet;
+
 public class AssignmentStatement extends Statement{
     private final String AssignedVariable;
     private final String AssignedValue;
 
     public AssignmentStatement(String assignedVariable, String assignedValue) {
+        super();
         AssignedVariable = assignedVariable;
         AssignedValue = assignedValue;
+
     }
 
     @Override
@@ -29,8 +33,10 @@ public class AssignmentStatement extends Statement{
         // For each of the potential values, see if it is tainted. If it is, the AssignedVariable could be tainted, so pass it on.
         for (String Value : Values){
             Variable var = inputTaint.get(Value);
-            if (var.isTainted())
+            if (var.isTainted()) {
                 AssignedVar.setAllTainted(var.getTaints());
+                AssignedVar.TaintedFrom(var);
+            }
         }
 
 
@@ -48,6 +54,11 @@ public class AssignmentStatement extends Statement{
     @Override
     public boolean isTaintedSink() {
         return false;
+    }
+
+    @Override
+    public HashSet<Variable> TaintedBy() {
+        return null;
     }
 
     public String getAssignedValue() {

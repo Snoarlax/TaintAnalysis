@@ -8,7 +8,6 @@ import java.util.HashSet;
 import java.util.List;
 
 public enum Sinks {
-    // todo: Check if the fact that some methods have common names becomes a problem; if it is implement flag to change output on error detection.
     // Echo is detected in the TerminalStatement class, as it is labelled differently in the .dat files. The same goes for print and Expr_Print
 
     // Injection
@@ -28,6 +27,7 @@ public enum Sinks {
         fopen(new TaintType[] {TaintType.Default, TaintType.DIRECTORY}),
         opendir(new TaintType[] {TaintType.Default, TaintType.DIRECTORY}),
         file(new TaintType[] {TaintType.Default, TaintType.DIRECTORY}),
+        readfile(new TaintType[] {TaintType.Default, TaintType.DIRECTORY}),
 
     // XSS
         echo(new TaintType[] {TaintType.Default, TaintType.XSS}),
@@ -45,7 +45,7 @@ public enum Sinks {
 
     private final HashSet<TaintType> SinkType;
 
-    private Sinks(TaintType[] TaintTypes) {
+    Sinks(TaintType[] TaintTypes) {
             this.SinkType = new HashSet<>(List.of(TaintTypes));
     }
 

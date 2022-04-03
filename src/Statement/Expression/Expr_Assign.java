@@ -3,6 +3,8 @@ package Statement.Expression;
 import Statement.TaintMap;
 import Statement.Variable;
 
+import java.util.HashSet;
+
 public class Expr_Assign extends ExpressionStatement{
 
     public Expr_Assign(String Expression) {
@@ -23,12 +25,20 @@ public class Expr_Assign extends ExpressionStatement{
 
             inputTaint.put(var);
             inputTaint.put(result);
+
+            var.TaintedFrom(expr);
+            result.TaintedFrom(expr);
         }
     }
 
     @Override
     public boolean isTaintedSink() {
         return false;
+    }
+
+    @Override
+    public HashSet<Variable> TaintedBy() {
+        return null;
     }
 
     @Override

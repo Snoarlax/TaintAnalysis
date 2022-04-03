@@ -12,11 +12,15 @@ public class Expr_FuncCall extends ExpressionStatement{
     private final boolean isSanitization;
     private boolean isTainted;
 
+    private final HashSet<Variable> TaintedBy;
+
     public Expr_FuncCall(String Expression, String[] Arguments) {
         super(Expression);
         isTainted = false;
         isSink = computeSink(Arguments);
         isSanitization = computeSanitization(Arguments);
+
+        TaintedBy = new HashSet<>();
     }
 
     private boolean computeSanitization(String[] Arguments) {
@@ -50,20 +54,34 @@ public class Expr_FuncCall extends ExpressionStatement{
             FunctionArguments[i-1] = inputTaint.get(Arguments[i].split(": ",2)[1]);
 
         Variable result = inputTaint.get(Arguments[Arguments.length-1].split(": ",2)[1]);
-        for (Variable arg : FunctionArguments)
-            result.setAllTainted(arg.getTaints());
 
+        // check if any of the arguments are tainted
+        if (Arrays.stream(FunctionArguments).anyMatch(Variable::isTainted)) {
+            // Gets taint from all arguments into the result
+            for (Variable var : FunctionArguments) {
+                if (var.isTainted()) {
+                    result.setAllTainted(var.getTaints());
+                    result.TaintedFrom(var);
+                }
+            }
+
+            inputTaint.put(result);
+        }
 
 
         // if the statement is a sink and is not already tainted, check if the any taint matches sinktype, and mark statement as tainted if this is the case
-        if (!isTaintedSink() && isSink()) {
-            Sinks sinkType = Arrays.stream(Sinks.values())
-                    .filter(x -> Arguments[0].endsWith("LITERAL('" + x.name() + "')"))
-                    .findFirst()
-                    .get();
-            if (result.getTaints().stream()
-                    .anyMatch(x -> sinkType.getVulnerableTaints().contains(x))) {
-                isTainted = true;
+        if (isSink()) {
+            if (!isTainted) {
+                Sinks sinkType = Arrays.stream(Sinks.values())
+                        .filter(x -> Arguments[0].endsWith("LITERAL('" + x.name() + "')"))
+                        .findFirst()
+                        .get();
+                for (Variable arg : FunctionArguments) {
+                    if (arg.getTaints().stream().anyMatch(x -> sinkType.getVulnerableTaints().contains(x))) {
+                        TaintedBy.add(arg);
+                        isTainted = true;
+                    }
+                }
             }
         }
 
@@ -87,6 +105,10 @@ public class Expr_FuncCall extends ExpressionStatement{
     @Override
     public ExpressionType getExpressionType() {
         return ExpressionType.Expr_FuncCall;
+    }
+
+    public HashSet<Variable> TaintedBy() {
+        return new HashSet<>(TaintedBy);
     }
 
 }
