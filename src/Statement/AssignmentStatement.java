@@ -51,16 +51,6 @@ public class AssignmentStatement extends Statement{
         return StatementType.ASSIGNMENT;
     }
 
-    @Override
-    public boolean isTaintedSink() {
-        return false;
-    }
-
-    @Override
-    public HashSet<Variable> TaintedBy() {
-        return null;
-    }
-
     public String getAssignedValue() {
         return AssignedValue;
     }

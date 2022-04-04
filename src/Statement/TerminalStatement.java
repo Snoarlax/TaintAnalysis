@@ -1,5 +1,7 @@
 package Statement;
 
+import Statement.Expression.Sinks;
+
 import java.util.HashSet;
 
 public class TerminalStatement extends Statement{
@@ -45,6 +47,11 @@ public class TerminalStatement extends Statement{
     @Override
     public HashSet<Variable> TaintedBy() {
         return new HashSet<>(TaintedBy);
+    }
+
+    @Override
+    public Sinks getSinkType() {
+        return isSink() ? Sinks.echo : null;
     }
 
     public String getTerminalName() {

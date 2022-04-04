@@ -14,6 +14,8 @@ public class Expr_FuncCall extends ExpressionStatement{
 
     private final HashSet<Variable> TaintedBy;
 
+    private final Sinks sinkType;
+
     public Expr_FuncCall(String Expression, String[] Arguments) {
         super(Expression);
         isTainted = false;
@@ -21,6 +23,8 @@ public class Expr_FuncCall extends ExpressionStatement{
         isSanitization = computeSanitization(Arguments);
 
         TaintedBy = new HashSet<>();
+
+        sinkType = isSink ? findSinkType(Arguments) : null;
     }
 
     private boolean computeSanitization(String[] Arguments) {
@@ -35,14 +39,15 @@ public class Expr_FuncCall extends ExpressionStatement{
         return Arrays.stream(Sinks.values()).anyMatch(x -> Arguments[0].endsWith("LITERAL('" + x.name() + "')"));
     }
 
+    private Sinks findSinkType(String[] Arguments) {
+        // returns the relevant Sinks enum from the Arguments
+        return Arrays.stream(Sinks.values()).filter(x -> Arguments[0].endsWith("LITERAL('" + x.name() + "')")).findFirst().get();
+    }
+
     public boolean isSink() {
         return isSink;
     }
 
-    @Override
-    public boolean isTaintedSink() {
-        return isSink && isTainted;
-    }
 
     // Follows dataflow equation, Taintout = Taintout(pred) U gen(pred) / kill(pred)
     @Override
@@ -102,13 +107,25 @@ public class Expr_FuncCall extends ExpressionStatement{
             inputTaint.put(result);
     }
 
+
+    @Override
+    public boolean isTaintedSink() {
+        return isSink && isTainted;
+    }
+
     @Override
     public ExpressionType getExpressionType() {
         return ExpressionType.Expr_FuncCall;
     }
 
+    @Override
     public HashSet<Variable> TaintedBy() {
         return new HashSet<>(TaintedBy);
+    }
+
+    @Override
+    public Sinks getSinkType() {
+        return sinkType;
     }
 
 }

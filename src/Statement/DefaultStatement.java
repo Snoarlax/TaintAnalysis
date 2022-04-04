@@ -18,16 +18,6 @@ public class DefaultStatement extends Statement{
         return StatementType.DEFAULT;
     }
 
-    @Override
-    public boolean isTaintedSink() {
-        return false;
-    }
-
-    @Override
-    public HashSet<Variable> TaintedBy() {
-        return null;
-    }
-
     public String getRawStatement() {
         return rawStatement;
     }

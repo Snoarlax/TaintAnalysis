@@ -27,15 +27,5 @@ public class Expr_ArrayDimFetch extends ExpressionStatement{
     }
 
     @Override
-    public boolean isTaintedSink() {
-        return false;
-    }
-
-    @Override
-    public HashSet<Variable> TaintedBy() {
-        return null;
-    }
-
-    @Override
     public ExpressionType getExpressionType() { return ExpressionType.Expr_ArrayDimFetch; }
 }

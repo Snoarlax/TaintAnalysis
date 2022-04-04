@@ -546,6 +546,20 @@ public class UnitTests {
     }
 
     @Test
+    @DisplayName("Check that FuncCalls over all the sinks are marked as the right sink. ")
+    public void AllSinks_FuncCall_MarkedAsCorrectSink() {
+        // Arrange
+        String[] SinksList = new String[] {"eval","include","include_once","require","require_once","echo","print","printf","file_put_contents","fopen","opendir","file","mysql_query","mysqli_query","sqlite_query","sqlite_single_query","oci_parse","query","prepare","system","exec","proc_open","passthru","shell_exec"};
+        for (String sink : SinksList) {
+            String[] Arguments = new String[] { "name: LITERAL('" + sink + "')" };
+            // Act
+            Expr_FuncCall FuncCallStatement = new Expr_FuncCall("Expr_FuncCall", Arguments);
+            // Assert
+            assertEquals(FuncCallStatement.getSinkType(), Sinks.valueOf(sink));
+        }
+    }
+
+    @Test
     @DisplayName("Check that Expr_MethodCall computeTaintFromInput works correctly on a tainted argument. ")
     public void MethodCall_computeTaintFromInput_withTaint() {
         // Arrange
@@ -617,6 +631,20 @@ public class UnitTests {
             Expr_MethodCall MethodCallStatement = new Expr_MethodCall("Expr_MethodCall", Arguments);
             // Assert
             assertTrue(MethodCallStatement.isSink());
+        }
+    }
+
+    @Test
+    @DisplayName("Check that MethodCalls over all the sinks are marked as the right sink. ")
+    public void AllSinks_MethodCall_MarkedAsCorrectSink() {
+        // Arrange
+        String[] SinksList = new String[] {"eval","include","include_once","require","require_once","echo","print","printf","file_put_contents","fopen","opendir","file","mysql_query","mysqli_query","sqlite_query","sqlite_single_query","oci_parse","query","prepare","system","exec","proc_open","passthru","shell_exec"};
+        for (String sink : SinksList) {
+            String[] Arguments = new String[] { "var: var","name: LITERAL('" + sink + "')" };
+            // Act
+            Expr_MethodCall MethodCallStatement = new Expr_MethodCall("Expr_MethodCall", Arguments);
+            // Assert
+            assertEquals(MethodCallStatement.getSinkType(), Sinks.valueOf(sink));
         }
     }
 

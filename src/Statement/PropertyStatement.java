@@ -21,16 +21,6 @@ public class PropertyStatement extends Statement {
         return StatementType.PROPERTY;
     }
 
-    @Override
-    public boolean isTaintedSink() {
-        return false;
-    }
-
-    @Override
-    public HashSet<Variable> TaintedBy() {
-        return null;
-    }
-
     public String getPropertyName() {
         return PropertyName;
     }

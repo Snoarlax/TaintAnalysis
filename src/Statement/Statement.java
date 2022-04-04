@@ -1,5 +1,7 @@
 package Statement;
 
+import Statement.Expression.Sinks;
+
 import java.util.HashSet;
 
 public abstract class Statement {
@@ -9,7 +11,14 @@ public abstract class Statement {
 
     abstract public void computeTaintFromInput(TaintMap inputTaint, String[] Arguments);
     abstract public StatementType getStatementType();
-    abstract public boolean isTaintedSink();
-    abstract public HashSet<Variable> TaintedBy();
+    public boolean isTaintedSink() {
+        return false;
+    };
+    public HashSet<Variable> TaintedBy() {
+        return null;
+    };
+    public Sinks getSinkType(){
+        return null;
+    }
 
 }

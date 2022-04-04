@@ -21,7 +21,7 @@ public class Expr_Print extends ExpressionStatement{
     @Override
     public void computeTaintFromInput(TaintMap inputTaint, String[] Arguments) {
         Variable expr = inputTaint.get(Arguments[0].split(": ", 2)[1]);
-        if (expr.isTainted()){
+        if (expr.isTainted() && !isTaintedSink()){
             tainted = true;
             Variable result = inputTaint.get(Arguments[1].split(": ", 2)[1]);
             result.setAllTainted(expr.getTaints());
@@ -45,5 +45,10 @@ public class Expr_Print extends ExpressionStatement{
     @Override
     public ExpressionType getExpressionType() {
         return ExpressionType.Expr_Print;
+    }
+
+    @Override
+    public Sinks getSinkType() {
+        return Sinks.print;
     }
 }

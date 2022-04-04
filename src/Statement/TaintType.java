@@ -6,7 +6,7 @@ public enum TaintType {
     SQLI("SQL Injection", "HIGH", "HIGH", "HIGH"), // can do " or '
     XSS("Cross site scripting", "low", "low", "low"), // can do <, >
     INJECTION("Code injection", "HIGH", "HIGH", "HIGH"), // can do ;, ||, &&
-    DIRECTORY("Directory Traversal", "HIGH", "HIGH", "low"); // can do .. , /
+    DIRECTORY("Directory Traversal", "HIGH", "low", "low"); // can do .. , /
 
 
     private final String Message, Confidentiality, Integrity, Availability;
@@ -18,13 +18,19 @@ public enum TaintType {
         Availability = availability;
     }
 
-
-    public String generateMessage() {
-        int spacing = Integer.max(15, Message.length());
-        String header = String.format("%"+spacing+"s" + "%"+spacing+"s" + "%"+spacing+"s" + "%"+spacing+"s", "Vulnerability", "Confidentiality", "Integrity", "Availability");
-        String content = String.format("%"+spacing+"s" + "%"+spacing+"s" + "%"+spacing+"s" + "%"+spacing+"s", Message,Confidentiality,Integrity,Availability);
-
-        return String.format("%s\n%s",header,content);
+    public String getMessage() {
+        return Message;
     }
 
+    public String getConfidentiality() {
+        return Confidentiality;
+    }
+
+    public String getIntegrity() {
+        return Integrity;
+    }
+
+    public String getAvailability() {
+        return Availability;
+    }
 }

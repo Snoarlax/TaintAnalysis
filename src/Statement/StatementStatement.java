@@ -18,16 +18,6 @@ public class StatementStatement extends Statement{
         return StatementType.Stmt;
     }
 
-    @Override
-    public boolean isTaintedSink() {
-        return false;
-    }
-
-    @Override
-    public HashSet<Variable> TaintedBy() {
-        return null;
-    }
-
     public String getStatementName() {
         return StatementName;
     }

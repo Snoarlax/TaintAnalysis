@@ -14,6 +14,8 @@ public class Expr_MethodCall extends ExpressionStatement{
 
     private final HashSet<Variable> TaintedBy;
 
+    private final Sinks sinkType;
+
     public Expr_MethodCall(String Expression, String[] Arguments) {
         super(Expression);
         isTainted = false;
@@ -21,6 +23,8 @@ public class Expr_MethodCall extends ExpressionStatement{
         isSanitization = computeSanitization(Arguments);
 
         TaintedBy = new HashSet<>();
+
+        sinkType = isSink ? findSinkType(Arguments) : null;
     }
 
     private boolean computeSanitization(String[] Arguments) {
@@ -33,6 +37,11 @@ public class Expr_MethodCall extends ExpressionStatement{
         // returns true if the variable name matches a sinks name.
         // Arguments[0] should be the array that the element is being fetched from
         return Arrays.stream(Sinks.values()).anyMatch(x -> Arguments[1].endsWith("LITERAL('" + x.name() + "')"));
+    }
+
+    private Sinks findSinkType(String[] Arguments) {
+        // returns the relevant Sinks enum from the Arguments
+        return Arrays.stream(Sinks.values()).filter(x -> Arguments[1].endsWith("LITERAL('" + x.name() + "')")).findFirst().get();
     }
 
     public boolean isSink() {
@@ -107,8 +116,14 @@ public class Expr_MethodCall extends ExpressionStatement{
         return ExpressionType.Expr_FuncCall;
     }
 
+    @Override
     public HashSet<Variable> TaintedBy() {
         return new HashSet<>(TaintedBy);
+    }
+
+    @Override
+    public Sinks getSinkType() {
+        return sinkType;
     }
 
 }

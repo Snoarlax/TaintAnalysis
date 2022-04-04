@@ -1,17 +1,25 @@
+import Statement.Expression.Sinks;
 import Statement.Statement;
 import Statement.Variable;
+import Statement.TaintType;
 
-import javax.swing.plaf.nimbus.State;
 import java.util.*;
 
 public class TaintAnalyser {
     // mark successors as changed, so they recompute the tainted set
     // todo: use constants for the output
+    // todo: use the manual verification thing
+    // todo: check how the parser handles code written in php (you know what i mean)
     public static void main(String[] args) throws InvalidFileException {
+        boolean tainted = false;
+
+        System.out.println("--> : Tainted from");
+
         CFGParser parser = new CFGParser(args[0]);
         // Use a FiFo queue to manage which blocks need to be analysed.
         LinkedList<Block> workSet = new LinkedList<>();
         workSet.add(parser.getBlocks()[0]);
+
         while (!workSet.isEmpty()) {
             Block block = workSet.pop();
             HashSet<Variable> oldTainted = new HashSet<>(block.getTainted().keySet());
@@ -23,6 +31,7 @@ public class TaintAnalyser {
 
         for (Block block : parser.getBlocks())
             if (block.isTaintedSink()) {
+                tainted = true;
                 System.out.println("Block: " + block.getBlockName() + " Is Tainted! ");
                 System.out.println();
                 System.out.println("TAINT CHAIN:");
@@ -31,7 +40,8 @@ public class TaintAnalyser {
                         HashSet<Variable> TaintedFrom = statement.TaintedBy();
                         ArrayList<String> TaintChain = new ArrayList<>();
 
-                        // todo: put the sink name at the start of the chain
+                        Sinks sinkType = statement.getSinkType();
+                        TaintChain.add(String.format("[ %s ]", sinkType.name()));
                         while (!TaintedFrom.isEmpty()) {
                             // constructs each link in the chain of variables which caused the taint.
                             StringBuilder CurrentVariableLink = new StringBuilder("[");
@@ -50,7 +60,17 @@ public class TaintAnalyser {
 
                         System.out.println("        " + String.join(" --> ",  TaintChain));
                         System.out.println();
+
+                        int spacing = Integer.max(15, sinkType.getVulnerableTaints().stream().mapToInt(x -> x.getMessage().length()).max().getAsInt());
+                        System.out.printf("%"+spacing+"s" + "%"+spacing+"s" + "%"+spacing+"s" + "%"+spacing+ "s%n", "Vulnerability", "Confidentiality", "Integrity", "Availability");
+
+                        for (TaintType taintType : sinkType.getVulnerableTaints())
+                            System.out.printf("%"+spacing+"s" + "%"+spacing+"s" + "%"+spacing+"s" + "%"+spacing+ "s%n",
+                                    taintType.getMessage(),taintType.getConfidentiality(), taintType.getIntegrity(),taintType.getAvailability());
                     }
             }
+
+        if (!tainted)
+            System.out.println("The Analyser could not find any injection vulnerabilities. ");
     }
 }
