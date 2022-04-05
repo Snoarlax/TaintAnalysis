@@ -11,45 +11,45 @@ public enum Sinks {
     // Echo is detected in the TerminalStatement class, as it is labelled differently in the .dat files. The same goes for print and Expr_Print
 
     // Injection
-        shell_exec(new TaintType[] {TaintType.Default, TaintType.INJECTION}),
-        exec(new TaintType[] {TaintType.Default, TaintType.INJECTION}),
-        eval(new TaintType[] {TaintType.Default, TaintType.INJECTION}),
-        system(new TaintType[] {TaintType.Default, TaintType.INJECTION}),
-        proc_open(new TaintType[] {TaintType.Default, TaintType.INJECTION}),
-        passthru(new TaintType[] {TaintType.Default, TaintType.INJECTION}),
-        popen(new TaintType[] {TaintType.Default, TaintType.INJECTION}),
+        shell_exec(TaintType.INJECTION),
+        exec(TaintType.INJECTION),
+        eval(TaintType.INJECTION),
+        system(TaintType.INJECTION),
+        proc_open(TaintType.INJECTION),
+        passthru(TaintType.INJECTION),
+        popen(TaintType.INJECTION),
     // Traversal
-        include(new TaintType[] {TaintType.Default, TaintType.DIRECTORY}),
-        include_once(new TaintType[] {TaintType.Default, TaintType.DIRECTORY}),
-        require(new TaintType[] {TaintType.Default, TaintType.DIRECTORY}),
-        require_once(new TaintType[] {TaintType.Default, TaintType.DIRECTORY}),
-        file_put_contents(new TaintType[] {TaintType.Default, TaintType.DIRECTORY}),
-        fopen(new TaintType[] {TaintType.Default, TaintType.DIRECTORY}),
-        opendir(new TaintType[] {TaintType.Default, TaintType.DIRECTORY}),
-        file(new TaintType[] {TaintType.Default, TaintType.DIRECTORY}),
-        readfile(new TaintType[] {TaintType.Default, TaintType.DIRECTORY}),
+        include(TaintType.DIRECTORY),
+        include_once(TaintType.DIRECTORY),
+        require(TaintType.DIRECTORY),
+        require_once(TaintType.DIRECTORY),
+        file_put_contents(TaintType.DIRECTORY),
+        fopen(TaintType.DIRECTORY),
+        opendir(TaintType.DIRECTORY),
+        file(TaintType.DIRECTORY),
+        readfile(TaintType.DIRECTORY),
 
     // XSS
-        echo(new TaintType[] {TaintType.Default, TaintType.XSS}),
-        print(new TaintType[] {TaintType.Default, TaintType.XSS}),
-        printf(new TaintType[] {TaintType.Default, TaintType.XSS}),
+        echo(TaintType.XSS),
+        print(TaintType.XSS),
+        printf(TaintType.XSS),
     // SQLI
-        mysql_query(new TaintType[] {TaintType.Default, TaintType.SQLI}),
-        mysqli_query(new TaintType[] {TaintType.Default, TaintType.SQLI}),
-        sqlite_query(new TaintType[] {TaintType.Default, TaintType.SQLI}),
-        sqlite_single_query(new TaintType[] {TaintType.Default, TaintType.SQLI}),
-        single_query(new TaintType[] {TaintType.Default, TaintType.SQLI}),
-        oci_parse(new TaintType[] {TaintType.Default, TaintType.SQLI}),
-        query(new TaintType[] {TaintType.Default, TaintType.SQLI}),
-        prepare(new TaintType[] {TaintType.Default, TaintType.SQLI});
+        mysql_query(TaintType.SQLI),
+        mysqli_query(TaintType.SQLI),
+        sqlite_query(TaintType.SQLI),
+        sqlite_single_query(TaintType.SQLI),
+        single_query(TaintType.SQLI),
+        oci_parse(TaintType.SQLI),
+        query(TaintType.SQLI),
+        prepare(TaintType.SQLI);
 
-    private final HashSet<TaintType> SinkType;
+    private final TaintType SinkType;
 
-    Sinks(TaintType[] TaintTypes) {
-            this.SinkType = new HashSet<>(List.of(TaintTypes));
+    Sinks(TaintType taintType) {
+            this.SinkType = taintType;
     }
 
-    public HashSet<TaintType> getVulnerableTaints() {
-        return new HashSet<>(SinkType);
+    public TaintType getVulnerableTaint() {
+        return SinkType;
     }
 }

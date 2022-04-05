@@ -12,7 +12,6 @@ public class Block {
     private final HashMap<Statement, String[]> Arguments; // Maps from Property to Argument
 
     private final TaintMap Tainted;
-    // todo: consider alternative ways of reporting TaintedSinks
     private boolean TaintedSink = false;
 
     // Block has Statements, which each have Arguments

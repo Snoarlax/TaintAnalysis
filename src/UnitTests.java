@@ -1,6 +1,5 @@
 import Statement.Expression.*;
 import Statement.Statement;
-import com.sun.source.tree.AssertTree;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.jupiter.api.DisplayName;
@@ -124,7 +123,7 @@ public class UnitTests {
 
         TaintMap TaintMap = new TaintMap();
         Variable Var2 = new Variable("Var2", new HashSet<>());
-        Var2.setTainted(TaintType.Default);
+        Var2.setTainted(TaintType.XSS);
 
         TaintMap.put(Var2, Var2);
 
@@ -158,7 +157,7 @@ public class UnitTests {
         TaintMap TaintMap = new TaintMap();
         Variable Var2 = new Variable("Var2", new HashSet<>());
 
-        Var2.setTainted(TaintType.Default);
+        Var2.setTainted(TaintType.XSS);
         TaintMap.put(Var2, Var2);
 
 
@@ -217,7 +216,7 @@ public class UnitTests {
         TaintMap TaintMap = new TaintMap();
         Variable Var1 = new Variable("Var1");
 
-        Var1.setTainted(TaintType.Default);
+        Var1.setTainted(TaintType.XSS);
         TaintMap.put(Var1, Var1);
 
         String[] Arguments = new String[]{"left: Var1","right: LITERAL('')", "result: Var2"};
@@ -256,7 +255,7 @@ public class UnitTests {
         TaintMap TaintMap = new TaintMap();
         Variable Var1 = new Variable("Var1");
 
-        Var1.setTainted(TaintType.Default);
+        Var1.setTainted(TaintType.XSS);
         TaintMap.put(Var1, Var1);
 
         String[] Arguments = new String[]{"list[0]: Var1","list[1]: LITERAL('')","list[0]: Var2", "result: Var3"};
@@ -293,7 +292,7 @@ public class UnitTests {
         TaintMap TaintMap = new TaintMap();
         Variable Var1 = new Variable("Var1", new HashSet<>());
 
-        Var1.setTainted(TaintType.Default);
+        Var1.setTainted(TaintType.XSS);
         TaintMap.put(Var1, Var1);
 
         String[] Arguments = new String[]{"var: Var2", "expr: Var1", "result: Var3"};
@@ -338,7 +337,7 @@ public class UnitTests {
 
         String[] Arguments = new String[]{"var: Var2", "expr: Var1", "result: Var3"};
 
-        Var2.setTainted(TaintType.Default);
+        Var2.setTainted(TaintType.XSS);
         TaintMap.put(Var2, Var2);
 
         // Act
@@ -441,7 +440,7 @@ public class UnitTests {
         TaintMap TaintMap = new TaintMap();
 
         Variable Var1 = new Variable("Var1");
-        Var1.setTainted(TaintType.Default);
+        Var1.setTainted(TaintType.XSS);
         TaintMap.put(Var1, Var1);
 
         Expr_Print PrintStatement = new Expr_Print("Expr_Print");
@@ -478,7 +477,7 @@ public class UnitTests {
         TaintMap TaintMap = new TaintMap();
 
         Variable Var1 = new Variable("Var1");
-        Var1.setTainted(TaintType.Default);
+        Var1.setTainted(TaintType.XSS);
         TaintMap.put(Var1, Var1);
 
         Expr_FuncCall FuncCall = new Expr_FuncCall("Expr_FuncCall", Arguments);
@@ -567,7 +566,7 @@ public class UnitTests {
         TaintMap TaintMap = new TaintMap();
 
         Variable Var1 = new Variable("Var1");
-        Var1.setTainted(TaintType.Default);
+        Var1.setTainted(TaintType.XSS);
         TaintMap.put(Var1, Var1);
 
         Expr_MethodCall MethodCall = new Expr_MethodCall("Expr_MethodCall", Arguments);
@@ -653,17 +652,17 @@ public class UnitTests {
     public void getTaintTypes_Sinks(){
         // Arrange
         Sinks[] SinksToTest = new Sinks[] {Sinks.shell_exec, Sinks.include, Sinks.echo, Sinks.mysql_query};
-        List<HashSet<TaintType>> TaintTypesToCheck = List.of(
-                new HashSet<>(Arrays.asList(TaintType.Default, TaintType.INJECTION)),
-                new HashSet<>(Arrays.asList(TaintType.Default, TaintType.DIRECTORY)),
-                new HashSet<>(Arrays.asList(TaintType.Default, TaintType.XSS)),
-                new HashSet<>(Arrays.asList(TaintType.Default, TaintType.SQLI))
-        );
+        TaintType[] TaintTypesToCheck = new TaintType[] {
+            TaintType.INJECTION,
+                    TaintType.DIRECTORY,
+                    TaintType.XSS,
+                    TaintType.SQLI
+        };
 
         // ACT + ASSERT
 
         for (int i = 0; i < SinksToTest.length; i++)
-            assertEquals(SinksToTest[i].getVulnerableTaints(), TaintTypesToCheck.get(i));
+            assertEquals(SinksToTest[i].getVulnerableTaint(), TaintTypesToCheck[i]);
     }
 
     @Test
@@ -671,7 +670,7 @@ public class UnitTests {
     public void Sanitizations_XSS_MarkedCorrectly() {
         // Arrange
         Sanitizations[] XSSSanitizations = new Sanitizations[] {Sanitizations.htmlspecialchars, Sanitizations.htmlentities};
-        HashSet<TaintType> TaintsToRemove = new HashSet<>(List.of(TaintType.Default, TaintType.XSS));
+        HashSet<TaintType> TaintsToRemove = new HashSet<>(List.of(TaintType.XSS));
 
         // Act + Assert
         assertTrue(Arrays.stream(XSSSanitizations).allMatch(x -> x.getTaintTypeSanitizations().equals(TaintsToRemove)));
@@ -682,7 +681,7 @@ public class UnitTests {
     public void Sanitizations_Injection_MarkedCorrectly() {
         // Arrange
         Sanitizations[] InjectionSanitizations = new Sanitizations[] {Sanitizations.escapeshellcmd};
-        HashSet<TaintType> TaintsToRemove = new HashSet<>(List.of(TaintType.Default, TaintType.INJECTION));
+        HashSet<TaintType> TaintsToRemove = new HashSet<>(List.of(TaintType.INJECTION));
 
         // Act + Assert
         assertTrue(Arrays.stream(InjectionSanitizations).allMatch(x -> x.getTaintTypeSanitizations().equals(TaintsToRemove)));
@@ -693,7 +692,7 @@ public class UnitTests {
     public void Sanitizations_Traversal_MarkedCorrectly() {
         // Arrange
         Sanitizations[] TraversalSanitizations = new Sanitizations[] {Sanitizations.realpath};
-        HashSet<TaintType> TaintsToRemove = new HashSet<>(List.of(TaintType.Default, TaintType.DIRECTORY));
+        HashSet<TaintType> TaintsToRemove = new HashSet<>(List.of(TaintType.DIRECTORY));
 
         // Act + Assert
         assertTrue(Arrays.stream(TraversalSanitizations).allMatch(x -> x.getTaintTypeSanitizations().equals(TaintsToRemove)));
@@ -704,7 +703,7 @@ public class UnitTests {
     public void Sanitizations_SQLI_MarkedCorrectly() {
         // Arrange
         Sanitizations[] SQLISanitizations = new Sanitizations[] {    Sanitizations.addcslashes, //unsure
-                Sanitizations.addslashes, //unsure,
+                Sanitizations.addslashes,
                 Sanitizations.mysql_escape_string,
                 Sanitizations.mysql_real_escape_string,
                 Sanitizations.mysqli_escape_string,
@@ -714,7 +713,7 @@ public class UnitTests {
                 Sanitizations.sqlite_escape_string,
                 Sanitizations.escapeString,
                 Sanitizations.quote };
-        HashSet<TaintType> TaintsToRemove = new HashSet<>(List.of(TaintType.Default, TaintType.SQLI));
+        HashSet<TaintType> TaintsToRemove = new HashSet<>(List.of(TaintType.SQLI));
 
         // Act + Assert
         assertTrue(Arrays.stream(SQLISanitizations).allMatch(x -> x.getTaintTypeSanitizations().equals(TaintsToRemove)));
@@ -899,7 +898,7 @@ public class UnitTests {
         AssignmentStatement statement = new AssignmentStatement("Var2", "Var1");
 
         Variable Var1 = new Variable("Var1");
-        Var1.setTainted(TaintType.Default);
+        Var1.setTainted(TaintType.XSS);
 
         TaintMap inputTaint = new TaintMap();
         inputTaint.put(Var1);
@@ -942,7 +941,7 @@ public class UnitTests {
         AssignmentStatement statement = new AssignmentStatement("Var2", "Phi(Var1, Var3, Var4)");
 
         Variable Var1 = new Variable("Var1");
-        Var1.setTainted(TaintType.Default);
+        Var1.setTainted(TaintType.XSS);
         Variable Var3 = new Variable("Var3");
         Var3.setTainted(TaintType.XSS);
 
@@ -1011,7 +1010,6 @@ public class UnitTests {
         TerminalStatement statement = new TerminalStatement("Terminal_Echo");
 
         Variable Var1 = new Variable("Var1");
-        Var1.setTainted(TaintType.Default);
 
         TaintMap inputTaint = new TaintMap();
         inputTaint.put(Var1);
@@ -1032,7 +1030,7 @@ public class UnitTests {
         Expr_ArrayDimFetch statement = new Expr_ArrayDimFetch("Expr_ArrayDimFetch");
 
         Variable Var1 = new Variable("Var1");
-        Var1.setTainted(TaintType.Default);
+        Var1.setTainted(TaintType.XSS);
 
         TaintMap inputTaint = new TaintMap();
         inputTaint.put(Var1);
@@ -1073,7 +1071,7 @@ public class UnitTests {
         Expr_Assign statement = new Expr_Assign("Expr_Assign");
 
         Variable Var1 = new Variable("Var1");
-        Var1.setTainted(TaintType.Default);
+        Var1.setTainted(TaintType.XSS);
 
         TaintMap inputTaint = new TaintMap();
         inputTaint.put(Var1);
@@ -1116,9 +1114,9 @@ public class UnitTests {
         Expr_BinaryOp_Concat statement = new Expr_BinaryOp_Concat("Expr_BinaryOp_Concat");
 
         Variable Var1 = new Variable("Var1");
-        Var1.setTainted(TaintType.Default);
+        Var1.setTainted(TaintType.XSS);
         Variable Var2 = new Variable("Var2");
-        Var2.setTainted(TaintType.Default);
+        Var2.setTainted(TaintType.XSS);
 
         TaintMap inputTaint = new TaintMap();
         inputTaint.put(Var1);
@@ -1164,9 +1162,9 @@ public class UnitTests {
         Expr_ConcatList statement = new Expr_ConcatList("Expr_ConcatList");
 
         Variable Var1 = new Variable("Var1");
-        Var1.setTainted(TaintType.Default);
+        Var1.setTainted(TaintType.XSS);
         Variable Var2 = new Variable("Var2");
-        Var2.setTainted(TaintType.Default);
+        Var2.setTainted(TaintType.XSS);
 
         TaintMap inputTaint = new TaintMap();
         inputTaint.put(Var1);
@@ -1213,7 +1211,7 @@ public class UnitTests {
         Expr_FuncCall statement = new Expr_FuncCall("Expr_FuncCall", new String[] {"name: LITERAL('shell_exec')", "args[0]: Var1", "result: Var2"});
 
         Variable Var1 = new Variable("Var1");
-        Var1.setTainted(TaintType.Default);
+        Var1.setTainted(TaintType.XSS);
 
         TaintMap inputTaint = new TaintMap();
         inputTaint.put(Var1);
@@ -1254,7 +1252,7 @@ public class UnitTests {
         Expr_FuncCall statement = new Expr_FuncCall("Expr_FuncCall", new String[] {"name: LITERAL('shell_exec')", "args[0]: Var1", "result: Var2"});
 
         Variable Var1 = new Variable("Var1");
-        Var1.setTainted(TaintType.Default);
+        Var1.setTainted(TaintType.INJECTION);
 
         TaintMap inputTaint = new TaintMap();
         inputTaint.put(Var1);
@@ -1275,7 +1273,7 @@ public class UnitTests {
         Expr_MethodCall statement = new Expr_MethodCall("Expr_MethodCall", new String[] {"var: object", "name: LITERAL('shell_exec')", "args[0]: Var1", "result: Var2"});
 
         Variable Var1 = new Variable("Var1");
-        Var1.setTainted(TaintType.Default);
+        Var1.setTainted(TaintType.XSS);
 
         TaintMap inputTaint = new TaintMap();
         inputTaint.put(Var1);
@@ -1316,7 +1314,7 @@ public class UnitTests {
         Expr_MethodCall statement = new Expr_MethodCall("Expr_MethodCall", new String[] {"var: object", "name: LITERAL('shell_exec')", "args[0]: Var1", "result: Var2"});
 
         Variable Var1 = new Variable("Var1");
-        Var1.setTainted(TaintType.Default);
+        Var1.setTainted(TaintType.INJECTION);
 
         TaintMap inputTaint = new TaintMap();
         inputTaint.put(Var1);
@@ -1337,7 +1335,7 @@ public class UnitTests {
         Expr_Print statement = new Expr_Print("Expr_Print");
 
         Variable Var1 = new Variable("Var1");
-        Var1.setTainted(TaintType.Default);
+        Var1.setTainted(TaintType.XSS);
 
         TaintMap inputTaint = new TaintMap();
         inputTaint.put(Var1);
@@ -1378,7 +1376,7 @@ public class UnitTests {
         Expr_Print statement = new Expr_Print("Expr_Print");
 
         Variable Var1 = new Variable("Var1");
-        Var1.setTainted(TaintType.Default);
+        Var1.setTainted(TaintType.XSS);
 
         TaintMap inputTaint = new TaintMap();
         inputTaint.put(Var1);

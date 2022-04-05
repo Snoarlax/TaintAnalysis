@@ -82,7 +82,7 @@ public class Expr_FuncCall extends ExpressionStatement{
                         .findFirst()
                         .get();
                 for (Variable arg : FunctionArguments) {
-                    if (arg.getTaints().stream().anyMatch(x -> sinkType.getVulnerableTaints().contains(x))) {
+                    if (arg.getTaints().contains(sinkType.getVulnerableTaint())) {
                         TaintedBy.add(arg);
                         isTainted = true;
                     }

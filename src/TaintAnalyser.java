@@ -8,8 +8,6 @@ import java.util.*;
 public class TaintAnalyser {
     // mark successors as changed, so they recompute the tainted set
     // todo: use constants for the output
-    // todo: use the manual verification thing
-    // todo: check how the parser handles code written in php (you know what i mean)
     public static void main(String[] args) throws InvalidFileException {
         boolean tainted = false;
 
@@ -61,12 +59,14 @@ public class TaintAnalyser {
                         System.out.println("        " + String.join(" --> ",  TaintChain));
                         System.out.println();
 
-                        int spacing = Integer.max(15, sinkType.getVulnerableTaints().stream().mapToInt(x -> x.getMessage().length()).max().getAsInt());
-                        System.out.printf("%"+spacing+"s" + "%"+spacing+"s" + "%"+spacing+"s" + "%"+spacing+ "s%n", "Vulnerability", "Confidentiality", "Integrity", "Availability");
-
-                        for (TaintType taintType : sinkType.getVulnerableTaints())
-                            System.out.printf("%"+spacing+"s" + "%"+spacing+"s" + "%"+spacing+"s" + "%"+spacing+ "s%n",
-                                    taintType.getMessage(),taintType.getConfidentiality(), taintType.getIntegrity(),taintType.getAvailability());
+                        TaintType taintType = sinkType.getVulnerableTaint();
+                        int spacing = -Integer.max(25, taintType.getMessage().length());
+                        System.out.println("VULNERABILITY TABLE:");
+                        System.out.printf("        " + String.join("", Collections.nCopies(5, "%"+spacing+"s")) + "%n",
+                                "Vulnerability", "Confidentiality", "Integrity", "Availability", "Priority");
+                        System.out.println();
+                        System.out.printf("        " + String.join("", Collections.nCopies(5, "%"+spacing+"s")) + "%n",
+                                taintType.getMessage(),taintType.getConfidentiality(), taintType.getIntegrity(),taintType.getAvailability(), taintType.getPriority());
                     }
             }
 
