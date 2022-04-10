@@ -1,0 +1,320 @@
+
+Block#1
+    Terminal_Echo
+        expr: LITERAL('    
+            ')
+    Expr_Include
+        expr: LITERAL('partials-front/menu.php')
+        result: Var#1
+    Terminal_Echo
+        expr: LITERAL('
+            ')
+    Expr_ArrayDimFetch
+        var: Var#2<$_GET>
+        dim: LITERAL('category_id')
+        result: Var#3
+    Expr_Isset
+        vars[0]: Var#3
+        result: Var#4
+    Stmt_JumpIf
+        cond: Var#4
+        if: Block#2
+        else: Block#3
+
+Block#2
+    Parent: Block#1
+    Expr_ArrayDimFetch
+        var: Var#2<$_GET>
+        dim: LITERAL('category_id')
+        result: Var#5
+    Expr_Assign
+        var: Var#6<$category_id>
+        expr: Var#5
+        result: Var#7
+    Expr_ConcatList
+        list[0]: LITERAL('SELECT title FROM tbl_category WHERE id=')
+        list[1]: Var#6<$category_id>
+        result: Var#8
+    Expr_Assign
+        var: Var#9<$sql>
+        expr: Var#8
+        result: Var#10
+    Expr_FuncCall
+        name: LITERAL('mysqli_query')
+        args[0]: Var#11<$conn>
+        args[1]: Var#9<$sql>
+        result: Var#12
+    Expr_Assign
+        var: Var#13<$res>
+        expr: Var#12
+        result: Var#14
+    Expr_FuncCall
+        name: LITERAL('mysqli_fetch_assoc')
+        args[0]: Var#13<$res>
+        result: Var#15
+    Expr_Assign
+        var: Var#16<$row>
+        expr: Var#15
+        result: Var#17
+    Expr_ArrayDimFetch
+        var: Var#16<$row>
+        dim: LITERAL('title')
+        result: Var#18
+    Expr_Assign
+        var: Var#19<$category_title>
+        expr: Var#18
+        result: Var#20
+    Stmt_Jump
+        target: Block#4
+
+Block#3
+    Parent: Block#1
+    Expr_ConstFetch
+        name: LITERAL('SITEURL')
+        result: Var#21
+    Expr_BinaryOp_Concat
+        left: LITERAL('location:')
+        right: Var#21
+        result: Var#22
+    Expr_FuncCall
+        name: LITERAL('header')
+        args[0]: Var#22
+        result: Var#23
+    Stmt_Jump
+        target: Block#4
+
+Block#4
+    Parent: Block#2
+    Parent: Block#3
+    Var#24<$category_title> = Phi(Var#19<$category_title>, Var#25<$category_title>)
+    Var#26<$category_id> = Phi(Var#6<$category_id>, Var#27<$category_id>)
+    Terminal_Echo
+        expr: LITERAL('
+        
+            <!-- fOOD sEARCH Section Starts Here -->
+            <section class="food-search text-center">
+                <div class="container">
+                    
+                    <h2>Foods on <a href="#" class="text-white">"')
+    Terminal_Echo
+        expr: Var#24<$category_title>
+    Terminal_Echo
+        expr: LITERAL('"</a></h2>
+        
+                </div>
+            </section>
+            <!-- fOOD sEARCH Section Ends Here -->
+        
+        
+        
+            <!-- fOOD MEnu Section Starts Here -->
+            <section class="food-menu">
+                <div class="container">
+                    <h2 class="text-center">Food Menu</h2>
+        
+                    ')
+    Expr_ConcatList
+        list[0]: LITERAL('SELECT * FROM tbl_food WHERE category_id=')
+        list[1]: Var#26<$category_id>
+        result: Var#28
+    Expr_Assign
+        var: Var#29<$sql2>
+        expr: Var#28
+        result: Var#30
+    Expr_FuncCall
+        name: LITERAL('mysqli_query')
+        args[0]: Var#11<$conn>
+        args[1]: Var#29<$sql2>
+        result: Var#31
+    Expr_Assign
+        var: Var#32<$res2>
+        expr: Var#31
+        result: Var#33
+    Expr_FuncCall
+        name: LITERAL('mysqli_num_rows')
+        args[0]: Var#32<$res2>
+        result: Var#34
+    Expr_Assign
+        var: Var#35<$count2>
+        expr: Var#34
+        result: Var#36
+    Expr_BinaryOp_Greater
+        left: Var#35<$count2>
+        right: LITERAL(0)
+        result: Var#37
+    Stmt_JumpIf
+        cond: Var#37
+        if: Block#5
+        else: Block#6
+
+Block#5
+    Parent: Block#4
+    Parent: Block#11
+    Expr_FuncCall
+        name: LITERAL('mysqli_fetch_assoc')
+        args[0]: Var#32<$res2>
+        result: Var#38
+    Expr_Assign
+        var: Var#39<$row2>
+        expr: Var#38
+        result: Var#40
+    Stmt_JumpIf
+        cond: Var#40
+        if: Block#7
+        else: Block#8
+
+Block#6
+    Parent: Block#4
+    Terminal_Echo
+        expr: LITERAL('<div class=\'error\'>Food not Available.</div>')
+    Stmt_Jump
+        target: Block#8
+
+Block#7
+    Parent: Block#5
+    Expr_ArrayDimFetch
+        var: Var#39<$row2>
+        dim: LITERAL('id')
+        result: Var#41
+    Expr_Assign
+        var: Var#42<$id>
+        expr: Var#41
+        result: Var#43
+    Expr_ArrayDimFetch
+        var: Var#39<$row2>
+        dim: LITERAL('title')
+        result: Var#44
+    Expr_Assign
+        var: Var#45<$title>
+        expr: Var#44
+        result: Var#46
+    Expr_ArrayDimFetch
+        var: Var#39<$row2>
+        dim: LITERAL('price')
+        result: Var#47
+    Expr_Assign
+        var: Var#48<$price>
+        expr: Var#47
+        result: Var#49
+    Expr_ArrayDimFetch
+        var: Var#39<$row2>
+        dim: LITERAL('description')
+        result: Var#50
+    Expr_Assign
+        var: Var#51<$description>
+        expr: Var#50
+        result: Var#52
+    Expr_ArrayDimFetch
+        var: Var#39<$row2>
+        dim: LITERAL('image_name')
+        result: Var#53
+    Expr_Assign
+        var: Var#54<$image_name>
+        expr: Var#53
+        result: Var#55
+    Terminal_Echo
+        expr: LITERAL('                        
+                                <div class="food-menu-box">
+                                    <div class="food-menu-img">
+                                        ')
+    Expr_BinaryOp_Equal
+        left: Var#54<$image_name>
+        right: LITERAL('')
+        result: Var#56
+    Stmt_JumpIf
+        cond: Var#56
+        if: Block#9
+        else: Block#10
+
+Block#8
+    Parent: Block#6
+    Parent: Block#5
+    Terminal_Echo
+        expr: LITERAL('
+                    
+        
+                    <div class="clearfix"></div>
+        
+                    
+        
+                </div>
+        
+            </section>
+            <!-- fOOD Menu Section Ends Here -->
+        
+            ')
+    Expr_Include
+        expr: LITERAL('partials-front/footer.php')
+        result: Var#57
+    Terminal_Return
+
+Block#9
+    Parent: Block#7
+    Terminal_Echo
+        expr: LITERAL('<div class=\'error\'>Image not Available.</div>')
+    Stmt_Jump
+        target: Block#11
+
+Block#10
+    Parent: Block#7
+    Terminal_Echo
+        expr: LITERAL('                                        <img src="')
+    Expr_ConstFetch
+        name: LITERAL('SITEURL')
+        result: Var#58
+    Terminal_Echo
+        expr: Var#58
+    Terminal_Echo
+        expr: LITERAL('images/food/')
+    Terminal_Echo
+        expr: Var#54<$image_name>
+    Terminal_Echo
+        expr: LITERAL('" alt="Chicke Hawain Pizza" class="img-responsive img-curve">
+                                                ')
+    Stmt_Jump
+        target: Block#11
+
+Block#11
+    Parent: Block#9
+    Parent: Block#10
+    Terminal_Echo
+        expr: LITERAL('                                
+                                    </div>
+        
+                                    <div class="food-menu-desc">
+                                        <h4>')
+    Terminal_Echo
+        expr: Var#45<$title>
+    Terminal_Echo
+        expr: LITERAL('</h4>
+                                        <p class="food-price">$')
+    Terminal_Echo
+        expr: Var#48<$price>
+    Terminal_Echo
+        expr: LITERAL('</p>
+                                        <p class="food-detail">
+                                            ')
+    Terminal_Echo
+        expr: Var#51<$description>
+    Terminal_Echo
+        expr: LITERAL('                                </p>
+                                        <br>
+        
+                                        <a href="')
+    Expr_ConstFetch
+        name: LITERAL('SITEURL')
+        result: Var#59
+    Terminal_Echo
+        expr: Var#59
+    Terminal_Echo
+        expr: LITERAL('order.php?food_id=')
+    Terminal_Echo
+        expr: Var#42<$id>
+    Terminal_Echo
+        expr: LITERAL('" class="btn btn-primary">Order Now</a>
+                                    </div>
+                                </div>
+        
+                                ')
+    Stmt_Jump
+        target: Block#5

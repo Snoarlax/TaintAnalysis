@@ -1,0 +1,482 @@
+
+Block#1
+    Stmt_Function<site_name>
+    Stmt_Function<site_url>
+    Stmt_Function<site_version>
+    Stmt_Function<nav_menu>
+    Stmt_Function<page_title>
+    Stmt_Function<page_content>
+    Stmt_Function<init>
+    Terminal_Return
+
+Function site_name(): mixed
+Block#1
+    Expr_FuncCall
+        name: LITERAL('config')
+        args[0]: LITERAL('name')
+        result: Var#1
+    Terminal_Echo
+        expr: Var#1
+    Terminal_Return
+
+Function site_url(): mixed
+Block#1
+    Expr_FuncCall
+        name: LITERAL('config')
+        args[0]: LITERAL('site_url')
+        result: Var#1
+    Terminal_Echo
+        expr: Var#1
+    Terminal_Return
+
+Function site_version(): mixed
+Block#1
+    Expr_FuncCall
+        name: LITERAL('config')
+        args[0]: LITERAL('version')
+        result: Var#1
+    Terminal_Echo
+        expr: Var#1
+    Terminal_Return
+
+Function nav_menu(): mixed
+Block#1
+    Expr_Param
+        declaredType: mixed
+        name: LITERAL('sep')
+        defaultVar: LITERAL(' | ')
+        result: Var#1<$sep>
+        defaultBlock: Block#2
+    Expr_Assign
+        var: Var#2<$nav_menu>
+        expr: LITERAL('')
+        result: Var#3
+    Expr_FuncCall
+        name: LITERAL('config')
+        args[0]: LITERAL('nav_menu')
+        result: Var#4
+    Expr_Assign
+        var: Var#5<$nav_items>
+        expr: Var#4
+        result: Var#6
+    Iterator_Reset
+        var: Var#5<$nav_items>
+    Stmt_Jump
+        target: Block#3
+
+Block#2
+
+Block#3
+    Parent: Block#1
+    Parent: Block#13
+    Var#7<$nav_menu> = Phi(Var#2<$nav_menu>, Var#8<$nav_menu>)
+    Iterator_Valid
+        var: Var#5<$nav_items>
+        result: Var#9
+    Stmt_JumpIf
+        cond: Var#9
+        if: Block#4
+        else: Block#5
+
+Block#4
+    Parent: Block#3
+    Iterator_Key
+        var: Var#5<$nav_items>
+        result: Var#10
+    Expr_Assign
+        var: Var#11<$uri>
+        expr: Var#10
+        result: Var#12
+    Iterator_Value
+        var: Var#5<$nav_items>
+        result: Var#13
+    Expr_Assign
+        var: Var#14<$name>
+        expr: Var#13
+        result: Var#15
+    Expr_ArrayDimFetch
+        var: Var#16<$_SERVER>
+        dim: LITERAL('QUERY_STRING')
+        result: Var#17
+    Expr_BinaryOp_Coalesce
+        left: Var#17
+        right: LITERAL('')
+        result: Var#18
+    Expr_FuncCall
+        name: LITERAL('str_replace')
+        args[0]: LITERAL('page=')
+        args[1]: LITERAL('')
+        args[2]: Var#18
+        result: Var#19
+    Expr_Assign
+        var: Var#20<$query_string>
+        expr: Var#19
+        result: Var#21
+    Expr_BinaryOp_Equal
+        left: Var#20<$query_string>
+        right: Var#11<$uri>
+        result: Var#22
+    Stmt_JumpIf
+        cond: Var#22
+        if: Block#6
+        else: Block#7
+
+Block#5
+    Parent: Block#3
+    Expr_FuncCall
+        name: LITERAL('trim')
+        args[0]: Var#7<$nav_menu>
+        args[1]: Var#1<$sep>
+        result: Var#23
+    Terminal_Echo
+        expr: Var#23
+    Terminal_Return
+
+Block#6
+    Parent: Block#4
+    Expr_Assign
+        var: Var#24
+        expr: LITERAL(' active')
+        result: Var#25
+    Stmt_Jump
+        target: Block#8
+
+Block#7
+    Parent: Block#4
+    Expr_Assign
+        var: Var#26
+        expr: LITERAL('')
+        result: Var#27
+    Stmt_Jump
+        target: Block#8
+
+Block#8
+    Parent: Block#6
+    Parent: Block#7
+    Var#28 = Phi(Var#24, Var#26)
+    Expr_Assign
+        var: Var#29<$class>
+        expr: Var#28
+        result: Var#30
+    Expr_FuncCall
+        name: LITERAL('config')
+        args[0]: LITERAL('site_url')
+        result: Var#31
+    Expr_BinaryOp_Concat
+        left: Var#31
+        right: LITERAL('/')
+        result: Var#32
+    Expr_FuncCall
+        name: LITERAL('config')
+        args[0]: LITERAL('pretty_uri')
+        result: Var#33
+    Stmt_JumpIf
+        cond: Var#33
+        if: Block#9
+        else: Block#10
+
+Block#9
+    Parent: Block#8
+    Parent: Block#10
+    Var#34 = Phi(LITERAL(true), Var#35)
+    Stmt_JumpIf
+        cond: Var#34
+        if: Block#11
+        else: Block#12
+
+Block#10
+    Parent: Block#8
+    Expr_BinaryOp_Equal
+        left: Var#11<$uri>
+        right: LITERAL('')
+        result: Var#36
+    Expr_Cast_Bool
+        expr: Var#36
+        result: Var#35
+    Stmt_Jump
+        target: Block#9
+
+Block#11
+    Parent: Block#9
+    Expr_Assign
+        var: Var#37
+        expr: LITERAL('')
+        result: Var#38
+    Stmt_Jump
+        target: Block#13
+
+Block#12
+    Parent: Block#9
+    Expr_Assign
+        var: Var#39
+        expr: LITERAL('?page=')
+        result: Var#40
+    Stmt_Jump
+        target: Block#13
+
+Block#13
+    Parent: Block#11
+    Parent: Block#12
+    Var#41 = Phi(Var#37, Var#39)
+    Expr_BinaryOp_Concat
+        left: Var#32
+        right: Var#41
+        result: Var#42
+    Expr_BinaryOp_Concat
+        left: Var#42
+        right: Var#11<$uri>
+        result: Var#43
+    Expr_Assign
+        var: Var#44<$url>
+        expr: Var#43
+        result: Var#45
+    Expr_BinaryOp_Concat
+        left: LITERAL('<a href="')
+        right: Var#44<$url>
+        result: Var#46
+    Expr_BinaryOp_Concat
+        left: Var#46
+        right: LITERAL('" title="')
+        result: Var#47
+    Expr_BinaryOp_Concat
+        left: Var#47
+        right: Var#14<$name>
+        result: Var#48
+    Expr_BinaryOp_Concat
+        left: Var#48
+        right: LITERAL('" class="item ')
+        result: Var#49
+    Expr_BinaryOp_Concat
+        left: Var#49
+        right: Var#29<$class>
+        result: Var#50
+    Expr_BinaryOp_Concat
+        left: Var#50
+        right: LITERAL('">')
+        result: Var#51
+    Expr_BinaryOp_Concat
+        left: Var#51
+        right: Var#14<$name>
+        result: Var#52
+    Expr_BinaryOp_Concat
+        left: Var#52
+        right: LITERAL('</a>')
+        result: Var#53
+    Expr_BinaryOp_Concat
+        left: Var#53
+        right: Var#1<$sep>
+        result: Var#54
+    Expr_BinaryOp_Concat
+        left: Var#7<$nav_menu>
+        right: Var#54
+        result: Var#55
+    Expr_Assign
+        var: Var#8<$nav_menu>
+        expr: Var#55
+        result: Var#56
+    Stmt_Jump
+        target: Block#3
+
+Function page_title(): mixed
+Block#1
+    Expr_ArrayDimFetch
+        var: Var#1<$_GET>
+        dim: LITERAL('page')
+        result: Var#2
+    Expr_Isset
+        vars[0]: Var#2
+        result: Var#3
+    Stmt_JumpIf
+        cond: Var#3
+        if: Block#2
+        else: Block#3
+
+Block#2
+    Parent: Block#1
+    Expr_ArrayDimFetch
+        var: Var#1<$_GET>
+        dim: LITERAL('page')
+        result: Var#4
+    Expr_FuncCall
+        name: LITERAL('htmlspecialchars')
+        args[0]: Var#4
+        result: Var#5
+    Expr_Assign
+        var: Var#6
+        expr: Var#5
+        result: Var#7
+    Stmt_Jump
+        target: Block#4
+
+Block#3
+    Parent: Block#1
+    Expr_Assign
+        var: Var#8
+        expr: LITERAL('Home')
+        result: Var#9
+    Stmt_Jump
+        target: Block#4
+
+Block#4
+    Parent: Block#2
+    Parent: Block#3
+    Var#10 = Phi(Var#6, Var#8)
+    Expr_Assign
+        var: Var#11<$page>
+        expr: Var#10
+        result: Var#12
+    Expr_FuncCall
+        name: LITERAL('str_replace')
+        args[0]: LITERAL('-')
+        args[1]: LITERAL(' ')
+        args[2]: Var#11<$page>
+        result: Var#13
+    Expr_FuncCall
+        name: LITERAL('ucwords')
+        args[0]: Var#13
+        result: Var#14
+    Terminal_Echo
+        expr: Var#14
+    Terminal_Return
+
+Function page_content(): mixed
+Block#1
+    Expr_ArrayDimFetch
+        var: Var#1<$_GET>
+        dim: LITERAL('page')
+        result: Var#2
+    Expr_Isset
+        vars[0]: Var#2
+        result: Var#3
+    Stmt_JumpIf
+        cond: Var#3
+        if: Block#2
+        else: Block#3
+
+Block#2
+    Parent: Block#1
+    Expr_ArrayDimFetch
+        var: Var#1<$_GET>
+        dim: LITERAL('page')
+        result: Var#4
+    Expr_Assign
+        var: Var#5
+        expr: Var#4
+        result: Var#6
+    Stmt_Jump
+        target: Block#4
+
+Block#3
+    Parent: Block#1
+    Expr_Assign
+        var: Var#7
+        expr: LITERAL('home')
+        result: Var#8
+    Stmt_Jump
+        target: Block#4
+
+Block#4
+    Parent: Block#2
+    Parent: Block#3
+    Var#9 = Phi(Var#5, Var#7)
+    Expr_Assign
+        var: Var#10<$page>
+        expr: Var#9
+        result: Var#11
+    Expr_FuncCall
+        name: LITERAL('getcwd')
+        result: Var#12
+    Expr_BinaryOp_Concat
+        left: Var#12
+        right: LITERAL('/')
+        result: Var#13
+    Expr_FuncCall
+        name: LITERAL('config')
+        args[0]: LITERAL('content_path')
+        result: Var#14
+    Expr_BinaryOp_Concat
+        left: Var#13
+        right: Var#14
+        result: Var#15
+    Expr_BinaryOp_Concat
+        left: Var#15
+        right: LITERAL('/')
+        result: Var#16
+    Expr_BinaryOp_Concat
+        left: Var#16
+        right: Var#10<$page>
+        result: Var#17
+    Expr_BinaryOp_Concat
+        left: Var#17
+        right: LITERAL('.phtml')
+        result: Var#18
+    Expr_Assign
+        var: Var#19<$path>
+        expr: Var#18
+        result: Var#20
+    Expr_FuncCall
+        name: LITERAL('file_exists')
+        args[0]: Var#19<$path>
+        result: Var#21
+    Expr_BooleanNot
+        expr: Var#21
+        result: Var#22
+    Stmt_JumpIf
+        cond: Var#22
+        if: Block#5
+        else: Block#6
+
+Block#5
+    Parent: Block#4
+    Expr_FuncCall
+        name: LITERAL('getcwd')
+        result: Var#23
+    Expr_BinaryOp_Concat
+        left: Var#23
+        right: LITERAL('/')
+        result: Var#24
+    Expr_FuncCall
+        name: LITERAL('config')
+        args[0]: LITERAL('content_path')
+        result: Var#25
+    Expr_BinaryOp_Concat
+        left: Var#24
+        right: Var#25
+        result: Var#26
+    Expr_BinaryOp_Concat
+        left: Var#26
+        right: LITERAL('/404.phtml')
+        result: Var#27
+    Expr_Assign
+        var: Var#28<$path>
+        expr: Var#27
+        result: Var#29
+    Stmt_Jump
+        target: Block#6
+
+Block#6
+    Parent: Block#5
+    Parent: Block#4
+    Var#30<$path> = Phi(Var#28<$path>, Var#19<$path>)
+    Expr_FuncCall
+        name: LITERAL('file_get_contents')
+        args[0]: Var#30<$path>
+        result: Var#31
+    Terminal_Echo
+        expr: Var#31
+    Terminal_Return
+
+Function init(): mixed
+Block#1
+    Expr_FuncCall
+        name: LITERAL('config')
+        args[0]: LITERAL('template_path')
+        result: Var#1
+    Expr_BinaryOp_Concat
+        left: Var#1
+        right: LITERAL('/template.php')
+        result: Var#2
+    Expr_Include
+        expr: Var#2
+        result: Var#3
+    Terminal_Return

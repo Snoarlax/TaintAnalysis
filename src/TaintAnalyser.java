@@ -8,6 +8,8 @@ import java.util.*;
 public class TaintAnalyser {
     // mark successors as changed, so they recompute the tainted set
     // todo: use constants for the output
+    // todo: change the valid .dat file to mention it has to be procedurally generated
+    // todo: implement "unsure"
     public static void main(String[] args) throws InvalidFileException {
         boolean tainted = false;
 
@@ -31,8 +33,6 @@ public class TaintAnalyser {
             if (block.isTaintedSink()) {
                 tainted = true;
                 System.out.println("Block: " + block.getBlockName() + " Is Tainted! ");
-                System.out.println();
-                System.out.println("TAINT CHAIN:");
                 for (Statement statement : block.getStatements())
                     if (statement.isTaintedSink()) {
                         HashSet<Variable> TaintedFrom = statement.TaintedBy();
@@ -56,17 +56,19 @@ public class TaintAnalyser {
                             TaintedFrom = NewTaintedFrom;
                         }
 
-                        System.out.println("        " + String.join(" --> ",  TaintChain));
+                        System.out.println("        " + "TAINT CHAIN:");
+                        System.out.println("                " + String.join(" --> ",  TaintChain));
                         System.out.println();
 
                         TaintType taintType = sinkType.getVulnerableTaint();
                         int spacing = -Integer.max(25, taintType.getMessage().length());
-                        System.out.println("VULNERABILITY TABLE:");
-                        System.out.printf("        " + String.join("", Collections.nCopies(5, "%"+spacing+"s")) + "%n",
+                        System.out.println("        " + "VULNERABILITY TABLE:");
+                        System.out.printf("                " + String.join("", Collections.nCopies(5, "%"+spacing+"s")) + "%n",
                                 "Vulnerability", "Confidentiality", "Integrity", "Availability", "Priority");
                         System.out.println();
-                        System.out.printf("        " + String.join("", Collections.nCopies(5, "%"+spacing+"s")) + "%n",
+                        System.out.printf("                " + String.join("", Collections.nCopies(5, "%"+spacing+"s")) + "%n",
                                 taintType.getMessage(),taintType.getConfidentiality(), taintType.getIntegrity(),taintType.getAvailability(), taintType.getPriority());
+                        System.out.println();
                     }
             }
 

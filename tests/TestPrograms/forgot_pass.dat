@@ -1,0 +1,269 @@
+
+Block#1
+    Expr_FuncCall
+        name: LITERAL('session_start')
+        result: Var#1
+    Expr_Include
+        expr: LITERAL('includes/db.php')
+        result: Var#2
+    Expr_Include
+        expr: LITERAL('includes/header.php')
+        result: Var#3
+    Expr_Include
+        expr: LITERAL('functions/functions.php')
+        result: Var#4
+    Expr_Include
+        expr: LITERAL('includes/main.php')
+        result: Var#5
+    Terminal_Echo
+        expr: LITERAL('
+          <main>
+            <!-- HERO -->
+            <div class="nero">
+              <div class="nero__heading">
+                <span class="nero__bold">Forgot</span> password
+              </div>
+              <p class="nero__text">
+              </p>
+            </div>
+          </main>
+        
+        <div id="content" ><!-- content Starts -->
+        <div class="container" ><!-- container Starts -->
+        
+        <div class="col-md-12" ><!--- col-md-12 Starts -->
+        
+        <ul class="breadcrumb" ><!-- breadcrumb Starts -->
+        
+        <li>
+        <a href="index.php">Home</a>
+        </li>
+        
+        <li>Register</li>
+        
+        </ul><!-- breadcrumb Ends -->
+        
+        
+        
+        </div><!--- col-md-12 Ends -->
+        
+        
+        <div class="col-md-12" ><!-- col-md-12 Starts -->
+        
+        <div class="box"><!-- box Starts -->
+        
+        <div class="box-header"><!-- box-header Starts -->
+        
+        <center>
+        
+        <h3> Enter Your Email Below , We Will Send You , Your Password </h3>
+        
+        </center>
+        
+        </div><!-- box-header Ends -->
+        
+        <div align="center"><!-- center div Starts -->
+        
+        <form action="" method="post"><!-- form Starts -->
+        
+        <input type="text" class="form-control" name="c_email" placeholder="Enter Your Email">
+        
+        <br>
+        
+        <input type="submit" name="forgot_pass" class="btn btn-primary" value="Send My Password">
+        
+        </form><!-- form Ends -->
+        
+        </div><!-- center div Ends -->
+        
+        </div><!-- box Ends -->
+        
+        </div><!-- col-md-12 Ends -->
+        
+        
+        </div><!-- container Ends -->
+        </div><!-- content Ends -->
+        
+        
+        
+        ')
+    Expr_Include
+        expr: LITERAL('includes/footer.php')
+        result: Var#6
+    Terminal_Echo
+        expr: LITERAL('
+        <script src="js/jquery.min.js"> </script>
+        
+        <script src="js/bootstrap.min.js"></script>
+        
+        </body>
+        </html>
+        
+        ')
+    Expr_ArrayDimFetch
+        var: Var#7<$_POST>
+        dim: LITERAL('forgot_pass')
+        result: Var#8
+    Expr_Isset
+        vars[0]: Var#8
+        result: Var#9
+    Stmt_JumpIf
+        cond: Var#9
+        if: Block#2
+        else: Block#3
+
+Block#2
+    Parent: Block#1
+    Expr_ArrayDimFetch
+        var: Var#7<$_POST>
+        dim: LITERAL('c_email')
+        result: Var#10
+    Expr_Assign
+        var: Var#11<$c_email>
+        expr: Var#10
+        result: Var#12
+    Expr_ConcatList
+        list[0]: LITERAL('select * from customers where customer_email=\'')
+        list[1]: Var#11<$c_email>
+        list[2]: LITERAL('\'')
+        result: Var#13
+    Expr_Assign
+        var: Var#14<$sel_c>
+        expr: Var#13
+        result: Var#15
+    Expr_FuncCall
+        name: LITERAL('mysqli_query')
+        args[0]: Var#16<$con>
+        args[1]: Var#14<$sel_c>
+        result: Var#17
+    Expr_Assign
+        var: Var#18<$run_c>
+        expr: Var#17
+        result: Var#19
+    Expr_FuncCall
+        name: LITERAL('mysqli_num_rows')
+        args[0]: Var#18<$run_c>
+        result: Var#20
+    Expr_Assign
+        var: Var#21<$count_c>
+        expr: Var#20
+        result: Var#22
+    Expr_FuncCall
+        name: LITERAL('mysqli_fetch_array')
+        args[0]: Var#18<$run_c>
+        result: Var#23
+    Expr_Assign
+        var: Var#24<$row_c>
+        expr: Var#23
+        result: Var#25
+    Expr_ArrayDimFetch
+        var: Var#24<$row_c>
+        dim: LITERAL('customer_name')
+        result: Var#26
+    Expr_Assign
+        var: Var#27<$c_name>
+        expr: Var#26
+        result: Var#28
+    Expr_ArrayDimFetch
+        var: Var#24<$row_c>
+        dim: LITERAL('customer_pass')
+        result: Var#29
+    Expr_Assign
+        var: Var#30<$c_pass>
+        expr: Var#29
+        result: Var#31
+    Expr_BinaryOp_Equal
+        left: Var#21<$count_c>
+        right: LITERAL(0)
+        result: Var#32
+    Stmt_JumpIf
+        cond: Var#32
+        if: Block#4
+        else: Block#5
+
+Block#3
+    Parent: Block#1
+    Parent: Block#5
+    Terminal_Return
+
+Block#4
+    Parent: Block#2
+    Terminal_Echo
+        expr: LITERAL('<script> alert(\'Sorry, We do not have your email\') </script>')
+    Terminal_Exit
+
+Block#5
+    Parent: Block#2
+    Expr_ConcatList
+        list[0]: LITERAL('
+        
+        <h1 align=\'center\'> Your Password Has Been Sent To You </h1>
+        
+        <h2 align=\'center\'> Dear ')
+        list[1]: Var#27<$c_name>
+        list[2]: LITERAL(' </h2>
+        
+        <h3 align=\'center\'>
+        
+        Your Password is : <span> <b>')
+        list[3]: Var#30<$c_pass>
+        list[4]: LITERAL('</b> </span>
+        
+        </h3>
+        
+        <h3 align=\'center\'>
+        
+        <a href=\'localhost/ecom_store/checkout.php\'>
+        
+        Click Here To Login Your Account
+        
+        </a>
+        
+        </h3>
+        
+        ')
+        result: Var#33
+    Expr_Assign
+        var: Var#34<$message>
+        expr: Var#33
+        result: Var#35
+    Expr_Assign
+        var: Var#36<$from>
+        expr: LITERAL('sad.ahmed22224@gmail.com')
+        result: Var#37
+    Expr_Assign
+        var: Var#38<$subject>
+        expr: LITERAL('Your Password')
+        result: Var#39
+    Expr_ConcatList
+        list[0]: LITERAL('From: ')
+        list[1]: Var#36<$from>
+        list[2]: LITERAL('
+        ')
+        result: Var#40
+    Expr_Assign
+        var: Var#41<$headers>
+        expr: Var#40
+        result: Var#42
+    Expr_BinaryOp_Concat
+        left: Var#41<$headers>
+        right: LITERAL('Content-type: text/html
+        ')
+        result: Var#43
+    Expr_Assign
+        var: Var#44<$headers>
+        expr: Var#43
+        result: Var#45
+    Expr_FuncCall
+        name: LITERAL('mail')
+        args[0]: Var#11<$c_email>
+        args[1]: Var#38<$subject>
+        args[2]: Var#34<$message>
+        args[3]: Var#44<$headers>
+        result: Var#46
+    Terminal_Echo
+        expr: LITERAL('<script> alert(\'Your Password has been sent to you, check your inbox \') </script>')
+    Terminal_Echo
+        expr: LITERAL('<script>window.open(\'checkout.php\',\'_self\')</script>')
+    Stmt_Jump
+        target: Block#3
