@@ -1,7 +1,8 @@
 package Statement;
 
+import java.util.Arrays;
+
 public enum TaintType {
-    // todo: replace with constants
     SQLI("SQL Injection", "HIGH", "HIGH", "HIGH", "CRITICAL"), // can do " or '
     XSS("Cross site scripting", "low", "low", "low", "medium"), // can do <, >
     INJECTION("Code injection", "HIGH", "HIGH", "HIGH", "CRITICAL"), // can do ;, ||, &&
@@ -36,5 +37,9 @@ public enum TaintType {
 
     public String getPriority() {
         return Priority;
+    }
+
+    public static Integer getMaxMessageLength() {
+        return Arrays.stream(TaintType.values()).mapToInt(x -> x.getMessage().length()).max().getAsInt();
     }
 }

@@ -1,6 +1,7 @@
 package Statement;
 
 import Statement.Expression.Sources;
+import org.hamcrest.Matcher;
 
 import java.util.*;
 
@@ -94,5 +95,14 @@ public class Variable {
     }
 
 
+    public boolean isRealVariable() {
+        // Variables which are not just from the SSA form are styled like Var#N<$variablename>
+        return VariableName.contains("<$");
+    }
 
+    public String getRealVariableName() {
+        // returns the non SSA form of the variable name if possible, else returns variable name.
+
+        return isRealVariable() ? VariableName.split("<")[1].split(">")[0] : VariableName;
+    }
 }

@@ -1,0 +1,68 @@
+
+Block#1
+    Expr_ArrayDimFetch
+        var: Var#1<$_GET>
+        dim: LITERAL('str')
+        result: Var#2
+    Expr_Assign
+        var: Var#3<$x>
+        expr: Var#2
+        result: Var#4
+    Expr_Assign
+        var: Var#5<$a>
+        expr: LITERAL(10)
+        result: Var#6
+    Stmt_Jump
+        target: Block#2
+
+Block#2
+    Parent: Block#1
+    Parent: Block#5
+    Var#7<$x> = Phi(Var#3<$x>, Var#8<$x>)
+    Expr_ConstFetch
+        name: LITERAL('true')
+        result: Var#9
+    Stmt_JumpIf
+        cond: Var#9
+        if: Block#3
+        else: Block#4
+
+Block#3
+    Parent: Block#2
+    Expr_FuncCall
+        name: LITERAL('htmlentities')
+        args[0]: Var#7<$x>
+        result: Var#10
+    Expr_Assign
+        var: Var#11<$x>
+        expr: Var#10
+        result: Var#12
+    Expr_BinaryOp_NotEqual
+        left: Var#5<$a>
+        right: LITERAL(0)
+        result: Var#13
+    Stmt_JumpIf
+        cond: Var#13
+        if: Block#5
+        else: Block#4
+
+Block#4
+    Parent: Block#2
+    Parent: Block#3
+    Var#14<$x> = Phi(Var#7<$x>, Var#11<$x>)
+    Terminal_Echo
+        expr: Var#14<$x>
+    Terminal_Return
+
+Block#5
+    Parent: Block#3
+    Expr_ArrayDimFetch
+        var: Var#1<$_GET>
+        dim: LITERAL('str')
+        result: Var#15
+    Expr_Assign
+        var: Var#8<$x>
+        expr: Var#15
+        result: Var#16
+    Stmt_Jump
+        target: Block#2

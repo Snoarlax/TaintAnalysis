@@ -1,5 +1,5 @@
 import Statement.*;
-import org.junit.Assert;
+import Statement.Expression.Sinks;
 
 import java.util.*;
 import java.util.regex.Pattern;
@@ -85,6 +85,7 @@ public class Block {
             // if the statement is a sink which gets tainted, mark the block as containing a tainted sink
             if (statement.isTaintedSink())
                 TaintedSink = true;
+
         }
     }
 
@@ -124,4 +125,5 @@ public class Block {
     public boolean isTaintedSink() {
         return TaintedSink;
     }
+
 }
