@@ -9,6 +9,7 @@ public enum ExpressionType {
     Expr_ArrayDimFetch,
     Expr_FuncCall,
     Expr_Print,
+    Expr_Eval,
     Expr_MethodCall,
     Expr_Default;
 

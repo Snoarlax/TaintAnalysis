@@ -23,8 +23,6 @@ public class TaintAnalyser {
         HashSet<TaintType> taintTypeList = new HashSet<>();
         HashSet<Statement> TaintedSinks = new HashSet<>();
 
-        System.out.println(Header);
-
         CFGParser parser = new CFGParser(args[0]);
         // Use a FiFo queue to manage which blocks need to be analysed.
         LinkedList<Block> workSet = new LinkedList<>();
@@ -54,6 +52,8 @@ public class TaintAnalyser {
             System.out.println(FailMessage);
 
         else {
+            System.out.println(Header);
+
             for (Statement statement : TaintedSinks) {
                 // Write summary of vulnerabilities for the program.
                 HashSet<Variable> TaintedFrom = statement.TaintedBy();
