@@ -1,9 +1,8 @@
-import Statement.Expression.Sinks;
+import TaintAnalysisComponents.Sinks;
 import Statement.Statement;
-import Statement.Variable;
-import Statement.TaintType;
+import TaintAnalysisComponents.Variable;
+import TaintAnalysisComponents.TaintType;
 
-import javax.swing.plaf.nimbus.State;
 import java.util.*;
 
 public class TaintAnalyser {

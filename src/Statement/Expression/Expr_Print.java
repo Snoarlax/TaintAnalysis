@@ -1,8 +1,9 @@
 package Statement.Expression;
 
-import Statement.TaintMap;
-import Statement.TaintType;
-import Statement.Variable;
+import TaintAnalysisComponents.Sinks;
+import TaintAnalysisComponents.TaintMap;
+import TaintAnalysisComponents.TaintType;
+import TaintAnalysisComponents.Variable;
 
 import java.util.HashSet;
 

@@ -1,6 +1,4 @@
-package Statement;
-
-import Statement.Variable;
+package TaintAnalysisComponents;
 
 import java.util.HashMap;
 

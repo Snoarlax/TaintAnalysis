@@ -1,4 +1,4 @@
-package Statement.Expression;
+package TaintAnalysisComponents;
 public enum Sources {
     $_GET,
     $_POST,

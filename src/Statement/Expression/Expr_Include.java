@@ -1,11 +1,10 @@
 package Statement.Expression;
 
-import Statement.TaintMap;
-import Statement.TaintType;
-import Statement.Variable;
+import TaintAnalysisComponents.Sinks;
+import TaintAnalysisComponents.TaintMap;
+import TaintAnalysisComponents.TaintType;
+import TaintAnalysisComponents.Variable;
 
-import java.beans.Expression;
-import java.util.Arrays;
 import java.util.HashSet;
 
 public class Expr_Include extends ExpressionStatement {

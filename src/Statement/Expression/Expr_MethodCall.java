@@ -1,8 +1,6 @@
 package Statement.Expression;
 
-import Statement.TaintMap;
-import Statement.TaintType;
-import Statement.Variable;
+import TaintAnalysisComponents.*;
 
 import java.util.Arrays;
 import java.util.HashSet;

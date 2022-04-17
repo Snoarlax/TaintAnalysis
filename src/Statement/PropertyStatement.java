@@ -1,6 +1,6 @@
 package Statement;
 
-import java.util.HashSet;
+import TaintAnalysisComponents.TaintMap;
 
 public class PropertyStatement extends Statement {
     private final String PropertyName;

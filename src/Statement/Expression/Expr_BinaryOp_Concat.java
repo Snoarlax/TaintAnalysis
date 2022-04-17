@@ -1,9 +1,7 @@
 package Statement.Expression;
 
-import Statement.TaintMap;
-import Statement.Variable;
-
-import java.util.HashSet;
+import TaintAnalysisComponents.TaintMap;
+import TaintAnalysisComponents.Variable;
 
 public class Expr_BinaryOp_Concat extends ExpressionStatement{
 
@@ -18,7 +16,7 @@ public class Expr_BinaryOp_Concat extends ExpressionStatement{
         Variable right = inputTaint.get(Arguments[1].split(": ",2)[1]);
 
         if (left.isTainted() || right.isTainted()) {
-            // Check if the resultant variable is already in the Statement.TaintMap, if not create a new Variable.
+            // Check if the resultant variable is already in the TaintAnalysisComponents.TaintMap, if not create a new Variable.
             Variable result = inputTaint.get(Arguments[2].split(": ", 2)[1]);
 
             result.setAllTainted(left.getTaints());

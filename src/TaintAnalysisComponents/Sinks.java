@@ -1,11 +1,4 @@
-package Statement.Expression;
-
-import Statement.TaintType;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
+package TaintAnalysisComponents;
 
 public enum Sinks {
     // Echo is detected in the TerminalStatement class, as it is labelled differently in the .dat files. The same goes for print and Expr_Print

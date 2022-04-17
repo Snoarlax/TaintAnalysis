@@ -1,6 +1,7 @@
 package Statement;
 
-import java.util.HashSet;
+import TaintAnalysisComponents.TaintMap;
+import TaintAnalysisComponents.Variable;
 
 public class AssignmentStatement extends Statement{
     private final String AssignedVariable;

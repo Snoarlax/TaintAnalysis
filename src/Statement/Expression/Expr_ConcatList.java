@@ -1,10 +1,9 @@
 package Statement.Expression;
 
-import Statement.TaintMap;
-import Statement.Variable;
+import TaintAnalysisComponents.TaintMap;
+import TaintAnalysisComponents.Variable;
 
 import java.util.Arrays;
-import java.util.HashSet;
 
 public class Expr_ConcatList extends ExpressionStatement{
 
@@ -24,7 +23,7 @@ public class Expr_ConcatList extends ExpressionStatement{
 
         // check if any of the arguments are tainted
         if (Arrays.stream(Variables).anyMatch(Variable::isTainted)) {
-            // Check if the resultant variable is already in the Statement.TaintMap, if not create a new Variable.
+            // Check if the resultant variable is already in the TaintAnalysisComponents.TaintMap, if not create a new Variable.
             Variable result = inputTaint.get(Arguments[Arguments.length-1].split(": ", 2)[1]);
 
             // Gets taint from all arguments into the result

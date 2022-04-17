@@ -1,5 +1,6 @@
 import Statement.*;
-import Statement.Expression.Sinks;
+import TaintAnalysisComponents.TaintMap;
+import TaintAnalysisComponents.Variable;
 
 import java.util.*;
 import java.util.regex.Pattern;
@@ -117,7 +118,7 @@ public class Block {
         return Arguments;
     }
 
-    public HashMap<Variable,Variable> getTainted() {
+    public HashMap<Variable, Variable> getTainted() {
         // It is important the result is a copy of the tainted Values, so the taint application is a serializable flow.
         return new HashMap<>(Tainted);
     }

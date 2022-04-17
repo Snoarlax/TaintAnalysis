@@ -1,6 +1,4 @@
-package Statement.Expression;
-
-import Statement.TaintType;
+package TaintAnalysisComponents;
 
 import java.util.HashSet;
 import java.util.List;

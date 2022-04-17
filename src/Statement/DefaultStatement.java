@@ -1,6 +1,6 @@
 package Statement;
 
-import java.util.HashSet;
+import TaintAnalysisComponents.TaintMap;
 
 public class DefaultStatement extends Statement{
     private final String rawStatement;

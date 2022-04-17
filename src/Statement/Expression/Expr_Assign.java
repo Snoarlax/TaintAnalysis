@@ -1,9 +1,7 @@
 package Statement.Expression;
 
-import Statement.TaintMap;
-import Statement.Variable;
-
-import java.util.HashSet;
+import TaintAnalysisComponents.TaintMap;
+import TaintAnalysisComponents.Variable;
 
 public class Expr_Assign extends ExpressionStatement{
 
