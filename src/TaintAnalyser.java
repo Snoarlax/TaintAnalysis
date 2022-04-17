@@ -7,17 +7,30 @@ import javax.swing.plaf.nimbus.State;
 import java.util.*;
 
 public class TaintAnalyser {
-    // mark successors as changed, so they recompute the tainted set
-    // todo: change the valid .dat file to mention it has to be procedurally generated
-    // todo: implement "unsure"
-    // todo: compare postorder iteration to round robin
-    // todo: remove SSA names if var name is there, add verbose mode to keep it
 
     public static void main(String[] args) throws InvalidFileException {
+
         boolean Verbose = false;
         String Delimiter = " --> ";
         String Header = "A" + Delimiter + "B: A Taints B";
         String FailMessage = "The Analyser could not find any injection vulnerabilities. ";
+        String UsageMessage = "TaintAnalyser [FILE] [OPTION]\n" +
+                "Uses Taint analyses to analyse FILE in CFG form for injection vulnerabilities.\n" +
+                "OPTIONS\n" +
+                "-v Print with Verbosity";
+        if (args.length != 1 && args.length != 2) {
+            System.out.println(UsageMessage);
+            return;
+        }
+
+        if (args.length == 2) {
+            if (args[1].equals("-v"))
+                Verbose = true;
+            else {
+                System.out.println(UsageMessage);
+                return;
+            }
+        }
 
         boolean tainted = false;
         HashSet<TaintType> taintTypeList = new HashSet<>();

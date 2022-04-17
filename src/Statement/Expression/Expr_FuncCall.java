@@ -6,10 +6,13 @@ import Statement.Variable;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 
 public class Expr_FuncCall extends ExpressionStatement{
     private final boolean isSink;
     private final boolean isSanitization;
+    private final boolean isSource;
+
     private boolean isTainted;
 
     private final HashSet<Variable> TaintedBy;
@@ -21,20 +24,27 @@ public class Expr_FuncCall extends ExpressionStatement{
         isTainted = false;
         isSink = computeSink(Arguments);
         isSanitization = computeSanitization(Arguments);
+        isSource = computeSource(Arguments);
 
         TaintedBy = new HashSet<>();
 
         sinkType = isSink ? findSinkType(Arguments) : null;
     }
 
+    private boolean computeSource(String[] Arguments) {
+        // returns true if the function name matches a Source name.
+        // Arguments[0] should be the array that the element is being fetched from
+        return Arrays.stream(Sources.values()).anyMatch(x -> Arguments[0].endsWith("LITERAL('" + x.name() + "')"));
+    }
+
     private boolean computeSanitization(String[] Arguments) {
-        // returns true if the variable name matches a Sanitizers name.
+        // returns true if the function name matches a Sanitizers name.
         // Arguments[0] should be the array that the element is being fetched from
         return Arrays.stream(Sanitizations.values()).anyMatch(x -> Arguments[0].endsWith("LITERAL('" + x.name() + "')"));
     }
 
     private boolean computeSink(String[] Arguments){
-        // returns true if the variable name matches a sinks name.
+        // returns true if the function name matches a sinks name.
         // Arguments[0] should be the array that the element is being fetched from
         return Arrays.stream(Sinks.values()).anyMatch(x -> Arguments[0].endsWith("LITERAL('" + x.name() + "')"));
     }
@@ -101,6 +111,9 @@ public class Expr_FuncCall extends ExpressionStatement{
 
              result.clearAllTainted(TaintsToClear);
         }
+
+        else if (isSource)
+            result.setAllTainted(List.of(TaintType.values()));
 
         // put the resultant variable with its taints into the TaintMap
         if (result.isTainted())

@@ -1,0 +1,21 @@
+
+Block#1
+    Expr_FuncCall
+        name: LITERAL('getallheaders')
+        result: Var#1
+    Expr_ArrayDimFetch
+        var: Var#1
+        dim: LITERAL('User-Agent')
+        result: Var#2
+    Terminal_Echo
+        expr: Var#2
+    Expr_FuncCall
+        name: LITERAL('apache_request_headers')
+        result: Var#3
+    Expr_ArrayDimFetch
+        var: Var#3
+        dim: LITERAL('Host')
+        result: Var#4
+    Terminal_Echo
+        expr: Var#4
+    Terminal_Return
