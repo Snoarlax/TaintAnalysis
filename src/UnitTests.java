@@ -452,6 +452,26 @@ public class UnitTests {
 
         assertTrue(TaintMap.isTainted("Var2"));
     }
+    @Test
+    @DisplayName("Check that Expr_Include computeTaintFromInput works correctly on a tainted argument. ")
+    public void ExprInclude_computeTaintFromInput_withTaint() {
+        // Arrange
+        String[] Arguments = new String[] { "expr: Var1", "result: Var2"};
+        TaintMap TaintMap = new TaintMap();
+
+        Variable Var1 = new Variable("Var1");
+        Var1.setTainted(TaintType.DIRECTORY);
+        TaintMap.put(Var1, Var1);
+
+        Expr_Include IncludeStatement = new Expr_Include("Expr_Include");
+
+        // Act
+        IncludeStatement.computeTaintFromInput(TaintMap, Arguments);
+
+        // Assert
+
+        assertTrue(TaintMap.isTainted("Var2"));
+    }
 
     @Test
     @DisplayName("Check that Expr_Eval computeTaintFromInput works correctly on a tainted argument. ")
@@ -484,6 +504,22 @@ public class UnitTests {
 
         // Act
         PrintStatement.computeTaintFromInput(TaintMap, Arguments);
+
+        // Assert
+
+        assertFalse(TaintMap.isTainted("Var2"));
+    }
+
+    @Test
+    @DisplayName("Check that Expr_Include computeTaintFromInput works correctly on a untainted argument. ")
+    public void ExprInclude_computeTaintFromInput_noTaint() {
+        // Arrange
+        String[] Arguments = new String[] { "expr: Var1", "result: Var2"};
+        TaintMap TaintMap = new TaintMap();
+        Expr_Include IncludeStatement = new Expr_Include("Expr_Include");
+
+        // Act
+        IncludeStatement.computeTaintFromInput(TaintMap, Arguments);
 
         // Assert
 
@@ -1387,6 +1423,27 @@ public class UnitTests {
     }
 
     @Test
+    @DisplayName("Check that the Expr_Include statement result tracks where variables are tainted from. ")
+    public void Expr_Include_TracksTaintedFrom() {
+        // Arrange
+        Expr_Include statement = new Expr_Include("Expr_Include");
+
+        Variable Var1 = new Variable("Var1");
+        Var1.setTainted(TaintType.DIRECTORY);
+
+        TaintMap inputTaint = new TaintMap();
+        inputTaint.put(Var1);
+
+        // Act
+
+        statement.computeTaintFromInput(inputTaint, new String[] {"expr: Var1", "result: Var2"});
+
+        // Assert
+
+        Assert.assertTrue(inputTaint.get("Var2").getTaintedFrom().contains(Var1));
+    }
+
+    @Test
     @DisplayName("Check that the Expr_Eval statement result tracks where variables are tainted from. ")
     public void Expr_Eval_TracksTaintedFrom() {
         // Arrange
@@ -1436,6 +1493,48 @@ public class UnitTests {
 
         Variable Var1 = new Variable("Var1");
         Var1.setTainted(TaintType.XSS);
+
+        TaintMap inputTaint = new TaintMap();
+        inputTaint.put(Var1);
+
+        // Act
+
+        statement.computeTaintFromInput(inputTaint, new String[] {"expr: Var1", "result: Var2"});
+
+        // Assert
+
+        Assert.assertTrue(statement.TaintedBy().contains(Var1));
+    }
+
+    @Test
+    @DisplayName("Check that the Expr_Include statement result does not track where untainted variables are tainted from. ")
+    public void Expr_Include_DoesNotTrack_TaintedFrom() {
+        // Arrange
+        Expr_Include statement = new Expr_Include("Expr_Include");
+
+        Variable Var1 = new Variable("Var1");
+
+        TaintMap inputTaint = new TaintMap();
+        inputTaint.put(Var1);
+
+        // Act
+
+        statement.computeTaintFromInput(inputTaint, new String[] {"expr: Var1", "result: Var2"});
+
+        // Assert
+
+        Assert.assertFalse(inputTaint.get("Var2").getTaintedFrom().contains(Var1));
+    }
+
+
+    @Test
+    @DisplayName("Check that the Expr_Include statement result tracks the variable the sink was tainted By. ")
+    public void Expr_Include_TracksTaintedBy() {
+        // Arrange
+        Expr_Include statement = new Expr_Include("Expr_Include");
+
+        Variable Var1 = new Variable("Var1");
+        Var1.setTainted(TaintType.DIRECTORY);
 
         TaintMap inputTaint = new TaintMap();
         inputTaint.put(Var1);

@@ -64,6 +64,9 @@ public enum StatementType {
         else if (ExprType == ExpressionType.Expr_Print) {
             return new Expr_Print(rawStatement);
         }
+        else if (ExprType == ExpressionType.Expr_Include) {
+            return new Expr_Include(rawStatement);
+        }
 
         return new Expr_Default(rawStatement);
     }

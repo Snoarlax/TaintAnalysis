@@ -1,0 +1,15 @@
+
+Block#1
+    Var#1<$_GET> = Phi()
+    Expr_ArrayDimFetch
+        var: Var#1<$_GET>
+        dim: LITERAL('location')
+        result: Var#2
+    Expr_Assign
+        var: Var#3<$a>
+        expr: Var#2
+        result: Var#4
+    Expr_Include
+        expr: Var#3<$a>
+        result: Var#5
+    Terminal_Return
