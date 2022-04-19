@@ -7,8 +7,7 @@ import java.util.*;
 
 public class TaintAnalyser {
 
-    public static void main(String[] args) throws InvalidFileException {
-
+    public static void main(String[] args) {
         boolean Verbose = false;
         String Delimiter = " --> ";
         String Header = "A" + Delimiter + "B: A Taints B";
@@ -34,8 +33,15 @@ public class TaintAnalyser {
         boolean tainted = false;
         HashSet<TaintType> taintTypeList = new HashSet<>();
         HashSet<Statement> TaintedSinks = new HashSet<>();
+        CFGLexer parser;
+        try {
+            parser = new CFGLexer(args[0]);
+        }
 
-        CFGParser parser = new CFGParser(args[0]);
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            return;
+        }
         // Use a FiFo queue to manage which blocks need to be analysed.
         LinkedList<Block> workSet = new LinkedList<>();
         workSet.add(parser.getBlocks()[0]);

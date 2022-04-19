@@ -6,19 +6,19 @@ import java.util.*;
 
 import Statement.*;
 
-public class CFGParser {
+public class CFGLexer {
     // Parses the output of the PHP-CFG programme into Block Objects I can analyse.
 
     private Block[] Blocks = null;
     private String Data = "";
 
-    CFGParser(String FileLocation) throws InvalidFileException{
+    CFGLexer(String FileLocation) throws InvalidFileException{
         ReadFile(FileLocation);
         ParseFile(Data);
 
     }
 
-    private void ReadFile(String FileLocation){
+    private void ReadFile(String FileLocation) throws InvalidFileException{
         try {
             File graph = new File(FileLocation);
             Scanner reader = new Scanner(graph);
@@ -31,8 +31,7 @@ public class CFGParser {
         }
 
         catch (FileNotFoundException e){
-            System.out.println("File: " + FileLocation + " cannot be found. ");
-            e.printStackTrace();
+            throw new InvalidFileException("File: " + FileLocation + " cannot be found. ");
         }
     }
 

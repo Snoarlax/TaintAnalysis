@@ -22,7 +22,6 @@ public class Block {
 
         if (!Pattern.compile("\n( {4})(?=[^\s])").matcher(rawBlock).find()) // check for regex matches for the Statement Delimiter
             throw new InvalidFileException("The file is not a valid CFG .dat file. ");
-
         BlockName  = rawBlock.split("\n", 2)[0];
 
         // Statements un-separated from their Arguments

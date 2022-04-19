@@ -19,7 +19,7 @@ public class UnitTests {
     @DisplayName("Tests that CFGParser returns a block for each block in the .dat file")
     public void CFGParser_TestParsing() throws InvalidFileException {
         // Arrange
-        CFGParser parser = new CFGParser("tests/test1.dat");
+        CFGLexer parser = new CFGLexer("tests/test1.dat");
         // Act
         int NoBlocks = parser.getBlocks().length;
         // Assert
@@ -34,7 +34,7 @@ public class UnitTests {
 
         // Act
         Exception exception = assertThrows(InvalidFileException.class, () -> {
-            CFGParser parser = new CFGParser("tests/InvalidFile.dat");
+            CFGLexer parser = new CFGLexer("tests/InvalidFile.dat");
         });
         String actualMessage = exception.getMessage();
 
@@ -47,7 +47,7 @@ public class UnitTests {
     @DisplayName("Test getBlock from CFGParser")
     public void CFGParser_TestGetBlock() throws InvalidFileException {
         // Arrange
-        CFGParser parser = new CFGParser("tests/test1.dat");
+        CFGLexer parser = new CFGLexer("tests/test1.dat");
         // Act
         Block Block2 = parser.getBlock("Block#2");
         // Assert
@@ -58,7 +58,7 @@ public class UnitTests {
     @DisplayName("Test getSucc from CFGParser")
     public void CFGParser_TestGetSucc() throws InvalidFileException {
         // Arrange
-        CFGParser parser = new CFGParser("tests/test1.dat");
+        CFGLexer parser = new CFGLexer("tests/test1.dat");
         // Act
         Block Block1 = parser.getBlock("Block#1");
         Block[] Successors = Block1.getSucc();
@@ -71,7 +71,7 @@ public class UnitTests {
     @DisplayName("Test getPred from CFGParser")
     public void CFGParser_TestGetPred() throws InvalidFileException {
         // Arrange
-        CFGParser parser = new CFGParser("tests/test1.dat");
+        CFGLexer parser = new CFGLexer("tests/test1.dat");
         // Act
         Block Block4 = parser.getBlock("Block#4");
         Block[] Predecessors = Block4.getPred();
@@ -84,7 +84,7 @@ public class UnitTests {
     @DisplayName("Test GetStatementType from Statement.StatementType")
     public void StatementType_TestGetStatementType() throws InvalidFileException {
         // Arrange
-        CFGParser parser = new CFGParser("tests/test1.dat");
+        CFGLexer parser = new CFGLexer("tests/test1.dat");
 
         // Act
         Block Block3 = parser.getBlock("Block#3");
@@ -102,7 +102,7 @@ public class UnitTests {
     public void ExpressionType_TestParseExpressionType() throws InvalidFileException {
 
         // Arrange
-        CFGParser parser = new CFGParser("tests/test2.dat");
+        CFGLexer parser = new CFGLexer("tests/test2.dat");
 
         // Act
         Block Block = parser.getBlock("Block#1");
@@ -191,7 +191,7 @@ public class UnitTests {
         // Created by parsing [ echo $a."fake')\nFakeArgument : LITERAL('FakeValue"; ]
 
         // Arrange
-        CFGParser parser = new CFGParser("tests/ExprTest.dat");
+        CFGLexer parser = new CFGLexer("tests/ExprTest.dat");
         // Act + Assert
         for (Block block : parser.getBlocks()){
             for (String[] arguments : block.getArguments().values()){
