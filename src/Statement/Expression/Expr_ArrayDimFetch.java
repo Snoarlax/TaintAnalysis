@@ -5,12 +5,12 @@ import TaintAnalysisComponents.Variable;
 
 public class Expr_ArrayDimFetch extends ExpressionStatement{
 
-    public Expr_ArrayDimFetch(String Expression){
-        super(Expression);
+    public Expr_ArrayDimFetch(String Expression, String[] Arguments){
+        super(Expression, Arguments);
     }
 
     @Override
-    public void computeTaintFromInput(TaintMap inputTaint, String[] Arguments) {
+    public void computeTaintFromInput(TaintMap inputTaint) {
         // if the array is tainted, then the result of getting anything from the array will be considered tainted. (Possible extension to make more fine grained)
         Variable var = inputTaint.get(Arguments[0].split(": ",2)[1]);
 

@@ -3,22 +3,17 @@ package Statement;
 import TaintAnalysisComponents.TaintMap;
 
 public class DefaultStatement extends Statement{
-    private final String rawStatement;
 
-    public DefaultStatement(String rawStatement) {
-        this.rawStatement = rawStatement;
+    public DefaultStatement(String StatementName, String[] Arguments) {
+        super(StatementName, Arguments);
     }
 
     // Does nothing by Default
     @Override
-    public void computeTaintFromInput(TaintMap inputTaint, String[] Arguments) {}
+    public void computeTaintFromInput(TaintMap inputTaint) {}
 
     @Override
     public StatementType getStatementType() {
         return StatementType.DEFAULT;
-    }
-
-    public String getRawStatement() {
-        return rawStatement;
     }
 }

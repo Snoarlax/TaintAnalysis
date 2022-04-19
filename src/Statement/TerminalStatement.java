@@ -8,25 +8,24 @@ import TaintAnalysisComponents.Variable;
 import java.util.HashSet;
 
 public class TerminalStatement extends Statement{
-    private final String TerminalName;
     private boolean Sink;
     private boolean tainted;
 
-    private HashSet<Variable> TaintedBy;
+    private final HashSet<Variable> TaintedBy;
 
-    public TerminalStatement(String terminalName) {
-        TerminalName = terminalName;
+    public TerminalStatement(String StatementName, String[] Arguments) {
+        super(StatementName, Arguments);
         tainted = false;
 
         // the only Terminal sink i know of is Terminal_Echo, which has only one argument
-        if (terminalName.equals("Terminal_Echo"))
+        if (StatementName.equals("Terminal_Echo"))
             Sink = true;
 
         TaintedBy = new HashSet<>();
     }
 
     @Override
-    public void computeTaintFromInput(TaintMap inputTaint, String[] Arguments) {
+    public void computeTaintFromInput(TaintMap inputTaint) {
         if (Sink && !tainted) {
             Variable expr = inputTaint.get(Arguments[0].split(": ", 2)[1]);
 
@@ -55,10 +54,6 @@ public class TerminalStatement extends Statement{
     @Override
     public Sinks getSinkType() {
         return isSink() ? Sinks.echo : null;
-    }
-
-    public String getTerminalName() {
-        return TerminalName;
     }
 
     public boolean isSink() {

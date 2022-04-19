@@ -8,14 +8,14 @@ public class AssignmentStatement extends Statement{
     private final String AssignedValue;
 
     public AssignmentStatement(String assignedVariable, String assignedValue) {
-        super();
+        super("", new String[0]);
         AssignedVariable = assignedVariable;
         AssignedValue = assignedValue;
 
     }
 
     @Override
-    public void computeTaintFromInput(TaintMap inputTaint, String[] Arguments) {
+    public void computeTaintFromInput(TaintMap inputTaint) {
         // put a new Variable in the Taint Set passed on to the next Statement. Make it have no types of taint registered.
         // Check if it is already in the taint map first, and if it is use that one
 

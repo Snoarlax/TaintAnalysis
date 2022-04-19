@@ -12,6 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import Statement.*;
 
+import javax.swing.plaf.nimbus.State;
 import java.util.*;
 
 public class UnitTests {
@@ -130,7 +131,7 @@ public class UnitTests {
 
 
         // Act
-        StatementWithTaint.computeTaintFromInput(TaintMap, new String[0]);
+        StatementWithTaint.computeTaintFromInput(TaintMap);
 
         // Assert
         assertTrue(TaintMap.isTainted("Var1"));
@@ -143,7 +144,7 @@ public class UnitTests {
         AssignmentStatement StatementWithNoTaint = new AssignmentStatement("Var1", "Var2");
         TaintMap TaintMap = new TaintMap();
         // Act
-        StatementWithNoTaint.computeTaintFromInput(TaintMap, new String[0]);
+        StatementWithNoTaint.computeTaintFromInput(TaintMap);
 
         // Assert
         assertFalse(TaintMap.isTainted("Var1"));
@@ -163,7 +164,7 @@ public class UnitTests {
 
 
         // Act
-        StatementWithTaint.computeTaintFromInput(TaintMap, new String[0]);
+        StatementWithTaint.computeTaintFromInput(TaintMap);
 
         // Assert
         assertTrue(TaintMap.isTainted("Var1"));
@@ -178,7 +179,7 @@ public class UnitTests {
         TaintMap TaintMap = new TaintMap();
 
         // Act
-        StatementWithNoTaint.computeTaintFromInput(TaintMap, new String[0]);
+        StatementWithNoTaint.computeTaintFromInput(TaintMap);
 
         // Assert
         assertFalse(TaintMap.isTainted("Var1"));
@@ -194,7 +195,8 @@ public class UnitTests {
         CFGLexer parser = new CFGLexer("tests/ExprTest.dat");
         // Act + Assert
         for (Block block : parser.getBlocks()){
-            for (String[] arguments : block.getArguments().values()){
+            for (Statement statement : block.getStatements()){
+                String[] arguments = statement.getArguments();
                 for (String argument : arguments){
                     // Check each argument's value, if it starts with LITERAL(' it must end with ') (where the last ' is unescaped)
                     String value = argument.split(": ",2)[1];
@@ -212,7 +214,6 @@ public class UnitTests {
     @DisplayName("Check that Expr_BinaryOp_Concat passes on taint correctly when given tainted arguments")
     public void ExpressionStatement_ExprBinaryOpConcat_computeTaintFromInput_WithTaintedArguments() {
         // Arrange
-        ExpressionStatement StatementWithTaint = new Expr_BinaryOp_Concat("Expr_BinaryOp_Concat");
 
         TaintMap TaintMap = new TaintMap();
         Variable Var1 = new Variable("Var1");
@@ -221,10 +222,11 @@ public class UnitTests {
         TaintMap.put(Var1, Var1);
 
         String[] Arguments = new String[]{"left: Var1","right: LITERAL('')", "result: Var2"};
+        ExpressionStatement StatementWithTaint = new Expr_BinaryOp_Concat("Expr_BinaryOp_Concat", Arguments);
 
 
         // Act
-        StatementWithTaint.computeTaintFromInput(TaintMap, Arguments);
+        StatementWithTaint.computeTaintFromInput(TaintMap);
 
         // Assert
         assertTrue(TaintMap.isTainted("Var2"));
@@ -234,14 +236,14 @@ public class UnitTests {
     @DisplayName("Check that Expr_BinaryOp_Concat passes on taint correctly when given untainted arguments")
     public void ExpressionStatement_ExprBinaryOpConcat_computeTaintFromInput_NoTaintedArguments() {
         // Arrange
-        ExpressionStatement StatementWithNoTaint = new Expr_BinaryOp_Concat("Expr_BinaryOp_Concat");
         TaintMap TaintMap = new TaintMap();
         Variable Var2 = new Variable("Var2");
         String[] Arguments = new String[]{"left: Var1","right: LITERAL('')", "result: Var2"};
+        ExpressionStatement StatementWithNoTaint = new Expr_BinaryOp_Concat("Expr_BinaryOp_Concat", Arguments);
 
 
         // Act
-        StatementWithNoTaint.computeTaintFromInput(TaintMap, Arguments);
+        StatementWithNoTaint.computeTaintFromInput(TaintMap);
 
         // Assert
         assertFalse(TaintMap.isTainted(Var2));
@@ -251,7 +253,6 @@ public class UnitTests {
     @DisplayName("Check that Expr_ConcatList passes on taint correctly when given tainted arguments")
     public void ExpressionStatement_ExprConcatList_computeTaintFromInput_WithTaintedArguments() {
         // Arrange
-        ExpressionStatement StatementWithTaint = new Expr_ConcatList("Expr_ConcatList");
 
         TaintMap TaintMap = new TaintMap();
         Variable Var1 = new Variable("Var1");
@@ -260,10 +261,11 @@ public class UnitTests {
         TaintMap.put(Var1, Var1);
 
         String[] Arguments = new String[]{"list[0]: Var1","list[1]: LITERAL('')","list[0]: Var2", "result: Var3"};
+        ExpressionStatement StatementWithTaint = new Expr_ConcatList("Expr_ConcatList", Arguments);
 
 
         // Act
-        StatementWithTaint.computeTaintFromInput(TaintMap, Arguments);
+        StatementWithTaint.computeTaintFromInput(TaintMap);
 
         // Assert
         assertTrue(TaintMap.isTainted("Var3"));
@@ -273,12 +275,12 @@ public class UnitTests {
     @DisplayName("Check that Expr_ConcatList passes on taint correctly when given untainted arguments")
     public void ExpressionStatement_ExprConcatList_computeTaintFromInput_NoTaintedArguments() {
         // Arrange
-        ExpressionStatement StatementWithNoTaint = new Expr_ConcatList("Expr_ConcatList");
         TaintMap TaintMap = new TaintMap();
         String[] Arguments = new String[]{"list[0]: Var1","list[1]: LITERAL('')","list[0]: Var2", "result: Var3"};
+        ExpressionStatement StatementWithNoTaint = new Expr_ConcatList("Expr_ConcatList", Arguments);
 
         // Act
-        StatementWithNoTaint.computeTaintFromInput(TaintMap, Arguments);
+        StatementWithNoTaint.computeTaintFromInput(TaintMap);
 
         // Assert
         assertFalse(TaintMap.isTainted("Var3"));
@@ -288,7 +290,6 @@ public class UnitTests {
     @DisplayName("Check that Expr_Assign passes on taint correctly when given tainted arguments")
     public void ExpressionStatement_ExprAssign_computeTaintFromInput_WithTaintedArguments() {
         // Arrange
-        ExpressionStatement StatementWithTaint = new Expr_Assign("Expr_Assign");
 
         TaintMap TaintMap = new TaintMap();
         Variable Var1 = new Variable("Var1", new HashSet<>());
@@ -297,10 +298,11 @@ public class UnitTests {
         TaintMap.put(Var1, Var1);
 
         String[] Arguments = new String[]{"var: Var2", "expr: Var1", "result: Var3"};
+        ExpressionStatement StatementWithTaint = new Expr_Assign("Expr_Assign", Arguments);
 
 
         // Act
-        StatementWithTaint.computeTaintFromInput(TaintMap, Arguments);
+        StatementWithTaint.computeTaintFromInput(TaintMap);
 
         // Assert
         assertTrue(TaintMap.isTainted("Var2") &&
@@ -311,15 +313,15 @@ public class UnitTests {
     @DisplayName("Check that Expr_Assign passes on taint correctly when given untainted arguments")
     public void ExpressionStatement_ExprAssign_computeTaintFromInput_NoTaintedArguments() {
         // Arrange
-        ExpressionStatement StatementWithNoTaint = new Expr_ConcatList("Expr_ConcatList");
 
         TaintMap TaintMap = new TaintMap();
 
         String[] Arguments = new String[]{"var: Var2", "expr: Var1", "result: Var3"};
+        ExpressionStatement StatementWithNoTaint = new Expr_ConcatList("Expr_ConcatList", Arguments);
 
 
         // Act
-        StatementWithNoTaint.computeTaintFromInput(TaintMap, Arguments);
+        StatementWithNoTaint.computeTaintFromInput(TaintMap);
 
         // Assert
         assertFalse(TaintMap.isTainted("Var2")
@@ -330,19 +332,19 @@ public class UnitTests {
     @DisplayName("Check that Expr_Assign passes on taint correctly when given untainted arguments and already tainted variables")
     public void ExpressionStatement_ExprAssign_computeTaintFromInput_TaintedResults() {
         // Arrange
-        ExpressionStatement StatementWithNoTaint = new Expr_Assign("Expr_Assign");
 
         TaintMap TaintMap = new TaintMap();
         Variable Var2 = new Variable("Var2");
 
 
         String[] Arguments = new String[]{"var: Var2", "expr: Var1", "result: Var3"};
+        ExpressionStatement StatementWithNoTaint = new Expr_Assign("Expr_Assign", Arguments);
 
         Var2.setTainted(TaintType.XSS);
         TaintMap.put(Var2, Var2);
 
         // Act
-        StatementWithNoTaint.computeTaintFromInput(TaintMap, Arguments);
+        StatementWithNoTaint.computeTaintFromInput(TaintMap);
 
         // Assert
         assertTrue(TaintMap.isTainted("Var2") && !TaintMap.isTainted("Var3") && !TaintMap.isTainted("Var1"));
@@ -352,18 +354,18 @@ public class UnitTests {
     @DisplayName("Check that Terminal statements correctly mark themselves as tainted if given a tainted argument. ")
     public void TerminalStatement_computeTaintFromInput_CorrectlyRegistersTaintedArguments() {
         // Arrange
-        TerminalStatement StatementWithTaint = new TerminalStatement("Terminal_Echo");
 
         TaintMap TaintMap = new TaintMap();
         Variable Var1 = new Variable("Var1", new HashSet<>());
 
         String[] Arguments = new String[]{"expr: Var1"};
+        TerminalStatement StatementWithTaint = new TerminalStatement("Terminal_Echo", Arguments);
 
         Var1.setTainted(TaintType.XSS);
         TaintMap.put(Var1, Var1);
 
         // Act
-        StatementWithTaint.computeTaintFromInput(TaintMap, Arguments);
+        StatementWithTaint.computeTaintFromInput(TaintMap);
 
         // Assert
         assertTrue(StatementWithTaint.isTainted());
@@ -373,13 +375,13 @@ public class UnitTests {
     @DisplayName("Check that Terminal statements correctly mark themselves as untainted if given an untainted argument. ")
     public void TerminalStatement_computeTaintFromInput_CorrectlyRegistersUntaintedArguments() {
         // Arrange
-        TerminalStatement StatementWithTaint = new TerminalStatement("Terminal_Echo");
 
         TaintMap TaintMap = new TaintMap();
         String[] Arguments = new String[]{"expr: Var1"};
+        TerminalStatement StatementWithTaint = new TerminalStatement("Terminal_Echo", Arguments);
 
         // Act
-        StatementWithTaint.computeTaintFromInput(TaintMap, Arguments);
+        StatementWithTaint.computeTaintFromInput(TaintMap);
 
         // Assert
         assertFalse(StatementWithTaint.isTainted());
@@ -389,7 +391,7 @@ public class UnitTests {
     @DisplayName("Check that Terminal statements correctly mark themselves as a sink if it is Terminal_Echo. ")
     public void TerminalStatement_TerminalEcho_MarkedAs_Sink() {
         // Arrange + Act
-        TerminalStatement Statement = new TerminalStatement("Terminal_Echo");
+        TerminalStatement Statement = new TerminalStatement("Terminal_Echo", new String[] {});
 
         // Assert
         assertTrue(Statement.isSink());
@@ -399,7 +401,7 @@ public class UnitTests {
     @DisplayName("Check that Terminal statements correctly mark themselves as a not a sink if it is not Terminal_Echo. ")
     public void TerminalStatement_NotTerminalEcho_NotMarkedAs_Sink() {
         // Arrange + Act
-        TerminalStatement Statement = new TerminalStatement("Terminal_NotEcho");
+        TerminalStatement Statement = new TerminalStatement("Terminal_NotEcho", new String[] {});
 
         // Assert
         assertFalse(Statement.isSink());
@@ -411,10 +413,10 @@ public class UnitTests {
         // Arrange
         String[] Arguments = new String[] {"var: Var#1<$_GET>","dim: LITERAL('str')","result: Var#2"};
         TaintMap TaintMap = new TaintMap();
-        Expr_ArrayDimFetch SourceStatement = new Expr_ArrayDimFetch("Expr_ArrayDimFetch");
+        Expr_ArrayDimFetch SourceStatement = new Expr_ArrayDimFetch("Expr_ArrayDimFetch", Arguments);
 
         // Act
-        SourceStatement.computeTaintFromInput(TaintMap,Arguments);
+        SourceStatement.computeTaintFromInput(TaintMap);
         // Assert
         assertTrue(TaintMap.isTainted("Var#2"));
     }
@@ -425,10 +427,10 @@ public class UnitTests {
         // Arrange
         String[] Arguments = new String[] {"var: Var#1<SAFE>","dim: LITERAL('str')","result: Var#2"};
         TaintMap TaintMap = new TaintMap();
-        Expr_ArrayDimFetch SourceStatement = new Expr_ArrayDimFetch("Expr_ArrayDimFetch");
+        Expr_ArrayDimFetch SourceStatement = new Expr_ArrayDimFetch("Expr_ArrayDimFetch", Arguments);
 
         // Act
-        SourceStatement.computeTaintFromInput(TaintMap,Arguments);
+        SourceStatement.computeTaintFromInput(TaintMap);
         // Assert
         assertFalse(TaintMap.isTainted("Var#2"));
     }
@@ -444,10 +446,10 @@ public class UnitTests {
         Var1.setTainted(TaintType.XSS);
         TaintMap.put(Var1, Var1);
 
-        Expr_Print PrintStatement = new Expr_Print("Expr_Print");
+        Expr_Print PrintStatement = new Expr_Print("Expr_Print", Arguments);
 
         // Act
-        PrintStatement.computeTaintFromInput(TaintMap, Arguments);
+        PrintStatement.computeTaintFromInput(TaintMap);
 
         // Assert
 
@@ -464,10 +466,10 @@ public class UnitTests {
         Var1.setTainted(TaintType.DIRECTORY);
         TaintMap.put(Var1, Var1);
 
-        Expr_Include IncludeStatement = new Expr_Include("Expr_Include");
+        Expr_Include IncludeStatement = new Expr_Include("Expr_Include", Arguments);
 
         // Act
-        IncludeStatement.computeTaintFromInput(TaintMap, Arguments);
+        IncludeStatement.computeTaintFromInput(TaintMap);
 
         // Assert
 
@@ -485,10 +487,10 @@ public class UnitTests {
         Var1.setTainted(TaintType.INJECTION);
         TaintMap.put(Var1, Var1);
 
-        Expr_Eval EvalStatement = new Expr_Eval("Expr_Eval");
+        Expr_Eval EvalStatement = new Expr_Eval("Expr_Eval", Arguments);
 
         // Act
-        EvalStatement.computeTaintFromInput(TaintMap, Arguments);
+        EvalStatement.computeTaintFromInput(TaintMap);
 
         // Assert
 
@@ -501,10 +503,10 @@ public class UnitTests {
         // Arrange
         String[] Arguments = new String[] { "expr: Var1", "result: Var2"};
         TaintMap TaintMap = new TaintMap();
-        Expr_Print PrintStatement = new Expr_Print("Expr_Print");
+        Expr_Print PrintStatement = new Expr_Print("Expr_Print", Arguments);
 
         // Act
-        PrintStatement.computeTaintFromInput(TaintMap, Arguments);
+        PrintStatement.computeTaintFromInput(TaintMap);
 
         // Assert
 
@@ -517,10 +519,10 @@ public class UnitTests {
         // Arrange
         String[] Arguments = new String[] { "expr: Var1", "result: Var2"};
         TaintMap TaintMap = new TaintMap();
-        Expr_Include IncludeStatement = new Expr_Include("Expr_Include");
+        Expr_Include IncludeStatement = new Expr_Include("Expr_Include", Arguments);
 
         // Act
-        IncludeStatement.computeTaintFromInput(TaintMap, Arguments);
+        IncludeStatement.computeTaintFromInput(TaintMap);
 
         // Assert
 
@@ -533,10 +535,10 @@ public class UnitTests {
         // Arrange
         String[] Arguments = new String[] { "expr: Var1", "result: Var2"};
         TaintMap TaintMap = new TaintMap();
-        Expr_Eval EvalStatement = new Expr_Eval("Expr_Eval");
+        Expr_Eval EvalStatement = new Expr_Eval("Expr_Eval", Arguments);
 
         // Act
-        EvalStatement.computeTaintFromInput(TaintMap, Arguments);
+        EvalStatement.computeTaintFromInput(TaintMap);
 
         // Assert
 
@@ -557,7 +559,7 @@ public class UnitTests {
         Expr_FuncCall FuncCall = new Expr_FuncCall("Expr_FuncCall", Arguments);
 
         // Act
-        FuncCall.computeTaintFromInput(TaintMap, Arguments);
+        FuncCall.computeTaintFromInput(TaintMap);
 
         // Assert
 
@@ -573,7 +575,7 @@ public class UnitTests {
         Expr_FuncCall FuncCallStatement = new Expr_FuncCall("Expr_FuncCall", Arguments);
 
         // Act
-        FuncCallStatement.computeTaintFromInput(TaintMap, Arguments);
+        FuncCallStatement.computeTaintFromInput(TaintMap);
 
         // Assert
 
@@ -646,7 +648,7 @@ public class UnitTests {
         Expr_MethodCall MethodCall = new Expr_MethodCall("Expr_MethodCall", Arguments);
 
         // Act
-        MethodCall.computeTaintFromInput(TaintMap, Arguments);
+        MethodCall.computeTaintFromInput(TaintMap);
 
         // Assert
 
@@ -662,7 +664,7 @@ public class UnitTests {
         Expr_MethodCall MethodCallStatement = new Expr_MethodCall("Expr_MethodCall", Arguments);
 
         // Act
-        MethodCallStatement.computeTaintFromInput(TaintMap, Arguments);
+        MethodCallStatement.computeTaintFromInput(TaintMap);
 
         // Assert
 
@@ -816,7 +818,7 @@ public class UnitTests {
             String[] Arguments = new String[]{"name: LITERAL('" + SQLISan.name() + "')", "args[0]: tainted", "result: result"};
             Expr_FuncCall FuncCallStatement = new Expr_FuncCall("Expr_FuncCall", Arguments);
             // Act
-            FuncCallStatement.computeTaintFromInput(SQLITaintedMap, Arguments);
+            FuncCallStatement.computeTaintFromInput(SQLITaintedMap);
             // Assert
             Assert.assertFalse(SQLITaintedMap.isTainted("result"));
         }
@@ -835,7 +837,7 @@ public class UnitTests {
             String[] Arguments = new String[]{"name: LITERAL('" + TraversalSan.name() + "')", "args[0]: tainted", "result: result"};
             Expr_FuncCall FuncCallStatement = new Expr_FuncCall("Expr_FuncCall", Arguments);
             // Act
-            FuncCallStatement.computeTaintFromInput(TraversalSanitization, Arguments);
+            FuncCallStatement.computeTaintFromInput(TraversalSanitization);
             // Assert
             Assert.assertFalse(TraversalSanitization.isTainted("result"));
         }
@@ -854,7 +856,7 @@ public class UnitTests {
             String[] Arguments = new String[]{"name: LITERAL('" + InjectionSan.name() + "')", "args[0]: tainted", "result: result"};
             Expr_FuncCall FuncCallStatement = new Expr_FuncCall("Expr_FuncCall", Arguments);
             // Act
-            FuncCallStatement.computeTaintFromInput(InjectionTaintedMap, Arguments);
+            FuncCallStatement.computeTaintFromInput(InjectionTaintedMap);
             // Assert
             Assert.assertFalse(InjectionTaintedMap.isTainted("result"));
         }
@@ -873,7 +875,7 @@ public class UnitTests {
             String[] Arguments = new String[]{"name: LITERAL('" + XSSsan.name() + "')", "args[0]: tainted", "result: result"};
             Expr_FuncCall FuncCallStatement = new Expr_FuncCall("Expr_FuncCall", Arguments);
             // Act
-            FuncCallStatement.computeTaintFromInput(XSSTaintedMap, Arguments);
+            FuncCallStatement.computeTaintFromInput(XSSTaintedMap);
             // Assert
             Assert.assertFalse(XSSTaintedMap.isTainted("result"));
         }
@@ -902,7 +904,7 @@ public class UnitTests {
             String[] Arguments = new String[]{"name: LITERAL('" + SQLISan.name() + "')", "args[0]: tainted", "result: result"};
             Expr_FuncCall FuncCallStatement = new Expr_FuncCall("Expr_FuncCall", Arguments);
             // Act
-            FuncCallStatement.computeTaintFromInput(SQLITaintedMap, Arguments);
+            FuncCallStatement.computeTaintFromInput(SQLITaintedMap);
             // Assert
             Assert.assertTrue(SQLITaintedMap.isTainted("result"));
         }
@@ -921,7 +923,7 @@ public class UnitTests {
             String[] Arguments = new String[]{"name: LITERAL('" + TraversalSan.name() + "')", "args[0]: tainted", "result: result"};
             Expr_FuncCall FuncCallStatement = new Expr_FuncCall("Expr_FuncCall", Arguments);
             // Act
-            FuncCallStatement.computeTaintFromInput(TraversalSanitization, Arguments);
+            FuncCallStatement.computeTaintFromInput(TraversalSanitization);
             // Assert
             Assert.assertTrue(TraversalSanitization.isTainted("result"));
         }
@@ -940,7 +942,7 @@ public class UnitTests {
             String[] Arguments = new String[]{"name: LITERAL('" + InjectionSan.name() + "')", "args[0]: tainted", "result: result"};
             Expr_FuncCall FuncCallStatement = new Expr_FuncCall("Expr_FuncCall", Arguments);
             // Act
-            FuncCallStatement.computeTaintFromInput(InjectionTaintedMap, Arguments);
+            FuncCallStatement.computeTaintFromInput(InjectionTaintedMap);
             // Assert
             Assert.assertTrue(InjectionTaintedMap.isTainted("result"));
         }
@@ -959,7 +961,7 @@ public class UnitTests {
             String[] Arguments = new String[]{"name: LITERAL('" + XSSsan.name() + "')", "args[0]: tainted", "result: result"};
             Expr_FuncCall FuncCallStatement = new Expr_FuncCall("Expr_FuncCall", Arguments);
             // Act
-            FuncCallStatement.computeTaintFromInput(XSSTaintedMap, Arguments);
+            FuncCallStatement.computeTaintFromInput(XSSTaintedMap);
             // Assert
             Assert.assertTrue(XSSTaintedMap.isTainted("result"));
         }
@@ -979,7 +981,7 @@ public class UnitTests {
 
         // Act
 
-        statement.computeTaintFromInput(inputTaint, null);
+        statement.computeTaintFromInput(inputTaint);
         Variable Var2 = inputTaint.get("Var2");
 
         // Assert
@@ -1000,7 +1002,7 @@ public class UnitTests {
 
         // Act
 
-        statement.computeTaintFromInput(inputTaint, null);
+        statement.computeTaintFromInput(inputTaint);
         Variable Var2 = inputTaint.get("Var2");
 
         // Assert
@@ -1025,7 +1027,7 @@ public class UnitTests {
 
         // Act
 
-        statement.computeTaintFromInput(inputTaint, null);
+        statement.computeTaintFromInput(inputTaint);
         Variable Var2 = inputTaint.get("Var2");
 
         // Assert
@@ -1048,7 +1050,7 @@ public class UnitTests {
 
         // Act
 
-        statement.computeTaintFromInput(inputTaint, null);
+        statement.computeTaintFromInput(inputTaint);
         Variable Var2 = inputTaint.get("Var2");
 
         // Assert
@@ -1060,7 +1062,7 @@ public class UnitTests {
     @DisplayName("Check that the Terminal statement result tracks which variable it gets its taint from. ")
     public void TerminalStatement_TracksTaintedBy() {
         // Arrange
-        TerminalStatement statement = new TerminalStatement("Terminal_Echo");
+        TerminalStatement statement = new TerminalStatement("Terminal_Echo", new String[] {"expr: Var1"});
 
         Variable Var1 = new Variable("Var1");
         Var1.setTainted(TaintType.XSS);
@@ -1070,7 +1072,7 @@ public class UnitTests {
 
         // Act
 
-        statement.computeTaintFromInput(inputTaint, new String[] {"expr: Var1"});
+        statement.computeTaintFromInput(inputTaint);
 
         // Assert
 
@@ -1081,7 +1083,7 @@ public class UnitTests {
     @DisplayName("Check that the Terminal statement result does not track where it gets its taint from if the expression is untainted. ")
     public void TerminalStatement_DoesNotTrackTaintedBy() {
         // Arrange
-        TerminalStatement statement = new TerminalStatement("Terminal_Echo");
+        TerminalStatement statement = new TerminalStatement("Terminal_Echo", new String[] {"expr: Var1"});
 
         Variable Var1 = new Variable("Var1");
 
@@ -1090,7 +1092,7 @@ public class UnitTests {
 
         // Act
 
-        statement.computeTaintFromInput(inputTaint, new String[] {"expr: Var1"});
+        statement.computeTaintFromInput(inputTaint);
 
         // Assert
 
@@ -1101,7 +1103,7 @@ public class UnitTests {
     @DisplayName("Check that the ExprArrayDimFetch statement result tracks where variables get tainted from. ")
     public void ExprArrayDimFetch_Tracks_TaintedFrom() {
         // Arrange
-        Expr_ArrayDimFetch statement = new Expr_ArrayDimFetch("Expr_ArrayDimFetch");
+        Expr_ArrayDimFetch statement = new Expr_ArrayDimFetch("Expr_ArrayDimFetch", new String[] {"var: Var1", "dim: 2", "result: Var2"});
 
         Variable Var1 = new Variable("Var1");
         Var1.setTainted(TaintType.XSS);
@@ -1111,7 +1113,7 @@ public class UnitTests {
 
         // Act
 
-        statement.computeTaintFromInput(inputTaint, new String[] {"var: Var1", "dim: 2", "result: Var2"});
+        statement.computeTaintFromInput(inputTaint);
 
         // Assert
 
@@ -1122,7 +1124,7 @@ public class UnitTests {
     @DisplayName("Check that the ExprArrayDimFetch statement result does not track where it gets its taint from if the expression is untainted. ")
     public void ExprArrayDimFetch_DoesNotTrack_TaintedFrom_NoTaint() {
         // Arrange
-        Expr_ArrayDimFetch statement = new Expr_ArrayDimFetch("Expr_ArrayDimFetch");
+        Expr_ArrayDimFetch statement = new Expr_ArrayDimFetch("Expr_ArrayDimFetch", new String[] {"var: Var1", "dim: 2", "result: Var2"});
 
         Variable Var1 = new Variable("Var1");
 
@@ -1131,7 +1133,7 @@ public class UnitTests {
 
         // Act
 
-        statement.computeTaintFromInput(inputTaint, new String[] {"var: Var1", "dim: 2", "result: Var2"});
+        statement.computeTaintFromInput(inputTaint);
 
         // Assert
 
@@ -1142,7 +1144,7 @@ public class UnitTests {
     @DisplayName("Check that the ExprAssign statement result tracks where variables are tainted from. ")
     public void ExprAssign_TracksTaintedFrom() {
         // Arrange
-        Expr_Assign statement = new Expr_Assign("Expr_Assign");
+        Expr_Assign statement = new Expr_Assign("Expr_Assign", new String[] {"var: Var2", "expr: Var1", "result: Var3"});
 
         Variable Var1 = new Variable("Var1");
         Var1.setTainted(TaintType.XSS);
@@ -1152,7 +1154,7 @@ public class UnitTests {
 
         // Act
 
-        statement.computeTaintFromInput(inputTaint, new String[] {"var: Var2", "expr: Var1", "result: Var3"});
+        statement.computeTaintFromInput(inputTaint);
 
         // Assert
 
@@ -1164,7 +1166,7 @@ public class UnitTests {
     @DisplayName("Check that the ExprAssign statement result does not track where untainted variables are tainted from. ")
     public void ExprAssign_DoesNotTrack_TaintedFrom() {
         // Arrange
-        Expr_Assign statement = new Expr_Assign("Expr_Assign");
+        Expr_Assign statement = new Expr_Assign("Expr_Assign", new String[] {"var: Var2", "expr: Var1", "result: Var3"});
 
         Variable Var1 = new Variable("Var1");
 
@@ -1173,7 +1175,7 @@ public class UnitTests {
 
         // Act
 
-        statement.computeTaintFromInput(inputTaint, new String[] {"var: Var2", "expr: Var1", "result: Var3"});
+        statement.computeTaintFromInput(inputTaint);
 
         // Assert
 
@@ -1185,7 +1187,7 @@ public class UnitTests {
     @DisplayName("Check that the Expr_BinaryOp statement result tracks where variables are tainted from. ")
     public void Expr_BinaryOp_TracksTaintedFrom() {
         // Arrange
-        Expr_BinaryOp_Concat statement = new Expr_BinaryOp_Concat("Expr_BinaryOp_Concat");
+        Expr_BinaryOp_Concat statement = new Expr_BinaryOp_Concat("Expr_BinaryOp_Concat", new String[] {"left: Var1", "right: Var2", "result: Var3"});
 
         Variable Var1 = new Variable("Var1");
         Var1.setTainted(TaintType.XSS);
@@ -1198,7 +1200,7 @@ public class UnitTests {
 
         // Act
 
-        statement.computeTaintFromInput(inputTaint, new String[] {"left: Var1", "right: Var2", "result: Var3"});
+        statement.computeTaintFromInput(inputTaint);
 
         // Assert
 
@@ -1210,7 +1212,7 @@ public class UnitTests {
     @DisplayName("Check that the Expr_BinaryOp statement result does not track where untainted variables are tainted from. ")
     public void Expr_BinaryOp_DoesNotTrack_TaintedFrom() {
         // Arrange
-        Expr_BinaryOp_Concat statement = new Expr_BinaryOp_Concat("Expr_BinaryOp_Concat");
+        Expr_BinaryOp_Concat statement = new Expr_BinaryOp_Concat("Expr_BinaryOp_Concat", new String[] {"var: Var2", "expr: Var1", "result: Var3"});
 
         Variable Var1 = new Variable("Var1");
         Variable Var2 = new Variable("Var2");
@@ -1221,7 +1223,7 @@ public class UnitTests {
 
         // Act
 
-        statement.computeTaintFromInput(inputTaint, new String[] {"var: Var2", "expr: Var1", "result: Var3"});
+        statement.computeTaintFromInput(inputTaint);
 
         // Assert
 
@@ -1233,7 +1235,7 @@ public class UnitTests {
     @DisplayName("Check that the Expr_ConcatList statement result tracks where variables are tainted from. ")
     public void Expr_ConcatList_TracksTaintedFrom() {
         // Arrange
-        Expr_ConcatList statement = new Expr_ConcatList("Expr_ConcatList");
+        Expr_ConcatList statement = new Expr_ConcatList("Expr_ConcatList", new String[] {"list[0]: Var1", "list[1]: Var2", "result: Var3"});
 
         Variable Var1 = new Variable("Var1");
         Var1.setTainted(TaintType.XSS);
@@ -1246,7 +1248,7 @@ public class UnitTests {
 
         // Act
 
-        statement.computeTaintFromInput(inputTaint, new String[] {"list[0]: Var1", "list[1]: Var2", "result: Var3"});
+        statement.computeTaintFromInput(inputTaint);
 
         // Assert
 
@@ -1258,7 +1260,7 @@ public class UnitTests {
     @DisplayName("Check that the Expr_ConcatList statement result does not track where untainted variables are tainted from. ")
     public void Expr_ConcatList_DoesNotTrack_TaintedFrom() {
         // Arrange
-        Expr_ConcatList statement = new Expr_ConcatList("Expr_ConcatList");
+        Expr_ConcatList statement = new Expr_ConcatList("Expr_ConcatList", new String[] {"list[0]: Var1", "list[1]: Var2", "result: Var3"});
 
         Variable Var1 = new Variable("Var1");
         Variable Var2 = new Variable("Var2");
@@ -1270,7 +1272,7 @@ public class UnitTests {
 
         // Act
 
-        statement.computeTaintFromInput(inputTaint, new String[] {"list[0]: Var1", "list[1]: Var2", "result: Var3"});
+        statement.computeTaintFromInput(inputTaint);
 
         // Assert
 
@@ -1292,7 +1294,7 @@ public class UnitTests {
 
         // Act
 
-        statement.computeTaintFromInput(inputTaint, new String[] {"name: LITERAL('shell_exec')", "args[0]: Var1", "result: Var2"});
+        statement.computeTaintFromInput(inputTaint);
 
         // Assert
 
@@ -1312,7 +1314,7 @@ public class UnitTests {
 
         // Act
 
-        statement.computeTaintFromInput(inputTaint, new String[] {"name: LITERAL('shell_exec')", "args[0]: Var1", "result: Var2"});
+        statement.computeTaintFromInput(inputTaint);
 
         // Assert
 
@@ -1333,7 +1335,7 @@ public class UnitTests {
 
         // Act
 
-        statement.computeTaintFromInput(inputTaint, new String[] {"name: LITERAL('shell_exec')", "args[0]: Var1", "result: Var2"});
+        statement.computeTaintFromInput(inputTaint);
 
         // Assert
 
@@ -1354,8 +1356,7 @@ public class UnitTests {
 
         // Act
 
-        statement.computeTaintFromInput(inputTaint, new String[] {"var: object", "name: LITERAL('shell_exec')", "args[0]: Var1", "result: Var2"});
-
+        statement.computeTaintFromInput(inputTaint);
         // Assert
 
         Assert.assertTrue(inputTaint.get("Var2").getTaintedFrom().contains(Var1));
@@ -1374,7 +1375,7 @@ public class UnitTests {
 
         // Act
 
-        statement.computeTaintFromInput(inputTaint, new String[] {"var: object", "name: LITERAL('shell_exec')", "args[0]: Var1", "result: Var2"});
+        statement.computeTaintFromInput(inputTaint);
 
         // Assert
 
@@ -1395,7 +1396,7 @@ public class UnitTests {
 
         // Act
 
-        statement.computeTaintFromInput(inputTaint, new String[] {"var: object", "name: LITERAL('shell_exec')", "args[0]: Var1", "result: Var2"});
+        statement.computeTaintFromInput(inputTaint);
 
         // Assert
 
@@ -1406,7 +1407,7 @@ public class UnitTests {
     @DisplayName("Check that the Expr_Print statement result tracks where variables are tainted from. ")
     public void Expr_Print_TracksTaintedFrom() {
         // Arrange
-        Expr_Print statement = new Expr_Print("Expr_Print");
+        Expr_Print statement = new Expr_Print("Expr_Print", new String[] {"expr: Var1", "result: Var2"});
 
         Variable Var1 = new Variable("Var1");
         Var1.setTainted(TaintType.XSS);
@@ -1416,7 +1417,7 @@ public class UnitTests {
 
         // Act
 
-        statement.computeTaintFromInput(inputTaint, new String[] {"expr: Var1", "result: Var2"});
+        statement.computeTaintFromInput(inputTaint);
 
         // Assert
 
@@ -1427,7 +1428,7 @@ public class UnitTests {
     @DisplayName("Check that the Expr_Include statement result tracks where variables are tainted from. ")
     public void Expr_Include_TracksTaintedFrom() {
         // Arrange
-        Expr_Include statement = new Expr_Include("Expr_Include");
+        Expr_Include statement = new Expr_Include("Expr_Include", new String[] {"expr: Var1", "result: Var2"});
 
         Variable Var1 = new Variable("Var1");
         Var1.setTainted(TaintType.DIRECTORY);
@@ -1437,7 +1438,7 @@ public class UnitTests {
 
         // Act
 
-        statement.computeTaintFromInput(inputTaint, new String[] {"expr: Var1", "result: Var2"});
+        statement.computeTaintFromInput(inputTaint);
 
         // Assert
 
@@ -1448,7 +1449,7 @@ public class UnitTests {
     @DisplayName("Check that the Expr_Eval statement result tracks where variables are tainted from. ")
     public void Expr_Eval_TracksTaintedFrom() {
         // Arrange
-        Expr_Eval statement = new Expr_Eval("Expr_Eval");
+        Expr_Eval statement = new Expr_Eval("Expr_Eval", new String[] {"expr: Var1", "result: Var2"});
 
         Variable Var1 = new Variable("Var1");
         Var1.setTainted(TaintType.INJECTION);
@@ -1458,7 +1459,7 @@ public class UnitTests {
 
         // Act
 
-        statement.computeTaintFromInput(inputTaint, new String[] {"expr: Var1", "result: Var2"});
+        statement.computeTaintFromInput(inputTaint);
 
         // Assert
 
@@ -1469,7 +1470,7 @@ public class UnitTests {
     @DisplayName("Check that the Expr_Print statement result does not track where untainted variables are tainted from. ")
     public void Expr_Print_DoesNotTrack_TaintedFrom() {
         // Arrange
-        Expr_Print statement = new Expr_Print("Expr_Print");
+        Expr_Print statement = new Expr_Print("Expr_Print", new String[] {"expr: Var1", "result: Var2"});
 
         Variable Var1 = new Variable("Var1");
 
@@ -1478,7 +1479,7 @@ public class UnitTests {
 
         // Act
 
-        statement.computeTaintFromInput(inputTaint, new String[] {"expr: Var1", "result: Var2"});
+        statement.computeTaintFromInput(inputTaint);
 
         // Assert
 
@@ -1490,7 +1491,7 @@ public class UnitTests {
     @DisplayName("Check that the Expr_Print statement result tracks the variable the sink was tainted By. ")
     public void Expr_Print_TracksTaintedBy() {
         // Arrange
-        Expr_Print statement = new Expr_Print("Expr_Print");
+        Expr_Print statement = new Expr_Print("Expr_Print", new String[] {"expr: Var1", "result: Var2"});
 
         Variable Var1 = new Variable("Var1");
         Var1.setTainted(TaintType.XSS);
@@ -1500,7 +1501,7 @@ public class UnitTests {
 
         // Act
 
-        statement.computeTaintFromInput(inputTaint, new String[] {"expr: Var1", "result: Var2"});
+        statement.computeTaintFromInput(inputTaint);
 
         // Assert
 
@@ -1511,7 +1512,7 @@ public class UnitTests {
     @DisplayName("Check that the Expr_Include statement result does not track where untainted variables are tainted from. ")
     public void Expr_Include_DoesNotTrack_TaintedFrom() {
         // Arrange
-        Expr_Include statement = new Expr_Include("Expr_Include");
+        Expr_Include statement = new Expr_Include("Expr_Include", new String[] {"expr: Var1", "result: Var2"});
 
         Variable Var1 = new Variable("Var1");
 
@@ -1520,7 +1521,7 @@ public class UnitTests {
 
         // Act
 
-        statement.computeTaintFromInput(inputTaint, new String[] {"expr: Var1", "result: Var2"});
+        statement.computeTaintFromInput(inputTaint);
 
         // Assert
 
@@ -1532,7 +1533,7 @@ public class UnitTests {
     @DisplayName("Check that the Expr_Include statement result tracks the variable the sink was tainted By. ")
     public void Expr_Include_TracksTaintedBy() {
         // Arrange
-        Expr_Include statement = new Expr_Include("Expr_Include");
+        Expr_Include statement = new Expr_Include("Expr_Include", new String[] {"expr: Var1", "result: Var2"});
 
         Variable Var1 = new Variable("Var1");
         Var1.setTainted(TaintType.DIRECTORY);
@@ -1542,7 +1543,7 @@ public class UnitTests {
 
         // Act
 
-        statement.computeTaintFromInput(inputTaint, new String[] {"expr: Var1", "result: Var2"});
+        statement.computeTaintFromInput(inputTaint);
 
         // Assert
 
@@ -1553,7 +1554,7 @@ public class UnitTests {
     @DisplayName("Check that the Expr_Eval statement result does not track where untainted variables are tainted from. ")
     public void Expr_Eval_DoesNotTrack_TaintedFrom() {
         // Arrange
-        Expr_Eval statement = new Expr_Eval("Expr_Eval");
+        Expr_Eval statement = new Expr_Eval("Expr_Eval", new String[] {"expr: Var1", "result: Var2"});
 
         Variable Var1 = new Variable("Var1");
 
@@ -1562,7 +1563,7 @@ public class UnitTests {
 
         // Act
 
-        statement.computeTaintFromInput(inputTaint, new String[] {"expr: Var1", "result: Var2"});
+        statement.computeTaintFromInput(inputTaint);
 
         // Assert
 
@@ -1574,7 +1575,7 @@ public class UnitTests {
     @DisplayName("Check that the Expr_Eval statement result tracks the variable the sink was tainted By. ")
     public void Expr_Eval_TracksTaintedBy() {
         // Arrange
-        Expr_Eval statement = new Expr_Eval("Expr_Eval");
+        Expr_Eval statement = new Expr_Eval("Expr_Eval", new String[] {"expr: Var1", "result: Var2"});
 
         Variable Var1 = new Variable("Var1");
         Var1.setTainted(TaintType.INJECTION);
@@ -1584,7 +1585,7 @@ public class UnitTests {
 
         // Act
 
-        statement.computeTaintFromInput(inputTaint, new String[] {"expr: Var1", "result: Var2"});
+        statement.computeTaintFromInput(inputTaint);
 
         // Assert
 

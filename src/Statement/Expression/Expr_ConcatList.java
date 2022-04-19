@@ -7,12 +7,12 @@ import java.util.Arrays;
 
 public class Expr_ConcatList extends ExpressionStatement{
 
-    public Expr_ConcatList(String Expression){
-        super(Expression);
+    public Expr_ConcatList(String Expression, String[] Arguments){
+        super(Expression, Arguments);
     }
 
     @Override
-    public void computeTaintFromInput(TaintMap inputTaint, String[] Arguments) {
+    public void computeTaintFromInput(TaintMap inputTaint) {
         // Arguments are list[0], list[1] ... and ending with result
 
         // Variables will contain the arguments that are not the result

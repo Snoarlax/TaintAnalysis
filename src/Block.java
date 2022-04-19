@@ -10,14 +10,12 @@ public class Block {
     private Block[] Pred;
     private Block[] Succ;
     private final Statement[] Statements;
-    private final HashMap<Statement, String[]> Arguments; // Maps from Property to Argument
 
     private final TaintMap Tainted;
     private boolean TaintedSink = false;
 
     // Block has Statements, which each have Arguments
     public Block(String rawBlock) throws InvalidFileException {
-        Arguments = new HashMap<>();
         Tainted = new TaintMap();
 
         if (!Pattern.compile("\n( {4})(?=[^\s])").matcher(rawBlock).find()) // check for regex matches for the Statement Delimiter
@@ -65,12 +63,11 @@ public class Block {
                 else if (statementType == StatementType.Expr)
                     Statements[i] = StatementType.ConstructExpressionStatement(rawStatement, ArgumentsArray);
                 else if (statementType == StatementType.Stmt)
-                    Statements[i] = StatementType.ConstructStatementStatement(rawStatement);
+                    Statements[i] = StatementType.ConstructStatementStatement(rawStatement, ArgumentsArray);
                 else if (statementType == StatementType.Terminal)
-                    Statements[i] = StatementType.ConstructTerminalStatement(rawStatement);
+                    Statements[i] = StatementType.ConstructTerminalStatement(rawStatement, ArgumentsArray);
                 else
-                    Statements[i] = StatementType.ConstructDefaultStatement(rawStatement);
-                Arguments.put(Statements[i], ArgumentsArray);
+                    Statements[i] = StatementType.ConstructDefaultStatement(rawStatement, ArgumentsArray);
         }
 
     }
@@ -81,7 +78,7 @@ public class Block {
 
         // The taint function of the block should be equal to the application of all sequential taint functions of the statements that make up the block
         for (Statement statement : Statements) {
-            statement.computeTaintFromInput(Tainted, Arguments.get(statement));
+            statement.computeTaintFromInput(Tainted);
             // if the statement is a sink which gets tainted, mark the block as containing a tainted sink
             if (statement.isTaintedSink())
                 TaintedSink = true;
@@ -111,10 +108,6 @@ public class Block {
 
     public Statement[] getStatements() {
         return Statements;
-    }
-
-    public HashMap<Statement, String[]> getArguments() {
-        return Arguments;
     }
 
     public HashMap<Variable, Variable> getTainted() {

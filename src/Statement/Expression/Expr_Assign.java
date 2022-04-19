@@ -5,11 +5,11 @@ import TaintAnalysisComponents.Variable;
 
 public class Expr_Assign extends ExpressionStatement{
 
-    public Expr_Assign(String Expression) {
-        super(Expression);
+    public Expr_Assign(String Expression, String[] Arguments) {
+        super(Expression, Arguments);
     }
     @Override
-    public void computeTaintFromInput(TaintMap inputTaint, String[] Arguments) {
+    public void computeTaintFromInput(TaintMap inputTaint) {
         // Arguments are var, expr, result. Var and Result inherit taint from expr
 
         Variable expr = inputTaint.get(Arguments[1].split(": ",2)[1]);

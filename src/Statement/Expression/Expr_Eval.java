@@ -13,15 +13,15 @@ public class Expr_Eval extends ExpressionStatement{
 
     private final HashSet<Variable> TaintedBy;
 
-    public Expr_Eval(String Expression) {
-        super(Expression);
+    public Expr_Eval(String Expression, String[] Arguments) {
+        super(Expression, Arguments);
         tainted = false;
 
         TaintedBy = new HashSet<>();
     }
 
     @Override
-    public void computeTaintFromInput(TaintMap inputTaint, String[] Arguments) {
+    public void computeTaintFromInput(TaintMap inputTaint) {
         Variable expr = inputTaint.get(Arguments[0].split(": ", 2)[1]);
         if (expr.hasTainted(TaintType.INJECTION) && !isTaintedSink()){
             tainted = true;

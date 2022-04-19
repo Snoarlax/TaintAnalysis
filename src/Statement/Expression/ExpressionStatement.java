@@ -3,22 +3,17 @@ import Statement.*;
 import TaintAnalysisComponents.TaintMap;
 
 public abstract class ExpressionStatement extends Statement {
-    private final String Expression;
 
-    ExpressionStatement(String Expression){
-        this.Expression = Expression;
+    ExpressionStatement(String Expression, String[] Arguments){
+        super(Expression, Arguments);
     }
 
     @Override
-    public abstract void computeTaintFromInput(TaintMap inputTaint, String[] Arguments);
+    public abstract void computeTaintFromInput(TaintMap inputTaint);
 
     @Override
     public StatementType getStatementType() {
         return StatementType.Expr;
-    }
-
-    public String getExpression() {
-        return Expression;
     }
 
     public abstract ExpressionType getExpressionType();

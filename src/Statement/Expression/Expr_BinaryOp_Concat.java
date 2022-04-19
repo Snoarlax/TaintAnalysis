@@ -5,12 +5,12 @@ import TaintAnalysisComponents.Variable;
 
 public class Expr_BinaryOp_Concat extends ExpressionStatement{
 
-    public Expr_BinaryOp_Concat(String Expression){
-        super(Expression);
+    public Expr_BinaryOp_Concat(String Expression, String[] Arguments){
+        super(Expression, Arguments);
     }
 
     @Override
-    public void computeTaintFromInput(TaintMap inputTaint, String[] Arguments) {
+    public void computeTaintFromInput(TaintMap inputTaint) {
         // Arguments are left, right and result
         Variable left = inputTaint.get(Arguments[0].split(": ",2)[1]);
         Variable right = inputTaint.get(Arguments[1].split(": ",2)[1]);

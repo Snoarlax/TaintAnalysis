@@ -15,7 +15,7 @@ public class Expr_MethodCall extends ExpressionStatement{
     private final Sinks sinkType;
 
     public Expr_MethodCall(String Expression, String[] Arguments) {
-        super(Expression);
+        super(Expression, Arguments);
         isTainted = false;
         isSink = computeSink(Arguments);
         isSanitization = computeSanitization(Arguments);
@@ -53,7 +53,7 @@ public class Expr_MethodCall extends ExpressionStatement{
 
     // Follows dataflow equation, Taintout = Taintout(pred) U gen(pred) / kill(pred)
     @Override
-    public void computeTaintFromInput(TaintMap inputTaint, String[] Arguments) {
+    public void computeTaintFromInput(TaintMap inputTaint) {
         // need to analyse function, in this case, by default a tainted argument will mean its a tainted result
         Variable[] FunctionArguments = new Variable[Arguments.length-3];
         // iterate through the arguments of the function, which are the Arguments of the statement excluding the first and last
