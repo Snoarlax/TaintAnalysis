@@ -127,7 +127,7 @@ public class UnitTests {
         Variable Var2 = new Variable("Var2", new HashSet<>());
         Var2.setTainted(TaintType.XSS);
 
-        TaintMap.put(Var2, Var2);
+        TaintMap.put("Var2", Var2);
 
 
         // Act
@@ -160,7 +160,7 @@ public class UnitTests {
         Variable Var2 = new Variable("Var2", new HashSet<>());
 
         Var2.setTainted(TaintType.XSS);
-        TaintMap.put(Var2, Var2);
+        TaintMap.put("Var2", Var2);
 
 
         // Act
@@ -219,7 +219,7 @@ public class UnitTests {
         Variable Var1 = new Variable("Var1");
 
         Var1.setTainted(TaintType.XSS);
-        TaintMap.put(Var1, Var1);
+        TaintMap.put("Var1", Var1);
 
         String[] Arguments = new String[]{"left: Var1","right: LITERAL('')", "result: Var2"};
         ExpressionStatement StatementWithTaint = new Expr_BinaryOp_Concat("Expr_BinaryOp_Concat", Arguments);
@@ -246,7 +246,7 @@ public class UnitTests {
         StatementWithNoTaint.computeTaintFromInput(TaintMap);
 
         // Assert
-        assertFalse(TaintMap.isTainted(Var2));
+        assertFalse(TaintMap.isTainted("Var2"));
     }
 
     @Test
@@ -258,7 +258,7 @@ public class UnitTests {
         Variable Var1 = new Variable("Var1");
 
         Var1.setTainted(TaintType.XSS);
-        TaintMap.put(Var1, Var1);
+        TaintMap.put("Var1", Var1);
 
         String[] Arguments = new String[]{"list[0]: Var1","list[1]: LITERAL('')","list[0]: Var2", "result: Var3"};
         ExpressionStatement StatementWithTaint = new Expr_ConcatList("Expr_ConcatList", Arguments);
@@ -295,7 +295,7 @@ public class UnitTests {
         Variable Var1 = new Variable("Var1", new HashSet<>());
 
         Var1.setTainted(TaintType.XSS);
-        TaintMap.put(Var1, Var1);
+        TaintMap.put("Var1", Var1);
 
         String[] Arguments = new String[]{"var: Var2", "expr: Var1", "result: Var3"};
         ExpressionStatement StatementWithTaint = new Expr_Assign("Expr_Assign", Arguments);
@@ -341,7 +341,7 @@ public class UnitTests {
         ExpressionStatement StatementWithNoTaint = new Expr_Assign("Expr_Assign", Arguments);
 
         Var2.setTainted(TaintType.XSS);
-        TaintMap.put(Var2, Var2);
+        TaintMap.put("Var2", Var2);
 
         // Act
         StatementWithNoTaint.computeTaintFromInput(TaintMap);
@@ -362,7 +362,7 @@ public class UnitTests {
         TerminalStatement StatementWithTaint = new TerminalStatement("Terminal_Echo", Arguments);
 
         Var1.setTainted(TaintType.XSS);
-        TaintMap.put(Var1, Var1);
+        TaintMap.put("Var1", Var1);
 
         // Act
         StatementWithTaint.computeTaintFromInput(TaintMap);
@@ -444,7 +444,7 @@ public class UnitTests {
 
         Variable Var1 = new Variable("Var1");
         Var1.setTainted(TaintType.XSS);
-        TaintMap.put(Var1, Var1);
+        TaintMap.put("Var1", Var1);
 
         Expr_Print PrintStatement = new Expr_Print("Expr_Print", Arguments);
 
@@ -464,7 +464,7 @@ public class UnitTests {
 
         Variable Var1 = new Variable("Var1");
         Var1.setTainted(TaintType.DIRECTORY);
-        TaintMap.put(Var1, Var1);
+        TaintMap.put("Var1", Var1);
 
         Expr_Include IncludeStatement = new Expr_Include("Expr_Include", Arguments);
 
@@ -485,7 +485,7 @@ public class UnitTests {
 
         Variable Var1 = new Variable("Var1");
         Var1.setTainted(TaintType.INJECTION);
-        TaintMap.put(Var1, Var1);
+        TaintMap.put("Var1", Var1);
 
         Expr_Eval EvalStatement = new Expr_Eval("Expr_Eval", Arguments);
 
@@ -554,7 +554,7 @@ public class UnitTests {
 
         Variable Var1 = new Variable("Var1");
         Var1.setTainted(TaintType.XSS);
-        TaintMap.put(Var1, Var1);
+        TaintMap.put("Var1", Var1);
 
         Expr_FuncCall FuncCall = new Expr_FuncCall("Expr_FuncCall", Arguments);
 
@@ -643,7 +643,7 @@ public class UnitTests {
 
         Variable Var1 = new Variable("Var1");
         Var1.setTainted(TaintType.XSS);
-        TaintMap.put(Var1, Var1);
+        TaintMap.put("Var1", Var1);
 
         Expr_MethodCall MethodCall = new Expr_MethodCall("Expr_MethodCall", Arguments);
 

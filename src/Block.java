@@ -110,9 +110,9 @@ public class Block {
         return Statements;
     }
 
-    public HashMap<Variable, Variable> getTainted() {
+    public TaintMap getTainted() {
         // It is important the result is a copy of the tainted Values, so the taint application is a serializable flow.
-        return new HashMap<>(Tainted);
+        return new TaintMap(Tainted);
     }
 
     public boolean isTaintedSink() {

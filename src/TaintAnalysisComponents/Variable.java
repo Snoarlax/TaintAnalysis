@@ -73,25 +73,6 @@ public class Variable {
         return new HashSet<>(TaintedFrom);
     }
 
-
-
-
-    @Override
-    public boolean equals(Object o) {
-        // State equality is equivalent to equality in the name of the Variable, not the taint status.
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Variable variable = (Variable) o;
-        return Objects.equals(VariableName, variable.VariableName);
-    }
-
-    @Override
-    public int hashCode() {
-        // State equality is equivalent to equality in the name of the Variable, not the taint status.
-        return Objects.hash(VariableName);
-    }
-
-
     public boolean isRealVariable() {
         // Variables which are not just from the SSA form are styled like Var#N<$variablename>
         return VariableName.contains("<$");

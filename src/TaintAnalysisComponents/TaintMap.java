@@ -2,23 +2,18 @@ package TaintAnalysisComponents;
 
 import java.util.HashMap;
 
-public class TaintMap extends HashMap<Variable, Variable> {
+public class TaintMap extends HashMap<String, Variable> {
 
     public TaintMap() {
         super();
     }
 
-    public TaintMap(HashMap<Variable, Variable> TaintMap) {
+    public TaintMap(HashMap<String, Variable> TaintMap) {
         super(TaintMap);
     }
 
     public Variable get(String VariableName) {
-        Variable var = new Variable(VariableName);
-        return getOrDefault(var,var);
-    }
-
-    public Variable get(Variable var) {
-        return getOrDefault(var,var);
+        return getOrDefault(VariableName,new Variable(VariableName));
     }
 
     // shorthand for getting variable by name first
@@ -26,11 +21,7 @@ public class TaintMap extends HashMap<Variable, Variable> {
         return get(VariableName).isTainted();
     }
 
-    public boolean isTainted(Variable var) {
-        return get(var).isTainted();
-    }
-
     public void put(Variable var) {
-        put(var, var);
+        put(var.getVariableName(), var);
     }
 }

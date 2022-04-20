@@ -1,5 +1,6 @@
 import TaintAnalysisComponents.Sinks;
 import Statement.Statement;
+import TaintAnalysisComponents.TaintMap;
 import TaintAnalysisComponents.Variable;
 import TaintAnalysisComponents.TaintType;
 
@@ -48,10 +49,10 @@ public class TaintAnalyser {
 
         while (!workSet.isEmpty()) {
             Block block = workSet.pop();
-            HashSet<Variable> oldTainted = new HashSet<>(block.getTainted().keySet());
+            TaintMap oldTainted = new TaintMap(block.getTainted());
             block.updateTaintedVariables();
             // If the tainted values change, make sure to repeat this on the successors of the block!
-            if (!oldTainted.equals(block.getTainted().keySet()))
+            if (!oldTainted.equals(block.getTainted()))
                 Collections.addAll(workSet, block.getSucc());
         }
 
