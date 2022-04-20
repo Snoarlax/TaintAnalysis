@@ -1,0 +1,24 @@
+
+Block#1
+    Var#1<$_GET> = Phi()
+    Expr_ArrayDimFetch
+        var: Var#1<$_GET>
+        dim: LITERAL('query')
+        result: Var#2
+    Expr_Assign
+        var: Var#3<$SQLITainted>
+        expr: Var#2
+        result: Var#4
+    Expr_FuncCall
+        name: LITERAL('escapeshellcmd')
+        args[0]: Var#3<$SQLITainted>
+        result: Var#5
+    Expr_Assign
+        var: Var#6<$SQLITainted>
+        expr: Var#5
+        result: Var#7
+    Expr_FuncCall
+        name: LITERAL('mysql_query')
+        args[0]: Var#6<$SQLITainted>
+        result: Var#8
+    Terminal_Return

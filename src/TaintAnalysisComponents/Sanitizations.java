@@ -6,6 +6,7 @@ import java.util.List;
 public enum Sanitizations {
     // Injection
     escapeshellcmd(new TaintType[] {TaintType.INJECTION}),
+    escapeshellarg(new TaintType[] {TaintType.INJECTION}),
 
     // Traversal
     realpath(new TaintType[] {TaintType.DIRECTORY}), //unsure, needs to be checked manually
