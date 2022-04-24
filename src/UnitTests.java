@@ -1590,4 +1590,81 @@ public class UnitTests {
 
         Assert.assertTrue(statement.TaintedBy().contains(Var1));
     }
+
+    @Test
+    @DisplayName("Check that FuncCall Source functions taint correctly. ")
+    public void Expr_FuncCall_SourceFunctionWorks() {
+        // Arrange
+        String[] Arguments = new String[] { "name: LITERAL('apache_request_headers')", "args[0]: Var1", "result: Var2"};
+        TaintMap TaintMap = new TaintMap();
+
+
+
+        Expr_FuncCall FuncCall = new Expr_FuncCall("Expr_FuncCall", Arguments);
+
+        // Act
+        FuncCall.computeTaintFromInput(TaintMap);
+
+        // Assert
+
+        assertTrue(TaintMap.isTainted("Var2"));
+    }
+
+    @Test
+    @DisplayName("Check that FuncCall non-Source functions taint correctly. ")
+    public void Expr_FuncCall_NotSourceFunctionWorks() {
+        // Arrange
+        String[] Arguments = new String[] { "name: LITERAL('safe')", "args[0]: Var1", "result: Var2"};
+        TaintMap TaintMap = new TaintMap();
+
+
+
+        Expr_FuncCall FuncCall = new Expr_FuncCall("Expr_FuncCall", Arguments);
+
+        // Act
+        FuncCall.computeTaintFromInput(TaintMap);
+
+        // Assert
+
+        assertFalse(TaintMap.isTainted("Var2"));
+    }
+
+    @Test
+    @DisplayName("Check that MethodCall Source functions taint correctly. ")
+    public void Expr_MethodCall_SourceFunctionWorks() {
+        // Arrange
+        String[] Arguments = new String[] { "name: LITERAL('apache_request_headers')", "args[0]: Var1", "result: Var2"};
+        TaintMap TaintMap = new TaintMap();
+
+
+
+        Expr_MethodCall MethodCall = new Expr_MethodCall("Expr_MethodCall", Arguments);
+
+        // Act
+        MethodCall.computeTaintFromInput(TaintMap);
+
+        // Assert
+
+        assertTrue(TaintMap.isTainted("Var2"));
+    }
+
+    @Test
+    @DisplayName("Check that MethodCall non-Source functions taint correctly. ")
+    public void Expr_MethodCall_NotSourceFunctionWorks() {
+        // Arrange
+        String[] Arguments = new String[] { "name: LITERAL('safe')", "args[0]: Var1", "result: Var2"};
+        TaintMap TaintMap = new TaintMap();
+
+
+
+        Expr_MethodCall MethodCall = new Expr_MethodCall("Expr_MethodCall", Arguments);
+
+        // Act
+        MethodCall.computeTaintFromInput(TaintMap);
+
+        // Assert
+
+        assertFalse(TaintMap.isTainted("Var2"));
+    }
+
 }

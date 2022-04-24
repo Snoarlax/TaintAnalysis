@@ -4,6 +4,4 @@ public enum Sources {
     $_POST,
     $_COOKIE,
     $_REQUEST,
-    apache_request_headers,
-    getallheaders
 }

@@ -32,7 +32,7 @@ public class Expr_FuncCall extends ExpressionStatement{
     private boolean computeSource(String[] Arguments) {
         // returns true if the function name matches a Source name.
         // Arguments[0] should be the array that the element is being fetched from
-        return Arrays.stream(Sources.values()).anyMatch(x -> Arguments[0].endsWith("LITERAL('" + x.name() + "')"));
+        return Arrays.stream(SourceFunction.values()).anyMatch(x -> Arguments[0].endsWith("LITERAL('" + x.name() + "')"));
     }
 
     private boolean computeSanitization(String[] Arguments) {

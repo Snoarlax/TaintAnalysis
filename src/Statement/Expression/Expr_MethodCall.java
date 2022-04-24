@@ -4,10 +4,12 @@ import TaintAnalysisComponents.*;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 
 public class Expr_MethodCall extends ExpressionStatement{
     private final boolean isSink;
     private final boolean isSanitization;
+    private final boolean isSource;
     private boolean isTainted;
 
     private final HashSet<Variable> TaintedBy;
@@ -19,10 +21,17 @@ public class Expr_MethodCall extends ExpressionStatement{
         isTainted = false;
         isSink = computeSink(Arguments);
         isSanitization = computeSanitization(Arguments);
+        isSource = computeSource(Arguments);
 
         TaintedBy = new HashSet<>();
 
         sinkType = isSink ? findSinkType(Arguments) : null;
+    }
+
+    private boolean computeSource(String[] Arguments) {
+        // returns true if the function name matches a Source name.
+        // Arguments[0] should be the array that the element is being fetched from
+        return Arrays.stream(SourceFunction.values()).anyMatch(x -> Arguments[0].endsWith("LITERAL('" + x.name() + "')"));
     }
 
     private boolean computeSanitization(String[] Arguments) {
@@ -103,6 +112,9 @@ public class Expr_MethodCall extends ExpressionStatement{
 
              result.clearAllTainted(TaintsToClear);
         }
+
+        else if (isSource)
+            result.setAllTainted(List.of(TaintType.values()));
 
         // put the resultant variable with its taints into the TaintMap
         if (result.isTainted())
