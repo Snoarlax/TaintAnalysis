@@ -28,7 +28,7 @@ public class Variable {
 
     private boolean computeSource(String variableName) {
         // returns true if the variable name matches a sources name.
-        return Arrays.stream(Sources.values()).anyMatch(x -> variableName.endsWith("<" + x.name() + ">"));
+        return Arrays.stream(Source.values()).anyMatch(x -> variableName.endsWith("<" + x.name() + ">"));
     }
 
 

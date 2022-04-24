@@ -1,4 +1,4 @@
-import TaintAnalysisComponents.Sinks;
+import TaintAnalysisComponents.Sink;
 import Statement.Statement;
 import TaintAnalysisComponents.TaintMap;
 import TaintAnalysisComponents.Variable;
@@ -78,7 +78,7 @@ public class TaintAnalyser {
                 HashSet<Variable> TaintedFrom = statement.TaintedBy();
                 ArrayList<String> TaintChain = new ArrayList<>();
 
-                Sinks sinkType = statement.getSinkType();
+                Sink sinkType = statement.getSinkType();
                 taintTypeList.add(sinkType.getVulnerableTaint());
 
 

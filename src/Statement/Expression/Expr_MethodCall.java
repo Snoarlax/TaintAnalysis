@@ -14,7 +14,7 @@ public class Expr_MethodCall extends ExpressionStatement{
 
     private final HashSet<Variable> TaintedBy;
 
-    private final Sinks sinkType;
+    private final Sink sinkType;
 
     public Expr_MethodCall(String Expression, String[] Arguments) {
         super(Expression, Arguments);
@@ -43,12 +43,12 @@ public class Expr_MethodCall extends ExpressionStatement{
     private boolean computeSink(String[] Arguments){
         // returns true if the variable name matches a sinks name.
         // Arguments[0] should be the array that the element is being fetched from
-        return Arrays.stream(Sinks.values()).anyMatch(x -> Arguments[1].endsWith("LITERAL('" + x.name() + "')"));
+        return Arrays.stream(Sink.values()).anyMatch(x -> Arguments[1].endsWith("LITERAL('" + x.name() + "')"));
     }
 
-    private Sinks findSinkType(String[] Arguments) {
+    private Sink findSinkType(String[] Arguments) {
         // returns the relevant Sinks enum from the Arguments
-        return Arrays.stream(Sinks.values()).filter(x -> Arguments[1].endsWith("LITERAL('" + x.name() + "')")).findFirst().get();
+        return Arrays.stream(Sink.values()).filter(x -> Arguments[1].endsWith("LITERAL('" + x.name() + "')")).findFirst().get();
     }
 
     public boolean isSink() {
@@ -89,7 +89,7 @@ public class Expr_MethodCall extends ExpressionStatement{
 
         // if the statement is a sink and is not already tainted, check if the any taint matches sinktype, and mark statement as tainted if this is the case
         if (!isTaintedSink() && isSink()) {
-            Sinks sinkType = Arrays.stream(Sinks.values())
+            Sink sinkType = Arrays.stream(Sink.values())
                     .filter(x -> Arguments[1].endsWith("LITERAL('" + x.name() + "')"))
                     .findFirst()
                     .get();
@@ -132,7 +132,7 @@ public class Expr_MethodCall extends ExpressionStatement{
     }
 
     @Override
-    public Sinks getSinkType() {
+    public Sink getSinkType() {
         return sinkType;
     }
 

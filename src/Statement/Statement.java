@@ -1,6 +1,6 @@
 package Statement;
 
-import TaintAnalysisComponents.Sinks;
+import TaintAnalysisComponents.Sink;
 import TaintAnalysisComponents.TaintMap;
 import TaintAnalysisComponents.Variable;
 
@@ -23,7 +23,7 @@ public abstract class Statement {
     public HashSet<Variable> TaintedBy() {
         return null;
     };
-    public Sinks getSinkType(){
+    public Sink getSinkType(){
         return null;
     }
 

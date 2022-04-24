@@ -1,5 +1,5 @@
 package TaintAnalysisComponents;
-public enum Sources {
+public enum Source {
     $_GET,
     $_POST,
     $_COOKIE,

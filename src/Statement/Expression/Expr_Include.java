@@ -1,6 +1,6 @@
 package Statement.Expression;
 
-import TaintAnalysisComponents.Sinks;
+import TaintAnalysisComponents.Sink;
 import TaintAnalysisComponents.TaintMap;
 import TaintAnalysisComponents.TaintType;
 import TaintAnalysisComponents.Variable;
@@ -50,7 +50,7 @@ public class Expr_Include extends ExpressionStatement {
     }
 
     @Override
-    public Sinks getSinkType() {
-        return Sinks.include;
+    public Sink getSinkType() {
+        return Sink.include;
     }
 }

@@ -1,6 +1,6 @@
 package TaintAnalysisComponents;
 
-public enum Sinks {
+public enum Sink {
     // Echo is detected in the TerminalStatement class, as it is labelled differently in the .dat files. The same goes for print and Expr_Print
 
     // Injection
@@ -38,7 +38,7 @@ public enum Sinks {
 
     private final TaintType SinkType;
 
-    Sinks(TaintType taintType) {
+    Sink(TaintType taintType) {
             this.SinkType = taintType;
     }
 

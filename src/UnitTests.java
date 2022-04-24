@@ -629,7 +629,7 @@ public class UnitTests {
             // Act
             Expr_FuncCall FuncCallStatement = new Expr_FuncCall("Expr_FuncCall", Arguments);
             // Assert
-            assertEquals(FuncCallStatement.getSinkType(), Sinks.valueOf(sink));
+            assertEquals(FuncCallStatement.getSinkType(), Sink.valueOf(sink));
         }
     }
 
@@ -718,7 +718,7 @@ public class UnitTests {
             // Act
             Expr_MethodCall MethodCallStatement = new Expr_MethodCall("Expr_MethodCall", Arguments);
             // Assert
-            assertEquals(MethodCallStatement.getSinkType(), Sinks.valueOf(sink));
+            assertEquals(MethodCallStatement.getSinkType(), Sink.valueOf(sink));
         }
     }
 
@@ -726,7 +726,7 @@ public class UnitTests {
     @DisplayName("Check that getTaintTypes() works for different sinks. ")
     public void getTaintTypes_Sinks(){
         // Arrange
-        Sinks[] SinksToTest = new Sinks[] {Sinks.shell_exec, Sinks.include, Sinks.echo, Sinks.mysql_query};
+        Sink[] SinksToTest = new Sink[] {Sink.shell_exec, Sink.include, Sink.echo, Sink.mysql_query};
         TaintType[] TaintTypesToCheck = new TaintType[] {
             TaintType.INJECTION,
                     TaintType.DIRECTORY,

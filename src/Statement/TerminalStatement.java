@@ -1,6 +1,5 @@
 package Statement;
 
-import TaintAnalysisComponents.Sinks;
 import TaintAnalysisComponents.TaintMap;
 import TaintAnalysisComponents.TaintType;
 import TaintAnalysisComponents.Variable;
@@ -52,8 +51,8 @@ public class TerminalStatement extends Statement{
     }
 
     @Override
-    public Sinks getSinkType() {
-        return isSink() ? Sinks.echo : null;
+    public TaintAnalysisComponents.Sink getSinkType() {
+        return isSink() ? TaintAnalysisComponents.Sink.echo : null;
     }
 
     public boolean isSink() {
