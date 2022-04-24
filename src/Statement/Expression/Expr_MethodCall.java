@@ -28,7 +28,7 @@ public class Expr_MethodCall extends ExpressionStatement{
     private boolean computeSanitization(String[] Arguments) {
         // returns true if the variable name matches a Sanitizers name.
         // Arguments[0] should be the array that the element is being fetched from
-        return Arrays.stream(Sanitizations.values()).anyMatch(x -> Arguments[1].endsWith("LITERAL('" + x.name() + "')"));
+        return Arrays.stream(Sanitization.values()).anyMatch(x -> Arguments[1].endsWith("LITERAL('" + x.name() + "')"));
     }
 
     private boolean computeSink(String[] Arguments){
@@ -95,7 +95,7 @@ public class Expr_MethodCall extends ExpressionStatement{
         // if statement is a sanitisation function, remove the relevant taints from the result.
 
         else if (isSanitization) {
-             HashSet<TaintType> TaintsToClear = Arrays.stream(Sanitizations.values())
+             HashSet<TaintType> TaintsToClear = Arrays.stream(Sanitization.values())
                     .filter(x -> Arguments[0].endsWith("LITERAL('" + x.name() + "')"))
                     .findFirst()
                     .get()

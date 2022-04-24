@@ -12,7 +12,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import Statement.*;
 
-import javax.swing.plaf.nimbus.State;
 import java.util.*;
 
 public class UnitTests {
@@ -745,7 +744,7 @@ public class UnitTests {
     @DisplayName("Check the XSS sanitizations return the correct set of Sanitizations. ")
     public void Sanitizations_XSS_MarkedCorrectly() {
         // Arrange
-        Sanitizations[] XSSSanitizations = new Sanitizations[] {Sanitizations.htmlspecialchars, Sanitizations.htmlentities};
+        Sanitization[] XSSSanitizations = new Sanitization[] {Sanitization.htmlspecialchars, Sanitization.htmlentities};
         HashSet<TaintType> TaintsToRemove = new HashSet<>(List.of(TaintType.XSS));
 
         // Act + Assert
@@ -756,7 +755,7 @@ public class UnitTests {
     @DisplayName("Check the Injection sanitizations return the correct set of Sanitizations. ")
     public void Sanitizations_Injection_MarkedCorrectly() {
         // Arrange
-        Sanitizations[] InjectionSanitizations = new Sanitizations[] {Sanitizations.escapeshellcmd};
+        Sanitization[] InjectionSanitizations = new Sanitization[] {Sanitization.escapeshellcmd};
         HashSet<TaintType> TaintsToRemove = new HashSet<>(List.of(TaintType.INJECTION));
 
         // Act + Assert
@@ -767,7 +766,7 @@ public class UnitTests {
     @DisplayName("Check the Traversal sanitizations return the correct set of Sanitizations. ")
     public void Sanitizations_Traversal_MarkedCorrectly() {
         // Arrange
-        Sanitizations[] TraversalSanitizations = new Sanitizations[] {Sanitizations.realpath};
+        Sanitization[] TraversalSanitizations = new Sanitization[] {Sanitization.realpath};
         HashSet<TaintType> TaintsToRemove = new HashSet<>(List.of(TaintType.DIRECTORY));
 
         // Act + Assert
@@ -778,17 +777,17 @@ public class UnitTests {
     @DisplayName("Check the SQLI sanitizations return the correct set of Sanitizations. ")
     public void Sanitizations_SQLI_MarkedCorrectly() {
         // Arrange
-        Sanitizations[] SQLISanitizations = new Sanitizations[] {    Sanitizations.addcslashes, //unsure
-                Sanitizations.addslashes,
-                Sanitizations.mysql_escape_string,
-                Sanitizations.mysql_real_escape_string,
-                Sanitizations.mysqli_escape_string,
-                Sanitizations.escape_string,
-                Sanitizations.mysqli_real_escape_string,
-                Sanitizations.real_escape_string,
-                Sanitizations.sqlite_escape_string,
-                Sanitizations.escapeString,
-                Sanitizations.quote };
+        Sanitization[] SQLISanitizations = new Sanitization[] {    Sanitization.addcslashes, //unsure
+                Sanitization.addslashes,
+                Sanitization.mysql_escape_string,
+                Sanitization.mysql_real_escape_string,
+                Sanitization.mysqli_escape_string,
+                Sanitization.escape_string,
+                Sanitization.mysqli_real_escape_string,
+                Sanitization.real_escape_string,
+                Sanitization.sqlite_escape_string,
+                Sanitization.escapeString,
+                Sanitization.quote };
         HashSet<TaintType> TaintsToRemove = new HashSet<>(List.of(TaintType.SQLI));
 
         // Act + Assert
@@ -799,19 +798,19 @@ public class UnitTests {
     @DisplayName("Check the sanitisation functions work for SQLI. ")
     public void Sanitizations_SQLI_Works() {
         // Arrange
-        Sanitizations[] SQLISanitizations = new Sanitizations[] {    Sanitizations.addcslashes, //unsure
-                Sanitizations.addslashes, //unsure,
-                Sanitizations.mysql_escape_string,
-                Sanitizations.mysql_real_escape_string,
-                Sanitizations.mysqli_escape_string,
-                Sanitizations.escape_string,
-                Sanitizations.mysqli_real_escape_string,
-                Sanitizations.real_escape_string,
-                Sanitizations.sqlite_escape_string,
-                Sanitizations.escapeString,
-                Sanitizations.quote };
+        Sanitization[] SQLISanitizations = new Sanitization[] {    Sanitization.addcslashes, //unsure
+                Sanitization.addslashes, //unsure,
+                Sanitization.mysql_escape_string,
+                Sanitization.mysql_real_escape_string,
+                Sanitization.mysqli_escape_string,
+                Sanitization.escape_string,
+                Sanitization.mysqli_real_escape_string,
+                Sanitization.real_escape_string,
+                Sanitization.sqlite_escape_string,
+                Sanitization.escapeString,
+                Sanitization.quote };
 
-        for (Sanitizations SQLISan : SQLISanitizations) {
+        for (Sanitization SQLISan : SQLISanitizations) {
             TaintMap SQLITaintedMap = new TaintMap();
             Variable tainted = new Variable("tainted", List.of(TaintType.SQLI));
             SQLITaintedMap.put(tainted);
@@ -828,9 +827,9 @@ public class UnitTests {
     @DisplayName("Check the sanitisation functions work for Traversal. ")
     public void Sanitizations_Traversal_Works() {
         // Arrange
-        Sanitizations[] DirectorySanitizations = new Sanitizations[] {Sanitizations.realpath};
+        Sanitization[] DirectorySanitizations = new Sanitization[] {Sanitization.realpath};
 
-        for (Sanitizations TraversalSan : DirectorySanitizations) {
+        for (Sanitization TraversalSan : DirectorySanitizations) {
             TaintMap TraversalSanitization = new TaintMap();
             Variable tainted = new Variable("tainted", List.of(TaintType.DIRECTORY));
             TraversalSanitization.put(tainted);
@@ -847,9 +846,9 @@ public class UnitTests {
     @DisplayName("Check the sanitisation functions work for Injection. ")
     public void Sanitizations_Injection_Works() {
         // Arrange
-        Sanitizations[] InjectionSanitizations = new Sanitizations[] {Sanitizations.escapeshellcmd};
+        Sanitization[] InjectionSanitizations = new Sanitization[] {Sanitization.escapeshellcmd};
 
-        for (Sanitizations InjectionSan : InjectionSanitizations) {
+        for (Sanitization InjectionSan : InjectionSanitizations) {
             TaintMap InjectionTaintedMap = new TaintMap();
             Variable tainted = new Variable("tainted", List.of(TaintType.INJECTION));
             InjectionTaintedMap.put(tainted);
@@ -866,9 +865,9 @@ public class UnitTests {
     @DisplayName("Check the sanitisation functions work for XSS. ")
     public void Sanitizations_XSS_Works() {
         // Arrange
-        Sanitizations[] XSSSanitizations = new Sanitizations[] {Sanitizations.htmlspecialchars, Sanitizations.htmlentities};
+        Sanitization[] XSSSanitizations = new Sanitization[] {Sanitization.htmlspecialchars, Sanitization.htmlentities};
 
-        for (Sanitizations XSSsan : XSSSanitizations) {
+        for (Sanitization XSSsan : XSSSanitizations) {
             TaintMap XSSTaintedMap = new TaintMap();
             Variable tainted = new Variable("tainted", List.of(TaintType.XSS));
             XSSTaintedMap.put(tainted);
@@ -885,19 +884,19 @@ public class UnitTests {
     @DisplayName("Check the sanitisation functions fails correctly for SQLI. ")
     public void Sanitizations_SQLI_Fails() {
         // Arrange
-        Sanitizations[] SQLISanitizations = new Sanitizations[] {    Sanitizations.addcslashes, //unsure
-                Sanitizations.addslashes, //unsure,
-                Sanitizations.mysql_escape_string,
-                Sanitizations.mysql_real_escape_string,
-                Sanitizations.mysqli_escape_string,
-                Sanitizations.escape_string,
-                Sanitizations.mysqli_real_escape_string,
-                Sanitizations.real_escape_string,
-                Sanitizations.sqlite_escape_string,
-                Sanitizations.escapeString,
-                Sanitizations.quote };
+        Sanitization[] SQLISanitizations = new Sanitization[] {    Sanitization.addcslashes, //unsure
+                Sanitization.addslashes, //unsure,
+                Sanitization.mysql_escape_string,
+                Sanitization.mysql_real_escape_string,
+                Sanitization.mysqli_escape_string,
+                Sanitization.escape_string,
+                Sanitization.mysqli_real_escape_string,
+                Sanitization.real_escape_string,
+                Sanitization.sqlite_escape_string,
+                Sanitization.escapeString,
+                Sanitization.quote };
 
-        for (Sanitizations SQLISan : SQLISanitizations) {
+        for (Sanitization SQLISan : SQLISanitizations) {
             TaintMap SQLITaintedMap = new TaintMap();
             Variable tainted = new Variable("tainted", List.of(TaintType.XSS));
             SQLITaintedMap.put(tainted);
@@ -914,9 +913,9 @@ public class UnitTests {
     @DisplayName("Check the sanitisation functions fails correctly for Traversal. ")
     public void Sanitizations_Traversal_Fails() {
         // Arrange
-        Sanitizations[] DirectorySanitizations = new Sanitizations[] {Sanitizations.realpath};
+        Sanitization[] directorySanitizations = new Sanitization[] {Sanitization.realpath};
 
-        for (Sanitizations TraversalSan : DirectorySanitizations) {
+        for (Sanitization TraversalSan : directorySanitizations) {
             TaintMap TraversalSanitization = new TaintMap();
             Variable tainted = new Variable("tainted", List.of(TaintType.XSS));
             TraversalSanitization.put(tainted);
@@ -933,9 +932,9 @@ public class UnitTests {
     @DisplayName("Check the sanitisation functions fails for Injection. ")
     public void Sanitizations_Injection_Fails() {
         // Arrange
-        Sanitizations[] InjectionSanitizations = new Sanitizations[] {Sanitizations.escapeshellcmd};
+        Sanitization[] InjectionSanitizations = new Sanitization[] {Sanitization.escapeshellcmd};
 
-        for (Sanitizations InjectionSan : InjectionSanitizations) {
+        for (Sanitization InjectionSan : InjectionSanitizations) {
             TaintMap InjectionTaintedMap = new TaintMap();
             Variable tainted = new Variable("tainted", List.of(TaintType.XSS));
             InjectionTaintedMap.put(tainted);
@@ -952,9 +951,9 @@ public class UnitTests {
     @DisplayName("Check the sanitisation functions fails for XSS. ")
     public void Sanitizations_XSS_Fails() {
         // Arrange
-        Sanitizations[] XSSSanitizations = new Sanitizations[] {Sanitizations.htmlspecialchars, Sanitizations.htmlentities};
+        Sanitization[] XSSSanitizations = new Sanitization[] {Sanitization.htmlspecialchars, Sanitization.htmlentities};
 
-        for (Sanitizations XSSsan : XSSSanitizations) {
+        for (Sanitization XSSsan : XSSSanitizations) {
             TaintMap XSSTaintedMap = new TaintMap();
             Variable tainted = new Variable("tainted", List.of(TaintType.SQLI));
             XSSTaintedMap.put(tainted);

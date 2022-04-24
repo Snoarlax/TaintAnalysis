@@ -3,7 +3,7 @@ package TaintAnalysisComponents;
 import java.util.HashSet;
 import java.util.List;
 
-public enum Sanitizations {
+public enum Sanitization {
     // Injection
     escapeshellcmd(new TaintType[] {TaintType.INJECTION}),
     escapeshellarg(new TaintType[] {TaintType.INJECTION}),
@@ -33,7 +33,7 @@ public enum Sanitizations {
     private final boolean NeedsManualVerification;
 
 
-    Sanitizations(TaintType[] TaintTypesToRemove) {
+    Sanitization(TaintType[] TaintTypesToRemove) {
         this.TaintTypeSanitizations = new HashSet<>(List.of(TaintTypesToRemove));
         this.NeedsManualVerification = false;
     }

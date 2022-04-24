@@ -20,7 +20,7 @@ public class Variable {
     public Variable(String VariableName) {
         this.VariableName = VariableName;
         this.Taints = new HashSet<>();
-        if (computeSource(VariableName))
+        if (isRealVariable() && computeSource(VariableName))
             Collections.addAll(Taints, TaintType.values());
 
         TaintedFrom = new HashSet<>();

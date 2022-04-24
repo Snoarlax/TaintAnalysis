@@ -73,10 +73,12 @@ public class Block {
     }
 
     public void updateTaintedVariables() {
+        // Taint IN = for p in pred U (Taint Out(p))
+        Tainted.clear();
         for (Block block : Pred)
             Tainted.putAll(block.getTainted());
 
-        // The taint function of the block should be equal to the application of all sequential taint functions of the statements that make up the block
+        // Taint OUT (n) = Taint IN U gen(n) / kill (n)
         for (Statement statement : Statements) {
             statement.computeTaintFromInput(Tainted);
             // if the statement is a sink which gets tainted, mark the block as containing a tainted sink
