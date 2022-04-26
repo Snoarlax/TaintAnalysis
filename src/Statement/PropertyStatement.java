@@ -25,8 +25,6 @@ public class PropertyStatement extends Statement {
     public String getPropertyName() {
         return PropertyName;
     }
-
-
     public String getPropertyValue() {
         return PropertyValue;
     }

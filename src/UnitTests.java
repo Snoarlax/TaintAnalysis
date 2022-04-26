@@ -1633,7 +1633,7 @@ public class UnitTests {
     @DisplayName("Check that MethodCall Source functions taint correctly. ")
     public void Expr_MethodCall_SourceFunctionWorks() {
         // Arrange
-        String[] Arguments = new String[] { "name: LITERAL('apache_request_headers')", "args[0]: Var1", "result: Var2"};
+        String[] Arguments = new String[] { "var: testVariable", "name: LITERAL('apache_request_headers')", "args[0]: Var1", "result: Var2"};
         TaintMap TaintMap = new TaintMap();
 
 
@@ -1652,7 +1652,7 @@ public class UnitTests {
     @DisplayName("Check that MethodCall non-Source functions taint correctly. ")
     public void Expr_MethodCall_NotSourceFunctionWorks() {
         // Arrange
-        String[] Arguments = new String[] { "name: LITERAL('safe')", "args[0]: Var1", "result: Var2"};
+        String[] Arguments = new String[] { "var: testVariable","name: LITERAL('safe')", "args[0]: Var1", "result: Var2"};
         TaintMap TaintMap = new TaintMap();
 
 

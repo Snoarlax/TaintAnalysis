@@ -56,6 +56,8 @@ public class TaintAnalyser {
                 Collections.addAll(workSet, block.getSucc());
         }
 
+        // Find Tainted Sinks
+
         for (Block block : parser.getBlocks())
             if (block.isTaintedSink()) {
                 tainted = true;

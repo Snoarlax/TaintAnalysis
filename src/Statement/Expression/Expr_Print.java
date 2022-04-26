@@ -1,22 +1,17 @@
 package Statement.Expression;
 
-import TaintAnalysisComponents.Sink;
-import TaintAnalysisComponents.TaintMap;
-import TaintAnalysisComponents.TaintType;
-import TaintAnalysisComponents.Variable;
+import TaintAnalysisComponents.*;
 
 import java.util.HashSet;
 
 public class Expr_Print extends ExpressionStatement{
     // Print is basically FuncCall that is always a sink, I have no idea why Print is not automatically marked as FuncCall as I believe it should.
-    private boolean tainted;
 
     private final HashSet<Variable> TaintedBy;
 
     public Expr_Print(String Expression, String[] Arguments) {
         super(Expression, Arguments);
-        tainted = false;
-
+        ComponentType = Component.Sink;
         TaintedBy = new HashSet<>();
     }
 
@@ -32,11 +27,6 @@ public class Expr_Print extends ExpressionStatement{
             TaintedBy.add(expr);
             result.TaintedFrom(expr);
         }
-    }
-
-    @Override
-    public boolean isTaintedSink() {
-        return tainted;
     }
 
     @Override

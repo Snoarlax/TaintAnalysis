@@ -7,31 +7,30 @@ import java.util.HashSet;
 import java.util.List;
 
 public class Expr_MethodCall extends ExpressionStatement{
-    private final boolean isSink;
-    private final boolean isSanitization;
-    private final boolean isSource;
-    private boolean isTainted;
 
     private final HashSet<Variable> TaintedBy;
 
-    private final Sink sinkType;
+    private Sink sinkType;
 
     public Expr_MethodCall(String Expression, String[] Arguments) {
         super(Expression, Arguments);
-        isTainted = false;
-        isSink = computeSink(Arguments);
-        isSanitization = computeSanitization(Arguments);
-        isSource = computeSource(Arguments);
+        if (computeSink(Arguments)) {
+            ComponentType = Component.Sink;
+            sinkType = findSinkType(Arguments);
+        }
+        else if (computeSanitization(Arguments))
+            ComponentType = Component.Sanitization;
+        else if (computeSource(Arguments))
+            ComponentType = Component.Source;
+
 
         TaintedBy = new HashSet<>();
-
-        sinkType = isSink ? findSinkType(Arguments) : null;
     }
 
     private boolean computeSource(String[] Arguments) {
         // returns true if the function name matches a Source name.
         // Arguments[0] should be the array that the element is being fetched from
-        return Arrays.stream(SourceFunction.values()).anyMatch(x -> Arguments[0].endsWith("LITERAL('" + x.name() + "')"));
+        return Arrays.stream(SourceFunction.values()).anyMatch(x -> Arguments[1].endsWith("LITERAL('" + x.name() + "')"));
     }
 
     private boolean computeSanitization(String[] Arguments) {
@@ -52,12 +51,7 @@ public class Expr_MethodCall extends ExpressionStatement{
     }
 
     public boolean isSink() {
-        return isSink;
-    }
-
-    @Override
-    public boolean isTaintedSink() {
-        return isSink && isTainted;
+        return ComponentType == Component.Sink;
     }
 
     // Follows dataflow equation, Taintout = Taintout(pred) U gen(pred) / kill(pred)
@@ -88,24 +82,26 @@ public class Expr_MethodCall extends ExpressionStatement{
 
 
         // if the statement is a sink and is not already tainted, check if the any taint matches sinktype, and mark statement as tainted if this is the case
-        if (!isTaintedSink() && isSink()) {
-            Sink sinkType = Arrays.stream(Sink.values())
-                    .filter(x -> Arguments[1].endsWith("LITERAL('" + x.name() + "')"))
-                    .findFirst()
-                    .get();
-            for (Variable arg : FunctionArguments) {
-                if (arg.getTaints().contains(sinkType.getVulnerableTaint())) {
-                    TaintedBy.add(arg);
-                    isTainted = true;
+        if (ComponentType == Component.Sink) {
+            if (!tainted) {
+                Sink sinkType = Arrays.stream(Sink.values())
+                        .filter(x -> Arguments[1].endsWith("LITERAL('" + x.name() + "')"))
+                        .findFirst()
+                        .get();
+                for (Variable arg : FunctionArguments) {
+                    if (arg.getTaints().contains(sinkType.getVulnerableTaint())) {
+                        TaintedBy.add(arg);
+                        tainted = true;
+                    }
                 }
             }
         }
 
         // if statement is a sanitisation function, remove the relevant taints from the result.
 
-        else if (isSanitization) {
+        else if (ComponentType == Component.Sanitization) {
              HashSet<TaintType> TaintsToClear = Arrays.stream(Sanitization.values())
-                    .filter(x -> Arguments[0].endsWith("LITERAL('" + x.name() + "')"))
+                    .filter(x -> Arguments[1].endsWith("LITERAL('" + x.name() + "')"))
                     .findFirst()
                     .get()
                     .getTaintTypeSanitizations();
@@ -113,12 +109,19 @@ public class Expr_MethodCall extends ExpressionStatement{
              result.clearAllTainted(TaintsToClear);
         }
 
-        else if (isSource)
+        else if (ComponentType == Component.Source) {
             result.setAllTainted(List.of(TaintType.values()));
+            // creates a variable for the sake of the tainted from, not a real variable
+            result.TaintedFrom(new Variable("SourceFunction<" + getFunctionName() + ">"));
+        }
 
         // put the resultant variable with its taints into the TaintMap
         if (result.isTainted())
             inputTaint.put(result);
+    }
+
+    public String getFunctionName() {
+        return Arguments[1].substring(Arguments[1].indexOf("LITERAL('")+9, Arguments[1].lastIndexOf("')"));
     }
 
     @Override

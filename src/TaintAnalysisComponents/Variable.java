@@ -74,13 +74,13 @@ public class Variable {
     }
 
     public boolean isRealVariable() {
-        // Variables which are not just from the SSA form are styled like Var#N<$variablename>
-        return VariableName.contains("<$");
+        // Variables which are not just from the SSA form are styled like Var#N<$variablename>, and the custom source functions are denoted SourceFunction<functionName>
+        return VariableName.contains("<$") || VariableName.contains("SourceFunction<");
     }
 
     public String getRealVariableName() {
         // returns the non SSA form of the variable name if possible, else returns variable name.
 
-        return isRealVariable() ? VariableName.split("<")[1].split(">")[0] : VariableName;
+        return isRealVariable() ? VariableName.substring(VariableName.indexOf("<") + 1, VariableName.lastIndexOf(">")) : VariableName;
     }
 }
