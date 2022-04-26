@@ -13,10 +13,13 @@ public class TaintAnalyser {
         String Delimiter = " --> ";
         String Header = "A" + Delimiter + "B: A Taints B";
         String FailMessage = "The Analyser could not find any injection vulnerabilities. ";
-        String UsageMessage = "TaintAnalyser [FILE] [OPTION]\n" +
-                "Uses Taint analyses to analyse FILE in CFG form for injection vulnerabilities.\n" +
-                "OPTIONS\n" +
-                "-v Print with Verbosity";
+        String UsageMessage = """
+                TaintAnalyser [FILE] [OPTION]
+                Uses Taint analyses to analyse FILE in CFG form for injection vulnerabilities.
+                
+                OPTIONS
+                -v Print with Verbosity
+                """;
         if (args.length != 1 && args.length != 2) {
             System.out.println(UsageMessage);
             return;
@@ -74,7 +77,7 @@ public class TaintAnalyser {
 
         else {
             System.out.println(Header);
-
+            System.out.println("        " + "TAINT CHAIN[S]:");
             for (Statement statement : TaintedSinks) {
                 // Write summary of vulnerabilities for the program.
                 HashSet<Variable> TaintedFrom = statement.TaintedBy();
@@ -108,16 +111,15 @@ public class TaintAnalyser {
                     TaintedFrom = NewTaintedFrom;
                 }
 
+                // reverse the taint chain since it is more intuitive (From source to sink instead of vice versa)
                 Collections.reverse(TaintChain);
 
                 // print the Taint Chain
-                System.out.println("        " + "TAINT CHAIN:");
                 System.out.println("                " + String.format("%s : ", sinkType.getVulnerableTaint()) + String.join(Delimiter, TaintChain));
                 System.out.println();
             }
             System.out.println();
             int spacing = -Integer.max(25, TaintType.getMaxMessageLength());
-            System.out.println("VULNERABILITY TABLE:");
             System.out.printf(String.join("", Collections.nCopies(5, "%"+spacing+"s")) + "%n",
                     "Vulnerability", "Confidentiality", "Integrity", "Availability", "Priority");
             System.out.println();
