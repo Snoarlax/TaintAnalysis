@@ -1,6 +1,5 @@
 import Statement.*;
 import TaintAnalysisComponents.TaintMap;
-import TaintAnalysisComponents.Variable;
 
 import java.util.*;
 import java.util.regex.Pattern;
@@ -45,7 +44,7 @@ public class Block {
                     String arg = ArgumentsArray_Unchecked[j].split(": ", 2)[0] + ": ";
                     StringBuilder value = new StringBuilder(ArgumentsArray_Unchecked[j].split(": ", 2)[1]);
                     if (value.toString().startsWith("LITERAL('"))
-                        while (!(value.toString().endsWith("')") && !value.toString().endsWith("\\')")))
+                        while (!value.toString().endsWith("')"))
                             value.append(ArgumentsArray_Unchecked[++j]);
                     ArgumentList.add(arg + value);
                 }

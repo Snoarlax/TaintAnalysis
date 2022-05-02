@@ -7,7 +7,7 @@ import TaintAnalysisComponents.TaintType;
 import java.util.*;
 
 public class TaintAnalyser {
-
+    // todo change it so one per chain
     public static void main(String[] args) {
         boolean Verbose = false;
         String Delimiter = " --> ";

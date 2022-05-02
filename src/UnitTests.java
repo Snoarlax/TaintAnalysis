@@ -197,10 +197,10 @@ public class UnitTests {
             for (Statement statement : block.getStatements()){
                 String[] arguments = statement.getArguments();
                 for (String argument : arguments){
-                    // Check each argument's value, if it starts with LITERAL(' it must end with ') (where the last ' is unescaped)
+                    // Check each argument's value, if it starts with LITERAL(' it must end with ')
                     String value = argument.split(": ",2)[1];
                     if (value.startsWith("LITERAL('")){
-                        if (!(value.endsWith("')") && !value.endsWith("\\')")))
+                        if (!value.endsWith("')"))
                             Assert.fail();
                     }
                 }
