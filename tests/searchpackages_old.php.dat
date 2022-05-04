@@ -1,0 +1,601 @@
+
+Block#1
+    Var#1<$_REQUEST> = Phi()
+    Var#2<$_SESSION> = Phi()
+    Expr_FuncCall
+        name: LITERAL('session_start')
+        result: Var#3
+    Expr_Include
+        expr: LITERAL('functions/ss.php')
+        result: Var#4
+    Expr_New
+        class: LITERAL('search')
+        result: Var#5
+    Expr_Assign
+        var: Var#6<$obj>
+        expr: Var#5
+        result: Var#7
+    Terminal_Echo
+        expr: LITERAL('
+        <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+        <html xmlns="http://www.w3.org/1999/xhtml">
+        <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>MY Documents</title>
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+         <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+         <link href="css/bootswatch.css" rel="stylesheet">
+          <link href="bootstrap.min.css" rel="stylesheet">
+          <link href="css/bootstrap-responsive.min.css" rel="stylesheet">
+          <link href="css/bootstrap-responsive.css" rel="stylesheet">
+          <link href="css/animate.css" rel="stylesheet">
+          <link href="css/main-style.css" rel="stylesheet">
+          <link href="css/styles.css" rel="stylesheet">
+          
+          <script type="text/javascript" src="js/jquery.min.js"></script>
+        <!--JAVASCRIPT AJAX AND add text field-->
+        <script type="text/javascript" src="js/clinicalpagesamjs.js"></script>
+        <!--END JAVASCRIPT AJAX-->
+          
+          
+          </head>
+        
+        <body class="preview" data-spy="scroll" data-target=".subnav" data-offset="80">
+         <script src="js/bsa.js"></script>
+        <div class="navbar navbar-fixed-top">
+           <div class="navbar-inner" style="background:#487A97;">
+             <div class="container">
+             <div class="brand" href="index.php" style="color:#FFFFFF; padding:14px 0px 7px;"><img src="img/st.png" style=" height: 54px;width:170px; margin-left:-100%;"/></div>
+               <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"> 
+                 <span class="icon-bar"></span>
+                 <span class="icon-bar"></span>
+                 <span class="icon-bar"></span>
+               </a>
+               <a class="brand" href="index.php" style="color:#FFFFFF; padding: 22px 0px 10px;">[My Health Package]</a>
+               <div class="nav-collapse" id="main-menu">
+                <form method="post" autocomplete="off">
+                <ul class="nav" id="main-menu-left" >
+                  <li><input type="text" id="cms1" onKeyUp="lookup_cms(this.value,this.id);" name="ival" style="margin-left:30px;  border-radius:8px;" /></li>
+                  <li><input type="submit" style="background:url(img/search.png);background-repeat: no-repeat;color: white;width: 55px;height: 31px;border: none;padding-right: 22px;margin: -5px;margin-left:-34px;" value="" src="img/search.png" name="isearch" /></li>
+                 
+                </ul>
+                
+                 </form>
+                
+                
+                
+                <ul class="nav pull-right" id="main-menu-right">
+                
+                  <li><a href="Login.php" style="color:#FFFFFF; padding: 0px 15px 10px;">LogIn</a></li>
+                </ul>
+               </div>
+             </div>
+           </div>
+         </div>
+         
+         <!-----CHK HERE suggestions----->
+        
+        <div  id="suggestions_cus" style="display:none; fontsize:5px;margin-left:501px;">
+                          <ul id="autoSuggestionsList_cus" style="color:rgb(60, 16, 199);border:1px solid black;width: 227px;" onclick=getsrch()>
+                          </ul>
+                        </div>
+         
+         
+        <div class="container">
+        <!--	<div class="hero-unit" style="margin:0px; padding:10px 0px; text-align:left">-->
+        <!--    	<div class="span7">fetch value</div>-->
+        <!--        	<div class="span4 text-right">-->
+        	<!--                <form class="" style="">-->
+        	<!--                        <input type="text" class="input-medium search-query">-->
+        	<!--                        <button type="submit" class="btn btn-success">Search</button>-->
+        <!--                  </form>-->
+        <!--                  </div>-->
+                          <div style="clear:both"></div>
+        			</div>
+        
+        
+          
+          <div style="clear:both; "></div>
+            
+                    
+        <div class="container">
+        <div class="hero-unit1 h_top2 r_b2" style="background:#A5B9B5 !important; border-radius:0px; height:40px; color:#fff; font-weight:bold;" >
+        <div class="row">
+        
+        
+        ')
+    Expr_ArrayDimFetch
+        var: Var#1<$_REQUEST>
+        dim: LITERAL('rad')
+        result: Var#8
+    Expr_Empty
+        expr: Var#8
+        result: Var#9
+    Expr_BooleanNot
+        expr: Var#9
+        result: Var#10
+    Stmt_JumpIf
+        cond: Var#10
+        if: Block#2
+        else: Block#3
+
+Block#2
+    Parent: Block#1
+    Stmt_Jump
+        target: Block#4
+
+Block#3
+    Parent: Block#1
+    Stmt_Jump
+        target: Block#4
+
+Block#4
+    Parent: Block#2
+    Parent: Block#3
+    Var#11<$_REQUEST> = Phi(Var#1<$_REQUEST>)
+    Var#12<$_SESSION> = Phi(Var#2<$_SESSION>)
+    Var#13<$obj> = Phi(Var#6<$obj>)
+    Terminal_Echo
+        expr: LITERAL('
+        
+        
+        
+        	<div class="span2" style="word-wrap:break-word; margin-left:163px; width:148px;"><h5 style="font-size:18px;">Doctor Name</h5></div>
+                            <div class="span2" style="word-wrap:break-word; width:200px; "><h5 style="font-size:18px;">Package Name</h5></div>
+                            <div class="span2" style="word-wrap:break-word; width:160px; "><h5 style="font-size:18px;">Details</h5></div>
+                            <div class="span3" style="width:80px; word-wrap:break-word; "><h5 style="font-size:18px;">Cost</h5></div>
+                               <div class="span3" style="width:110px; word-wrap:break-word; "><h5 style="font-size:18px;">Discount</h5></div>
+           
+        </div>
+        </div>
+        
+        	
+        
+        
+          <div style="clear:both; "></div>
+        
+        
+                    ')
+    Expr_Assign
+        var: Var#14<$i>
+        expr: LITERAL(0)
+        result: Var#15
+    Expr_Assign
+        var: Var#16<$e>
+        expr: LITERAL(0)
+        result: Var#17
+    Expr_ArrayDimFetch
+        var: Var#11<$_REQUEST>
+        dim: LITERAL('ival')
+        result: Var#18
+    Expr_Assign
+        var: Var#19<$ival>
+        expr: Var#18
+        result: Var#20
+    Expr_ArrayDimFetch
+        var: Var#12<$_SESSION>
+        dim: LITERAL('ival')
+        result: Var#21
+    Expr_Assign
+        var: Var#21
+        expr: Var#19<$ival>
+        result: Var#22
+    Expr_MethodCall
+        var: Var#13<$obj>
+        name: LITERAL('search_word')
+        args[0]: Var#19<$ival>
+        result: Var#23
+    Expr_ConcatList
+        list[0]: LITERAL('select  PK.RKEY,
+        			 P.RKEY,
+        			 P.doc_id, 
+        			 P.package,
+        			 P.pdetails,
+        			 P.cost,
+        			 P.discount,
+        			 P.RKEY,
+        			 D.pic,
+        			 D.name,
+        			 D.email,
+        			 P.id
+         from packages P , doctor_detail D ,package_keywords PK where P.RKEY=PK.RKEY AND keyword=\'')
+        list[1]: Var#19<$ival>
+        list[2]: LITERAL('\' group by P.RKEY')
+        result: Var#24
+    Expr_FuncCall
+        name: LITERAL('mysql_query')
+        args[0]: Var#24
+        result: Var#25
+    Expr_Assign
+        var: Var#26<$u>
+        expr: Var#25
+        result: Var#27
+    Stmt_JumpIf
+        cond: Var#27
+        if: Block#5
+        else: Block#6
+
+Block#5
+    Parent: Block#4
+    Var#28 = Phi(LITERAL(true), Var#29)
+    Var#30<$u> = Phi(Var#26<$u>)
+    Var#31<$i> = Phi(Var#14<$i>)
+    Expr_FuncCall
+        name: LITERAL('mysql_num_rows')
+        args[0]: Var#30<$u>
+        result: Var#32
+    Expr_BinaryOp_Equal
+        left: Var#32
+        right: LITERAL(0)
+        result: Var#33
+    Stmt_JumpIf
+        cond: Var#33
+        if: Block#7
+        else: Block#8
+
+Block#6
+    Parent: Block#4
+    Expr_FuncCall
+        name: LITERAL('mysql_error')
+        result: Var#34
+    Expr_BinaryOp_Concat
+        left: Var#34
+        right: LITERAL('STR')
+        result: Var#35
+    Terminal_Exit
+        expr: Var#35
+
+Block#7
+    Parent: Block#5
+    Terminal_Echo
+        expr: LITERAL(' 
+         <div class="hero-unit h_top" style="padding:0px;border-radius:0px; background-color:antiquewhite;" >
+                    	
+                    	<div class="row" style="margin-left:0px;">
+                    	    <div class="span2" style="margin-left:400px;">No Package Found</div>
+                    	    </div>
+                    	    </div>
+         
+         ')
+    Stmt_Jump
+        target: Block#9
+
+Block#8
+    Parent: Block#5
+    Stmt_Jump
+        target: Block#9
+
+Block#9
+    Parent: Block#7
+    Parent: Block#8
+    Var#36<$u> = Phi(Var#30<$u>)
+    Var#37<$i> = Phi(Var#31<$i>)
+    Stmt_Jump
+        target: Block#10
+
+Block#10
+    Parent: Block#9
+    Parent: Block#26
+    Var#38<$u> = Phi(Var#36<$u>, Var#39<$u>)
+    Var#40<$i> = Phi(Var#37<$i>, Var#41<$i>)
+    Expr_FuncCall
+        name: LITERAL('mysql_fetch_array')
+        args[0]: Var#38<$u>
+        result: Var#42
+    Expr_Assign
+        var: Var#43<$erd>
+        expr: Var#42
+        result: Var#44
+    Stmt_JumpIf
+        cond: Var#44
+        if: Block#11
+        else: Block#12
+
+Block#11
+    Parent: Block#10
+    Var#45<$erd> = Phi(Var#43<$erd>)
+    Var#46<$i> = Phi(Var#40<$i>)
+    Expr_ArrayDimFetch
+        var: Var#45<$erd>
+        dim: LITERAL(11)
+        result: Var#47
+    Expr_FuncCall
+        name: LITERAL('base64_encode')
+        args[0]: Var#47
+        result: Var#48
+    Expr_Assign
+        var: Var#49<$id>
+        expr: Var#48
+        result: Var#50
+    Expr_ArrayDimFetch
+        var: Var#45<$erd>
+        dim: LITERAL(2)
+        result: Var#51
+    Expr_FuncCall
+        name: LITERAL('base64_encode')
+        args[0]: Var#51
+        result: Var#52
+    Expr_Assign
+        var: Var#53<$usr>
+        expr: Var#52
+        result: Var#54
+    Terminal_Echo
+        expr: LITERAL('  
+                    <div class="hero-unit h_top" ')
+    Expr_BinaryOp_Mod
+        left: Var#46<$i>
+        right: LITERAL(2)
+        result: Var#55
+    Expr_BinaryOp_NotEqual
+        left: Var#55
+        right: LITERAL(0)
+        result: Var#56
+    Stmt_JumpIf
+        cond: Var#56
+        if: Block#13
+        else: Block#14
+
+Block#12
+    Parent: Block#10
+    Stmt_Jump
+        target: Block#15
+
+Block#13
+    Parent: Block#11
+    Terminal_Echo
+        expr: LITERAL('style="background-color: lavender;padding:0px;border-radius:0px;"')
+    Stmt_Jump
+        target: Block#16
+
+Block#14
+    Parent: Block#11
+    Terminal_Echo
+        expr: LITERAL(' style="padding:0px;border-radius:0px;" ')
+    Stmt_Jump
+        target: Block#16
+
+Block#15
+    Parent: Block#12
+    Terminal_Echo
+        expr: LITERAL('               
+        
+                     </div>
+                     
+        
+           		</div>
+                 
+              
+          </div>
+          
+         
+        </body>
+        </html>
+        ')
+    Terminal_Return
+
+Block#16
+    Parent: Block#13
+    Parent: Block#14
+    Var#57<$u> = Phi(Var#38<$u>)
+    Var#58<$erd> = Phi(Var#45<$erd>)
+    Var#59<$id> = Phi(Var#49<$id>)
+    Var#60<$usr> = Phi(Var#53<$usr>)
+    Var#61<$i> = Phi(Var#46<$i>)
+    Terminal_Echo
+        expr: LITERAL(' >
+                    	
+                    	<div class="row" style="margin-left:0px;">
+                    	    <div class="span2" style="margin-left:2px;"><img ')
+    Expr_ArrayDimFetch
+        var: Var#58<$erd>
+        dim: LITERAL(8)
+        result: Var#62
+    Expr_BinaryOp_Equal
+        left: Var#62
+        right: LITERAL('')
+        result: Var#63
+    Stmt_JumpIf
+        cond: Var#63
+        if: Block#17
+        else: Block#18
+
+Block#17
+    Parent: Block#16
+    Terminal_Echo
+        expr: LITERAL(' src="img/icon-user-default.png" ')
+    Stmt_Jump
+        target: Block#19
+
+Block#18
+    Parent: Block#16
+    Var#64<$erd> = Phi(Var#58<$erd>)
+    Terminal_Echo
+        expr: LITERAL(' src="')
+    Expr_ArrayDimFetch
+        var: Var#64<$erd>
+        dim: LITERAL(8)
+        result: Var#65
+    Terminal_Echo
+        expr: Var#65
+    Terminal_Echo
+        expr: LITERAL('" ')
+    Stmt_Jump
+        target: Block#19
+
+Block#19
+    Parent: Block#17
+    Parent: Block#18
+    Var#66<$u> = Phi(Var#57<$u>)
+    Var#67<$id> = Phi(Var#59<$id>)
+    Var#68<$usr> = Phi(Var#60<$usr>)
+    Var#69<$erd> = Phi(Var#58<$erd>, Var#64<$erd>)
+    Var#70<$i> = Phi(Var#61<$i>)
+    Terminal_Echo
+        expr: LITERAL(' /></div>
+                            <div class="span2" style="word-wrap:break-word; margin-top:4%;"><h5><a href="Doctor_box.php?id=')
+    Terminal_Echo
+        expr: Var#67<$id>
+    Terminal_Echo
+        expr: LITERAL('&usr=')
+    Terminal_Echo
+        expr: Var#68<$usr>
+    Terminal_Echo
+        expr: LITERAL('">')
+    Expr_ArrayDimFetch
+        var: Var#69<$erd>
+        dim: LITERAL(9)
+        result: Var#71
+    Terminal_Echo
+        expr: Var#71
+    Terminal_Echo
+        expr: LITERAL('</a></h5></div>
+                            <div class="span2" style="word-wrap:break-word; margin-top:4%;"><h5 >')
+    Expr_ArrayDimFetch
+        var: Var#69<$erd>
+        dim: LITERAL(3)
+        result: Var#72
+    Terminal_Echo
+        expr: Var#72
+    Terminal_Echo
+        expr: LITERAL('</h5></div>
+                            <div class="span2" style="word-wrap:break-word; width:230px;   margin-top:4%;"><h5>')
+    Expr_ArrayDimFetch
+        var: Var#69<$erd>
+        dim: LITERAL(4)
+        result: Var#73
+    Terminal_Echo
+        expr: Var#73
+    Terminal_Echo
+        expr: LITERAL('</h5></div>
+                            <div class="span3" style="width:80px; word-wrap:break-word; margin-top:4%;"><h5>')
+    Expr_ArrayDimFetch
+        var: Var#69<$erd>
+        dim: LITERAL(6)
+        result: Var#74
+    Expr_BinaryOp_NotEqual
+        left: Var#74
+        right: LITERAL(0)
+        result: Var#75
+    Stmt_JumpIf
+        cond: Var#75
+        if: Block#20
+        else: Block#21
+
+Block#20
+    Parent: Block#19
+    Var#76<$erd> = Phi(Var#69<$erd>)
+    Expr_ArrayDimFetch
+        var: Var#76<$erd>
+        dim: LITERAL(5)
+        result: Var#77
+    Expr_BinaryOp_Concat
+        left: LITERAL('<s>')
+        right: Var#77
+        result: Var#78
+    Expr_BinaryOp_Concat
+        left: Var#78
+        right: LITERAL('</s>')
+        result: Var#79
+    Terminal_Echo
+        expr: Var#79
+    Stmt_Jump
+        target: Block#22
+
+Block#21
+    Parent: Block#19
+    Var#80<$erd> = Phi(Var#69<$erd>)
+    Expr_ArrayDimFetch
+        var: Var#80<$erd>
+        dim: LITERAL(5)
+        result: Var#81
+    Terminal_Echo
+        expr: Var#81
+    Stmt_Jump
+        target: Block#22
+
+Block#22
+    Parent: Block#20
+    Parent: Block#21
+    Var#82<$u> = Phi(Var#66<$u>)
+    Var#83<$erd> = Phi(Var#76<$erd>, Var#80<$erd>)
+    Var#84<$i> = Phi(Var#70<$i>)
+    Terminal_Echo
+        expr: LITERAL('</h5></div>
+                               <div class="span3" style="width:50px; word-wrap:break-word; margin-top:4%;"><h5>')
+    Expr_ArrayDimFetch
+        var: Var#83<$erd>
+        dim: LITERAL(6)
+        result: Var#85
+    Terminal_Echo
+        expr: Var#85
+    Terminal_Echo
+        expr: LITERAL('</h5></div>
+                              <div class="span3" style="width:64px; float:left; word-wrap:break-word; margin-top:-1%;margin-left: 273px;"><h5>')
+    Expr_ArrayDimFetch
+        var: Var#83<$erd>
+        dim: LITERAL(6)
+        result: Var#86
+    Expr_BinaryOp_NotEqual
+        left: Var#86
+        right: LITERAL(0)
+        result: Var#87
+    Stmt_JumpIf
+        cond: Var#87
+        if: Block#23
+        else: Block#24
+
+Block#23
+    Parent: Block#22
+    Var#88<$erd> = Phi(Var#83<$erd>)
+    Expr_ArrayDimFetch
+        var: Var#88<$erd>
+        dim: LITERAL(5)
+        result: Var#89
+    Expr_ArrayDimFetch
+        var: Var#88<$erd>
+        dim: LITERAL(6)
+        result: Var#90
+    Expr_BinaryOp_Minus
+        left: Var#89
+        right: Var#90
+        result: Var#91
+    Terminal_Echo
+        expr: Var#91
+    Stmt_Jump
+        target: Block#25
+
+Block#24
+    Parent: Block#22
+    Terminal_Echo
+        expr: LITERAL('')
+    Stmt_Jump
+        target: Block#25
+
+Block#25
+    Parent: Block#23
+    Parent: Block#24
+    Var#39<$u> = Phi(Var#82<$u>)
+    Var#92<$i> = Phi(Var#84<$i>)
+    Terminal_Echo
+        expr: LITERAL('</h5></div>
+                              
+                          </div>
+                          
+                      		
+          				</div>
+                          ')
+    Expr_BinaryOp_Plus
+        left: Var#92<$i>
+        right: LITERAL(1)
+        result: Var#93
+    Expr_Assign
+        var: Var#41<$i>
+        expr: Var#93
+        result: Var#94
+    Stmt_Jump
+        target: Block#26
+
+Block#26
+    Parent: Block#25
+    Stmt_Jump
+        target: Block#10

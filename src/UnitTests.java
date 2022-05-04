@@ -1102,13 +1102,12 @@ public class UnitTests {
     @DisplayName("Check that the ExprArrayDimFetch statement result tracks where variables get tainted from. ")
     public void ExprArrayDimFetch_Tracks_TaintedFrom() {
         // Arrange
-        Expr_ArrayDimFetch statement = new Expr_ArrayDimFetch("Expr_ArrayDimFetch", new String[] {"var: Var1", "dim: 2", "result: Var2"});
+        Expr_ArrayDimFetch statement = new Expr_ArrayDimFetch("Expr_ArrayDimFetch", new String[] {"var: var#1<$_GET>", "dim: 2", "result: Var2"});
 
-        Variable Var1 = new Variable("Var1");
-        Var1.setTainted(TaintType.XSS);
+        Variable array = new Variable("var#1<$_GET>");
 
         TaintMap inputTaint = new TaintMap();
-        inputTaint.put(Var1);
+        inputTaint.put(array);
 
         // Act
 
@@ -1116,7 +1115,7 @@ public class UnitTests {
 
         // Assert
 
-        Assert.assertTrue(inputTaint.get("Var2").getTaintedFrom().contains(Var1));
+        Assert.assertTrue(inputTaint.get("Var2").getTaintedFrom().contains(array));
     }
 
     @Test

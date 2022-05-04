@@ -3,6 +3,7 @@ package Statement.Expression;
 import TaintAnalysisComponents.*;
 
 import java.util.HashSet;
+import java.util.List;
 
 public class Expr_Include extends ExpressionStatement {
     // Print is basically FuncCall that is always a sink, I have no idea why Print is not automatically marked as FuncCall as I believe it should.
@@ -21,7 +22,7 @@ public class Expr_Include extends ExpressionStatement {
         if (expr.hasTainted(TaintType.DIRECTORY) && !isTaintedSink()){
             tainted = true;
             Variable result = inputTaint.get(Arguments[1].split(": ", 2)[1]);
-            result.setAllTainted(expr.getTaints());
+            result.setAllTainted(List.of(TaintType.values()));
             inputTaint.put(result);
 
             TaintedBy.add(expr);

@@ -1,7 +1,10 @@
 package Statement;
 
 import TaintAnalysisComponents.TaintMap;
+import TaintAnalysisComponents.TaintType;
 import TaintAnalysisComponents.Variable;
+
+import java.util.HashSet;
 
 public class AssignmentStatement extends Statement{
     private final String AssignedVariable;
@@ -21,6 +24,7 @@ public class AssignmentStatement extends Statement{
 
         Variable AssignedVar = inputTaint.get(AssignedVariable);
 
+
         // Determine Type[s] of taint present in the variable
 
         String[] Values;
@@ -33,9 +37,12 @@ public class AssignmentStatement extends Statement{
 
         // If the Values are empty, then just create a new variable with name equal to the assigned variable
         // For each of the potential values, see if it is tainted. If it is, the AssignedVariable could be tainted, so pass it on.
+
+        HashSet<TaintType> TaintsBefore = AssignedVar.getTaints();
         for (String Value : Values){
             Variable var = inputTaint.get(Value);
-            if (var.isTainted()) {
+            // To remove cycles, TaintedFrom is only marked when a variable introduces new taints
+            if (var.isTainted() && !TaintsBefore.containsAll(var.getTaints())) {
                 AssignedVar.setAllTainted(var.getTaints());
                 AssignedVar.TaintedFrom(var);
             }

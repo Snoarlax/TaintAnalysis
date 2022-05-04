@@ -15,18 +15,21 @@ public class Expr_ArrayDimFetch extends ExpressionStatement{
         Variable var = inputTaint.get(Arguments[0].split(": ",2)[1]);
         Variable result = inputTaint.get(Arguments[2].split(": ", 2)[1]);
 
-        // if the result EVER becomes tainted, the array should also become tainted!
-        var.markTaintDependency(result);
+
         inputTaint.put(var);
         inputTaint.put(result);
 
-
-        if (var.isTainted()) {
-            if (!result.hasTainted(var.getTaints()))
+        if (var.isSource())
+            // alternatively, if the result gets tainted from the array...
+        {
+            if (!result.hasTainted(var.getTaints())) {
                 result.TaintedFrom(var);
                 result.setAllTainted(var.getTaints());
+            }
         }
 
+        // if the result EVER becomes tainted int the future, the array should also become tainted if it is not already!
+        else var.markTaintDependency(result);
 
     }
 

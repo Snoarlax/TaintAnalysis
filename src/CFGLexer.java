@@ -12,15 +12,21 @@ public class CFGLexer {
     private Block[] Blocks = null;
     private String Data = "";
 
+    public File getGraph() {
+        return graph;
+    }
+
+    private final File graph;
+
     CFGLexer(String FileLocation) throws InvalidFileException{
-        ReadFile(FileLocation);
+        graph = new File(FileLocation);
+        ReadFile();
         ParseFile(Data);
 
     }
 
-    private void ReadFile(String FileLocation) throws InvalidFileException{
+    private void ReadFile() throws InvalidFileException{
         try {
-            File graph = new File(FileLocation);
             Scanner reader = new Scanner(graph);
             StringBuilder builder = new StringBuilder();
 
@@ -31,7 +37,7 @@ public class CFGLexer {
         }
 
         catch (FileNotFoundException e){
-            throw new InvalidFileException("File: " + FileLocation + " cannot be found. ");
+            throw new InvalidFileException("File: " + graph.getName() + " cannot be found. ");
         }
     }
 

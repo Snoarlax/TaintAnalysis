@@ -9,20 +9,28 @@ public class Variable {
     private Optional<HashSet<Variable>> TaintDependencies;
     private final HashSet<Variable> TaintedFrom;
 
+    private final boolean isSource;
+
     public Variable(String VariableName, Collection<TaintType> Tainted) {
         // assumption that calling this with a sources' variable name chooses the programmers Tainted set over the default, which is all tainted.
         this.VariableName = VariableName;
         this.Taints = new HashSet<>(Tainted);
 
         TaintDependencies = Optional.empty();
+        isSource = false;
         TaintedFrom = new HashSet<>();
     }
 
     public Variable(String VariableName) {
         this.VariableName = VariableName;
         this.Taints = new HashSet<>();
-        if (isRealVariable() && computeSource(VariableName))
+        if (isRealVariable() && computeSource(VariableName)) {
             Collections.addAll(Taints, TaintType.values());
+            isSource = true;
+        }
+
+        else
+            isSource = false;
 
         TaintDependencies = Optional.empty();
         TaintedFrom = new HashSet<>();
@@ -52,22 +60,22 @@ public class Variable {
                         DFSStack.push(var);
         }
 
-        if (elements.contains(this))
-            return true;
-
-        return false;
+        return elements.contains(this);
     }
 
     public void markTaintDependency(Variable DependentVariable){
         // Enforces that Tainted(Variable) => Tainted(DependentVariable)
         if (TaintDependencies.isEmpty())
-            TaintDependencies = Optional.of(new HashSet<Variable>());
+            TaintDependencies = Optional.of(new HashSet<>());
 
         // check for cycles
         if (!TaintDependencyCycle(DependentVariable))
             TaintDependencies.get().add(DependentVariable);
     }
 
+    public boolean isSource() {
+        return isSource;
+    }
     public String getVariableName() {
         return VariableName;
     }
@@ -128,6 +136,7 @@ public class Variable {
         HashSet<Variable> returnTaintedFrom = new HashSet<>(TaintedFrom);
 
         TaintDependencies.get().forEach(x -> returnTaintedFrom.addAll(x.getTaintedFrom()));
+        // ensure we do not have cyclic tainted from
         returnTaintedFrom.remove(this);
         return returnTaintedFrom;
     }

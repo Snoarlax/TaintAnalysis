@@ -1,0 +1,3079 @@
+
+Block#1
+    Var#1<$_SESSION> = Phi()
+    Var#2<$_POST> = Phi()
+    Var#3<$_FILES> = Phi()
+    Var#4<$fileExt> = Phi()
+    Var#5<$username> = Phi()
+    Var#6<$_GET> = Phi()
+    Expr_FuncCall
+        name: LITERAL('ob_start')
+        result: Var#7
+    Expr_FuncCall
+        name: LITERAL('error_reporting')
+        args[0]: LITERAL(0)
+        result: Var#8
+    Expr_FuncCall
+        name: LITERAL('session_start')
+        result: Var#9
+    Expr_Include
+        expr: LITERAL('database.php')
+        result: Var#10
+    Expr_Include
+        expr: LITERAL('varfilter.php')
+        result: Var#11
+    Expr_Include
+        expr: LITERAL('functions/sam_img_lib.php')
+        result: Var#12
+    Expr_ArrayDimFetch
+        var: Var#1<$_SESSION>
+        dim: LITERAL('cusername')
+        result: Var#13
+    Expr_Empty
+        expr: Var#13
+        result: Var#14
+    Stmt_JumpIf
+        cond: Var#14
+        if: Block#2
+        else: Block#3
+
+Block#2
+    Parent: Block#1
+    Expr_FuncCall
+        name: LITERAL('header')
+        args[0]: LITERAL('location:index.php')
+        result: Var#15
+    Stmt_Jump
+        target: Block#4
+
+Block#3
+    Parent: Block#1
+    Stmt_Jump
+        target: Block#4
+
+Block#4
+    Parent: Block#2
+    Parent: Block#3
+    Var#16<$_SESSION> = Phi(Var#1<$_SESSION>)
+    Var#17<$_POST> = Phi(Var#2<$_POST>)
+    Var#18<$_FILES> = Phi(Var#3<$_FILES>)
+    Var#19<$fileExt> = Phi(Var#4<$fileExt>)
+    Var#20<$username> = Phi(Var#5<$username>)
+    Var#21<$_GET> = Phi(Var#6<$_GET>)
+    Expr_Include
+        expr: LITERAL('headwithsearch.php')
+        result: Var#22
+    Terminal_Echo
+        expr: LITERAL('
+        
+        ')
+    Expr_ArrayDimFetch
+        var: Var#16<$_SESSION>
+        dim: LITERAL('cusername')
+        result: Var#23
+    Expr_Assign
+        var: Var#24<$cusernmae>
+        expr: Var#23
+        result: Var#25
+    Expr_ConcatList
+        list[0]: LITERAL('select no_of_upload from client_login where username=\'')
+        list[1]: Var#24<$cusernmae>
+        list[2]: LITERAL('\'')
+        result: Var#26
+    Expr_FuncCall
+        name: LITERAL('mysql_query')
+        args[0]: Var#26
+        result: Var#27
+    Expr_Assign
+        var: Var#28<$c>
+        expr: Var#27
+        result: Var#29
+    Stmt_JumpIf
+        cond: Var#29
+        if: Block#5
+        else: Block#6
+
+Block#5
+    Parent: Block#4
+    Var#30 = Phi(LITERAL(true), Var#31)
+    Var#32<$c> = Phi(Var#28<$c>)
+    Var#33<$cusernmae> = Phi(Var#24<$cusernmae>)
+    Var#34<$_POST> = Phi(Var#17<$_POST>)
+    Var#35<$_FILES> = Phi(Var#18<$_FILES>)
+    Var#36<$fileExt> = Phi(Var#19<$fileExt>)
+    Var#37<$username> = Phi(Var#20<$username>)
+    Var#38<$_GET> = Phi(Var#21<$_GET>)
+    Expr_FuncCall
+        name: LITERAL('mysql_fetch_array')
+        args[0]: Var#32<$c>
+        result: Var#39
+    Expr_Assign
+        var: Var#40<$counter>
+        expr: Var#39
+        result: Var#41
+    Expr_ArrayDimFetch
+        var: Var#40<$counter>
+        dim: LITERAL(0)
+        result: Var#42
+    Expr_Assign
+        var: Var#43<$counting>
+        expr: Var#42
+        result: Var#44
+    Expr_ArrayDimFetch
+        var: Var#40<$counter>
+        dim: LITERAL(0)
+        result: Var#45
+    Expr_BinaryOp_Plus
+        left: Var#45
+        right: LITERAL(1)
+        result: Var#46
+    Expr_Assign
+        var: Var#47<$count>
+        expr: Var#46
+        result: Var#48
+    Expr_Assign
+        var: Var#49<$max>
+        expr: LITERAL(200)
+        result: Var#50
+    Terminal_Echo
+        expr: LITERAL('<div class="container">
+        	<div class="hero-unit" style="margin:0px; padding:10px 0px; text-align:left">
+            	<div class="row">
+                    <div class="span7">Welcome ')
+    Terminal_Echo
+        expr: Var#33<$cusernmae>
+    Terminal_Echo
+        expr: LITERAL('<br/>
+                        You have ')
+    Expr_BinaryOp_Minus
+        left: Var#49<$max>
+        right: Var#43<$counting>
+        result: Var#51
+    Expr_Assign
+        var: Var#52<$left>
+        expr: Var#51
+        result: Var#53
+    Terminal_Echo
+        expr: Var#53
+    Terminal_Echo
+        expr: LITERAL(' uploads left
+                    </div>
+                        <div class="span4 text-right">
+                            <form method="post" action="clientsearch.php" class="" style="">
+                                    <input type="text" name="srch_txt" class="input-medium search-query">
+                                    <button type="submit" name="srch" class="btn btn-success">Search</button>
+                              </form>
+                              </div>
+                  </div>
+        
+            </div>
+                    <div style="clear:both; margin:10px 0px"></div>
+        
+        
+        
+        
+        
+                    <!--marketing area-->
+                    <div class="hero-unit h_top">
+                    	<div class="row">
+                    	    <div class="span2"><h5>Name</h5></div>
+                            <div class="span2"><h5>Email</h5></div>
+                            <div class="span2"><h5>Phone</h5></div>
+                            <div class="span2"><h5>Date</h5></div>
+                            <div class="span3"><h5>Upload</h5>(Max limit 5 photos at once)</div>
+                          </div>
+                      		<div class="row">
+        
+                      		<form method="post" enctype="multipart/form-data">
+        
+              				<div class="span2"><input type="text"  name="name" class="span2" /></div>
+                            <div class="span2"><input type="text" name="email" class="span2" /></div>
+                            <div class="span2"><input type="text" name="phone" class="span2" /></div>
+                            <div class="span2"><input type="date" name="date" class="span2" /></div>
+                            <div class="span2"><input type="file"  multiple="multiple" id="myfile" name="myfile[]"  class=" span2"/></div>
+                            <div class="span1">
+                            <input type="submit" name="upload" value="upload" class="btn btn-success">
+                            </form>
+                            </div>
+        
+          				</div>
+        		<div style="clear:both; margin:10px 0px"></div>
+        
+        
+        
+        
+        
+        
+        
+        ')
+    Expr_ArrayDimFetch
+        var: Var#34<$_POST>
+        dim: LITERAL('upload')
+        result: Var#54
+    Expr_Isset
+        vars[0]: Var#54
+        result: Var#55
+    Stmt_JumpIf
+        cond: Var#55
+        if: Block#7
+        else: Block#8
+
+Block#6
+    Parent: Block#4
+    Expr_FuncCall
+        name: LITERAL('mysql_error')
+        result: Var#56
+    Terminal_Exit
+        expr: Var#56
+
+Block#7
+    Parent: Block#5
+    Var#57<$_POST> = Phi(Var#34<$_POST>)
+    Expr_ArrayDimFetch
+        var: Var#57<$_POST>
+        dim: LITERAL('myfile')
+        result: Var#58
+    Expr_Assign
+        var: Var#59<$myfile>
+        expr: Var#58
+        result: Var#60
+    Expr_ArrayDimFetch
+        var: Var#57<$_POST>
+        dim: LITERAL('name')
+        result: Var#61
+    Expr_FuncCall
+        name: LITERAL('unhack')
+        args[0]: Var#61
+        result: Var#62
+    Expr_Assign
+        var: Var#63<$imgname>
+        expr: Var#62
+        result: Var#64
+    Expr_ArrayDimFetch
+        var: Var#57<$_POST>
+        dim: LITERAL('email')
+        result: Var#65
+    Expr_FuncCall
+        name: LITERAL('unhack')
+        args[0]: Var#65
+        result: Var#66
+    Expr_Assign
+        var: Var#67<$email>
+        expr: Var#66
+        result: Var#68
+    Expr_ArrayDimFetch
+        var: Var#57<$_POST>
+        dim: LITERAL('date')
+        result: Var#69
+    Expr_FuncCall
+        name: LITERAL('unhack')
+        args[0]: Var#69
+        result: Var#70
+    Expr_Assign
+        var: Var#71<$imgdate>
+        expr: Var#70
+        result: Var#72
+    Expr_ArrayDimFetch
+        var: Var#57<$_POST>
+        dim: LITERAL('phone')
+        result: Var#73
+    Expr_FuncCall
+        name: LITERAL('unhack')
+        args[0]: Var#73
+        result: Var#74
+    Expr_Assign
+        var: Var#75<$phone>
+        expr: Var#74
+        result: Var#76
+    Expr_FuncCall
+        name: LITERAL('mysql_query')
+        args[0]: LITERAL('select MAX(docs_id) from mydocs')
+        result: Var#77
+    Expr_Assign
+        var: Var#78<$get_prev_id>
+        expr: Var#77
+        result: Var#79
+    Stmt_JumpIf
+        cond: Var#79
+        if: Block#9
+        else: Block#10
+
+Block#8
+    Parent: Block#5
+    Stmt_Jump
+        target: Block#11
+
+Block#9
+    Parent: Block#7
+    Var#80 = Phi(LITERAL(true), Var#81)
+    Var#82<$get_prev_id> = Phi(Var#78<$get_prev_id>)
+    Var#83<$_FILES> = Phi(Var#35<$_FILES>)
+    Var#84<$cusernmae> = Phi(Var#33<$cusernmae>)
+    Var#85<$fileExt> = Phi(Var#36<$fileExt>)
+    Var#86<$imgname> = Phi(Var#63<$imgname>)
+    Var#87<$email> = Phi(Var#67<$email>)
+    Var#88<$imgdate> = Phi(Var#71<$imgdate>)
+    Var#89<$phone> = Phi(Var#75<$phone>)
+    Var#90<$counting> = Phi(Var#43<$counting>)
+    Var#91<$username> = Phi(Var#37<$username>)
+    Var#92<$count> = Phi(Var#47<$count>)
+    Var#93<$max> = Phi(Var#49<$max>)
+    Var#94<$_GET> = Phi(Var#38<$_GET>)
+    Var#95<$counter> = Phi(Var#40<$counter>)
+    Expr_FuncCall
+        name: LITERAL('mysql_fetch_array')
+        args[0]: Var#82<$get_prev_id>
+        result: Var#96
+    Expr_Assign
+        var: Var#97<$docs_id>
+        expr: Var#96
+        result: Var#98
+    Expr_ArrayDimFetch
+        var: Var#97<$docs_id>
+        dim: LITERAL(0)
+        result: Var#99
+    Expr_Assign
+        var: Var#100<$d_id>
+        expr: Var#99
+        result: Var#101
+    Expr_ArrayDimFetch
+        var: Var#83<$_FILES>
+        dim: LITERAL('myfile')
+        result: Var#102
+    Expr_Assign
+        var: Var#103<$n>
+        expr: Var#102
+        result: Var#104
+    Expr_FuncCall
+        name: LITERAL('count')
+        args[0]: Var#103<$n>
+        result: Var#105
+    Expr_Assign
+        var: Var#106<$c>
+        expr: Var#105
+        result: Var#107
+    Expr_Assign
+        var: Var#108<$thumbnail>
+        expr: LITERAL(0)
+        result: Var#109
+    Expr_Assign
+        var: Var#110<$i>
+        expr: LITERAL(0)
+        result: Var#111
+    Expr_BinaryOp_Concat
+        left: LITERAL('mydocs/clients/')
+        right: Var#84<$cusernmae>
+        result: Var#112
+    Expr_FuncCall
+        name: LITERAL('file_exists')
+        args[0]: Var#112
+        result: Var#113
+    Expr_FuncCall
+        name: LITERAL('file_exists')
+        args[0]: Var#113
+        result: Var#114
+    Stmt_JumpIf
+        cond: Var#114
+        if: Block#12
+        else: Block#13
+
+Block#10
+    Parent: Block#7
+    Expr_FuncCall
+        name: LITERAL('mysql_error')
+        result: Var#115
+    Expr_BinaryOp_Concat
+        left: Var#115
+        right: LITERAL(' Prev id not fetched')
+        result: Var#116
+    Terminal_Exit
+        expr: Var#116
+
+Block#11
+    Parent: Block#47
+    Parent: Block#8
+    Var#117<$count> = Phi(Var#118<$count>, Var#47<$count>)
+    Var#119<$max> = Phi(Var#120<$max>, Var#49<$max>)
+    Var#121<$cusernmae> = Phi(Var#122<$cusernmae>, Var#33<$cusernmae>)
+    Var#123<$_GET> = Phi(Var#124<$_GET>, Var#38<$_GET>)
+    Var#125<$counter> = Phi(Var#126<$counter>, Var#40<$counter>)
+    Expr_BinaryOp_Greater
+        left: Var#117<$count>
+        right: Var#119<$max>
+        result: Var#127
+    Stmt_JumpIf
+        cond: Var#127
+        if: Block#14
+        else: Block#15
+
+Block#12
+    Parent: Block#9
+    Var#128<$d_id> = Phi(Var#100<$d_id>)
+    Var#129<$cusernmae> = Phi(Var#84<$cusernmae>)
+    Expr_BinaryOp_Plus
+        left: Var#128<$d_id>
+        right: LITERAL(1)
+        result: Var#130
+    Expr_Assign
+        var: Var#131<$increement>
+        expr: Var#130
+        result: Var#132
+    Expr_FuncCall
+        name: LITERAL('date_default_timezone_get')
+        args[0]: LITERAL('asia/kolkata')
+        result: Var#133
+    Expr_FuncCall
+        name: LITERAL('date')
+        args[0]: LITERAL('Y-m-d')
+        result: Var#134
+    Expr_Assign
+        var: Var#135<$date>
+        expr: Var#134
+        result: Var#136
+    Expr_ConcatList
+        list[0]: LITERAL('mydocs/clients/')
+        list[1]: Var#129<$cusernmae>
+        list[2]: LITERAL('/')
+        result: Var#137
+    Expr_BinaryOp_Concat
+        left: Var#137
+        right: Var#131<$increement>
+        result: Var#138
+    Expr_FuncCall
+        name: LITERAL('mkdir')
+        args[0]: Var#138
+        result: Var#139
+    Expr_ConcatList
+        list[0]: LITERAL('mydocs/clients/')
+        list[1]: Var#129<$cusernmae>
+        list[2]: LITERAL('/')
+        list[3]: Var#131<$increement>
+        result: Var#140
+    Expr_Assign
+        var: Var#141<$destination>
+        expr: Var#140
+        result: Var#142
+    Expr_Assign
+        var: Var#143<$i>
+        expr: LITERAL(0)
+        result: Var#144
+    Stmt_Jump
+        target: Block#16
+
+Block#13
+    Parent: Block#9
+    Var#145<$d_id> = Phi(Var#100<$d_id>)
+    Var#146<$cusernmae> = Phi(Var#84<$cusernmae>)
+    Expr_Assign
+        var: Var#147<$thumbnail>
+        expr: LITERAL(0)
+        result: Var#148
+    Expr_Assign
+        var: Var#149<$i>
+        expr: LITERAL(0)
+        result: Var#150
+    Expr_BinaryOp_Plus
+        left: Var#145<$d_id>
+        right: LITERAL(1)
+        result: Var#151
+    Expr_Assign
+        var: Var#152<$increement>
+        expr: Var#151
+        result: Var#153
+    Expr_ConcatList
+        list[0]: LITERAL('img.')
+        list[1]: Var#152<$increement>
+        result: Var#154
+    Expr_Assign
+        var: Var#155<$new_name>
+        expr: Var#154
+        result: Var#156
+    Expr_ConcatList
+        list[0]: LITERAL('Detail.')
+        list[1]: Var#152<$increement>
+        result: Var#157
+    Expr_Assign
+        var: Var#158<$detail>
+        expr: Var#157
+        result: Var#159
+    Expr_FuncCall
+        name: LITERAL('date_default_timezone_get')
+        args[0]: LITERAL('asia/kolkata')
+        result: Var#160
+    Expr_FuncCall
+        name: LITERAL('date')
+        args[0]: LITERAL('Y-m-d')
+        result: Var#161
+    Expr_Assign
+        var: Var#162<$date>
+        expr: Var#161
+        result: Var#163
+    Expr_BinaryOp_Concat
+        left: LITERAL('mydocs/clients/')
+        right: Var#146<$cusernmae>
+        result: Var#164
+    Expr_FuncCall
+        name: LITERAL('mkdir')
+        args[0]: Var#164
+        result: Var#165
+    Expr_ConcatList
+        list[0]: LITERAL('mydocs/clients/')
+        list[1]: Var#146<$cusernmae>
+        list[2]: LITERAL('/')
+        result: Var#166
+    Expr_BinaryOp_Concat
+        left: Var#166
+        right: Var#152<$increement>
+        result: Var#167
+    Expr_FuncCall
+        name: LITERAL('mkdir')
+        args[0]: Var#167
+        result: Var#168
+    Expr_ConcatList
+        list[0]: LITERAL('mydocs/clients/')
+        list[1]: Var#146<$cusernmae>
+        list[2]: LITERAL('/')
+        list[3]: Var#152<$increement>
+        result: Var#169
+    Expr_Assign
+        var: Var#170<$destination>
+        expr: Var#169
+        result: Var#171
+    Expr_Assign
+        var: Var#172<$i>
+        expr: LITERAL(0)
+        result: Var#173
+    Stmt_Jump
+        target: Block#17
+
+Block#14
+    Parent: Block#11
+    Terminal_Echo
+        expr: LITERAL('You do not upload document more then 200')
+    Stmt_Jump
+        target: Block#18
+
+Block#15
+    Parent: Block#11
+    Stmt_Jump
+        target: Block#18
+
+Block#16
+    Parent: Block#12
+    Parent: Block#55
+    Var#174<$i> = Phi(Var#143<$i>, Var#175<$i>)
+    Var#176<$c> = Phi(Var#106<$c>, Var#177<$c>)
+    Var#178<$_FILES> = Phi(Var#83<$_FILES>, Var#179<$_FILES>)
+    Var#180<$increement> = Phi(Var#131<$increement>, Var#181<$increement>)
+    Var#182<$destination> = Phi(Var#141<$destination>, Var#183<$destination>)
+    Var#184<$cusernmae> = Phi(Var#129<$cusernmae>, Var#185<$cusernmae>)
+    Var#186<$fileExt> = Phi(Var#85<$fileExt>, Var#187<$fileExt>)
+    Var#188<$thumbnail> = Phi(Var#108<$thumbnail>, Var#189<$thumbnail>)
+    Var#190<$imgname> = Phi(Var#86<$imgname>, Var#191<$imgname>)
+    Var#192<$email> = Phi(Var#87<$email>, Var#193<$email>)
+    Var#194<$imgdate> = Phi(Var#88<$imgdate>, Var#195<$imgdate>)
+    Var#196<$phone> = Phi(Var#89<$phone>, Var#197<$phone>)
+    Var#198<$counting> = Phi(Var#90<$counting>, Var#199<$counting>)
+    Var#200<$count> = Phi(Var#92<$count>, Var#201<$count>)
+    Var#202<$max> = Phi(Var#93<$max>, Var#203<$max>)
+    Var#204<$_GET> = Phi(Var#94<$_GET>, Var#205<$_GET>)
+    Var#206<$counter> = Phi(Var#95<$counter>, Var#207<$counter>)
+    Expr_BinaryOp_Smaller
+        left: Var#174<$i>
+        right: Var#176<$c>
+        result: Var#208
+    Stmt_JumpIf
+        cond: Var#208
+        if: Block#19
+        else: Block#20
+
+Block#17
+    Parent: Block#13
+    Parent: Block#46
+    Var#209<$i> = Phi(Var#172<$i>, Var#210<$i>)
+    Var#211<$c> = Phi(Var#106<$c>, Var#212<$c>)
+    Var#213<$_FILES> = Phi(Var#83<$_FILES>, Var#214<$_FILES>)
+    Var#215<$destination> = Phi(Var#170<$destination>, Var#216<$destination>)
+    Var#217<$username> = Phi(Var#91<$username>, Var#218<$username>)
+    Var#219<$fileExt> = Phi(Var#85<$fileExt>, Var#220<$fileExt>)
+    Var#221<$thumbnail> = Phi(Var#147<$thumbnail>, Var#222<$thumbnail>)
+    Var#223<$imgname> = Phi(Var#86<$imgname>, Var#224<$imgname>)
+    Var#225<$email> = Phi(Var#87<$email>, Var#226<$email>)
+    Var#227<$imgdate> = Phi(Var#88<$imgdate>, Var#228<$imgdate>)
+    Var#229<$cusernmae> = Phi(Var#146<$cusernmae>, Var#230<$cusernmae>)
+    Var#231<$phone> = Phi(Var#89<$phone>, Var#232<$phone>)
+    Var#233<$counting> = Phi(Var#90<$counting>, Var#234<$counting>)
+    Var#235<$count> = Phi(Var#92<$count>, Var#236<$count>)
+    Var#237<$max> = Phi(Var#93<$max>, Var#238<$max>)
+    Var#239<$_GET> = Phi(Var#94<$_GET>, Var#240<$_GET>)
+    Var#241<$counter> = Phi(Var#95<$counter>, Var#242<$counter>)
+    Expr_BinaryOp_Smaller
+        left: Var#209<$i>
+        right: Var#211<$c>
+        result: Var#243
+    Stmt_JumpIf
+        cond: Var#243
+        if: Block#21
+        else: Block#22
+
+Block#18
+    Parent: Block#14
+    Parent: Block#15
+    Var#244<$cusernmae> = Phi(Var#121<$cusernmae>)
+    Var#245<$_GET> = Phi(Var#123<$_GET>)
+    Var#246<$counter> = Phi(Var#125<$counter>)
+    Terminal_Echo
+        expr: LITERAL('
+        <div class="hero-unit h_top r_b">
+        <div class="row">
+        	<div class="span2"><strong>Image</strong></div>
+            <div class="span2"><strong>Filename</strong></div>
+            <div class="span2 wrapword"><strong>Email-ID</strong></div>
+        
+            <div class="span2"><strong>Date</strong></div>
+            <div class="span1"><strong>Phone No</strong></div>
+            <div class="span2"style=" text-align:right"><strong>Share On</strong></div>
+        </div>
+        </div>
+        ')
+    Expr_Assign
+        var: Var#247<$tbl_name>
+        expr: LITERAL('')
+        result: Var#248
+    Expr_Assign
+        var: Var#249<$adjacents>
+        expr: LITERAL(3)
+        result: Var#250
+    Expr_ConcatList
+        list[0]: LITERAL('select * from mydocs where client_name=\'')
+        list[1]: Var#244<$cusernmae>
+        list[2]: LITERAL('\' order by docs_id DESC ')
+        result: Var#251
+    Expr_FuncCall
+        name: LITERAL('mysql_query')
+        args[0]: Var#251
+        result: Var#252
+    Expr_Assign
+        var: Var#253<$qwerty>
+        expr: Var#252
+        result: Var#254
+    Stmt_JumpIf
+        cond: Var#254
+        if: Block#23
+        else: Block#24
+
+Block#19
+    Parent: Block#16
+    Var#255<$_FILES> = Phi(Var#178<$_FILES>)
+    Var#256<$i> = Phi(Var#174<$i>)
+    Expr_ArrayDimFetch
+        var: Var#255<$_FILES>
+        dim: LITERAL('myfile')
+        result: Var#257
+    Expr_ArrayDimFetch
+        var: Var#257
+        dim: LITERAL('name')
+        result: Var#258
+    Expr_ArrayDimFetch
+        var: Var#258
+        dim: Var#256<$i>
+        result: Var#259
+    Expr_Assign
+        var: Var#260<$name>
+        expr: Var#259
+        result: Var#261
+    Expr_ArrayDimFetch
+        var: Var#255<$_FILES>
+        dim: LITERAL('myfile')
+        result: Var#262
+    Expr_ArrayDimFetch
+        var: Var#262
+        dim: LITERAL('type')
+        result: Var#263
+    Expr_ArrayDimFetch
+        var: Var#263
+        dim: Var#256<$i>
+        result: Var#264
+    Expr_Assign
+        var: Var#265<$type>
+        expr: Var#264
+        result: Var#266
+    Expr_ArrayDimFetch
+        var: Var#255<$_FILES>
+        dim: LITERAL('myfile')
+        result: Var#267
+    Expr_ArrayDimFetch
+        var: Var#267
+        dim: LITERAL('size')
+        result: Var#268
+    Expr_ArrayDimFetch
+        var: Var#268
+        dim: Var#256<$i>
+        result: Var#269
+    Expr_Assign
+        var: Var#270<$siz>
+        expr: Var#269
+        result: Var#271
+    Expr_ArrayDimFetch
+        var: Var#255<$_FILES>
+        dim: LITERAL('myfile')
+        result: Var#272
+    Expr_ArrayDimFetch
+        var: Var#272
+        dim: LITERAL('tmp_name')
+        result: Var#273
+    Expr_ArrayDimFetch
+        var: Var#273
+        dim: Var#256<$i>
+        result: Var#274
+    Expr_Assign
+        var: Var#275<$tmp_name>
+        expr: Var#274
+        result: Var#276
+    Expr_ArrayDimFetch
+        var: Var#255<$_FILES>
+        dim: LITERAL('myfile')
+        result: Var#277
+    Expr_ArrayDimFetch
+        var: Var#277
+        dim: LITERAL('error')
+        result: Var#278
+    Expr_ArrayDimFetch
+        var: Var#278
+        dim: Var#256<$i>
+        result: Var#279
+    Expr_Assign
+        var: Var#280<$error>
+        expr: Var#279
+        result: Var#281
+    Expr_BinaryOp_Greater
+        left: Var#280<$error>
+        right: LITERAL(0)
+        result: Var#282
+    Stmt_JumpIf
+        cond: Var#282
+        if: Block#25
+        else: Block#26
+
+Block#20
+    Parent: Block#16
+    Stmt_Jump
+        target: Block#27
+
+Block#21
+    Parent: Block#17
+    Var#283<$_FILES> = Phi(Var#213<$_FILES>)
+    Var#284<$i> = Phi(Var#209<$i>)
+    Expr_ArrayDimFetch
+        var: Var#283<$_FILES>
+        dim: LITERAL('myfile')
+        result: Var#285
+    Expr_ArrayDimFetch
+        var: Var#285
+        dim: LITERAL('name')
+        result: Var#286
+    Expr_ArrayDimFetch
+        var: Var#286
+        dim: Var#284<$i>
+        result: Var#287
+    Expr_Assign
+        var: Var#288<$name>
+        expr: Var#287
+        result: Var#289
+    Expr_FuncCall
+        name: LITERAL('isimg')
+        args[0]: Var#288<$name>
+        result: Var#290
+    Expr_Assign
+        var: Var#291<$nam>
+        expr: Var#290
+        result: Var#292
+    Expr_ArrayDimFetch
+        var: Var#283<$_FILES>
+        dim: LITERAL('myfile')
+        result: Var#293
+    Expr_ArrayDimFetch
+        var: Var#293
+        dim: LITERAL('type')
+        result: Var#294
+    Expr_ArrayDimFetch
+        var: Var#294
+        dim: Var#284<$i>
+        result: Var#295
+    Expr_Assign
+        var: Var#296<$type>
+        expr: Var#295
+        result: Var#297
+    Expr_ArrayDimFetch
+        var: Var#283<$_FILES>
+        dim: LITERAL('myfile')
+        result: Var#298
+    Expr_ArrayDimFetch
+        var: Var#298
+        dim: LITERAL('size')
+        result: Var#299
+    Expr_ArrayDimFetch
+        var: Var#299
+        dim: Var#284<$i>
+        result: Var#300
+    Expr_Assign
+        var: Var#301<$siz>
+        expr: Var#300
+        result: Var#302
+    Expr_FuncCall
+        name: LITERAL('imgsize')
+        args[0]: Var#301<$siz>
+        result: Var#303
+    Expr_Assign
+        var: Var#304<$size>
+        expr: Var#303
+        result: Var#305
+    Expr_ArrayDimFetch
+        var: Var#283<$_FILES>
+        dim: LITERAL('myfile')
+        result: Var#306
+    Expr_ArrayDimFetch
+        var: Var#306
+        dim: LITERAL('tmp_name')
+        result: Var#307
+    Expr_ArrayDimFetch
+        var: Var#307
+        dim: Var#284<$i>
+        result: Var#308
+    Expr_Assign
+        var: Var#309<$tmp_name>
+        expr: Var#308
+        result: Var#310
+    Expr_ArrayDimFetch
+        var: Var#283<$_FILES>
+        dim: LITERAL('myfile')
+        result: Var#311
+    Expr_ArrayDimFetch
+        var: Var#311
+        dim: LITERAL('error')
+        result: Var#312
+    Expr_ArrayDimFetch
+        var: Var#312
+        dim: Var#284<$i>
+        result: Var#313
+    Expr_Assign
+        var: Var#314<$error>
+        expr: Var#313
+        result: Var#315
+    Expr_ArrayDimFetch
+        var: Var#283<$_FILES>
+        dim: LITERAL('myfile')
+        result: Var#316
+    Expr_ArrayDimFetch
+        var: Var#316
+        dim: LITERAL('name')
+        result: Var#317
+    Expr_ArrayDimFetch
+        var: Var#317
+        dim: Var#284<$i>
+        result: Var#318
+    Expr_Empty
+        expr: Var#318
+        result: Var#319
+    Expr_BooleanNot
+        expr: Var#319
+        result: Var#320
+    Stmt_JumpIf
+        cond: Var#320
+        if: Block#28
+        else: Block#29
+
+Block#22
+    Parent: Block#17
+    Stmt_Jump
+        target: Block#30
+
+Block#23
+    Parent: Block#18
+    Var#321 = Phi(LITERAL(true), Var#322)
+    Var#323<$cusernmae> = Phi(Var#244<$cusernmae>)
+    Var#324<$_GET> = Phi(Var#245<$_GET>)
+    Var#325<$adjacents> = Phi(Var#249<$adjacents>)
+    Var#326<$counter> = Phi(Var#246<$counter>)
+    Expr_ConcatList
+        list[0]: LITERAL('SELECT COUNT(*) as num FROM mydocs where client_name=\'')
+        list[1]: Var#323<$cusernmae>
+        list[2]: LITERAL('\' AND doctor_name!=\'\'')
+        result: Var#327
+    Expr_Assign
+        var: Var#328<$query>
+        expr: Var#327
+        result: Var#329
+    Expr_FuncCall
+        name: LITERAL('mysql_query')
+        args[0]: Var#328<$query>
+        result: Var#330
+    Expr_FuncCall
+        name: LITERAL('mysql_fetch_array')
+        args[0]: Var#330
+        result: Var#331
+    Expr_Assign
+        var: Var#332<$total_pages>
+        expr: Var#331
+        result: Var#333
+    Expr_ConstFetch
+        name: LITERAL('num')
+        result: Var#334
+    Expr_ArrayDimFetch
+        var: Var#332<$total_pages>
+        dim: Var#334
+        result: Var#335
+    Expr_Assign
+        var: Var#336<$total_pages>
+        expr: Var#335
+        result: Var#337
+    Expr_Assign
+        var: Var#338<$targetpage>
+        expr: LITERAL('clienthome.php')
+        result: Var#339
+    Expr_Assign
+        var: Var#340<$limit>
+        expr: LITERAL(5)
+        result: Var#341
+    Expr_ArrayDimFetch
+        var: Var#324<$_GET>
+        dim: LITERAL('page')
+        result: Var#342
+    Expr_Assign
+        var: Var#343<$page>
+        expr: Var#342
+        result: Var#344
+    Stmt_JumpIf
+        cond: Var#343<$page>
+        if: Block#31
+        else: Block#32
+
+Block#24
+    Parent: Block#18
+    Expr_FuncCall
+        name: LITERAL('mysql_error')
+        result: Var#345
+    Terminal_Exit
+        expr: Var#345
+
+Block#25
+    Parent: Block#19
+    Terminal_Echo
+        expr: LITERAL('<font color=\'red\'><h3>Please Choose file first</h3></font>')
+    Stmt_Jump
+        target: Block#33
+
+Block#26
+    Parent: Block#19
+    Stmt_Jump
+        target: Block#33
+
+Block#27
+    Parent: Block#20
+    Var#346<$thumbnail> = Phi(Var#188<$thumbnail>)
+    Var#347<$destination> = Phi(Var#182<$destination>)
+    Var#348<$imgname> = Phi(Var#190<$imgname>)
+    Var#349<$email> = Phi(Var#192<$email>)
+    Var#350<$imgdate> = Phi(Var#194<$imgdate>)
+    Var#351<$cusernmae> = Phi(Var#184<$cusernmae>)
+    Var#352<$phone> = Phi(Var#196<$phone>)
+    Expr_ConcatList
+        list[0]: LITERAL('INSERT INTO `mydocs`
+        	(`docs_id`, `img`, `current_folder`, `img_name`, `details`, `doc_date`, `doctor_name`, `client_name`, `client_phone`)
+        	 VALUES (NULL, \'')
+        list[1]: Var#346<$thumbnail>
+        list[2]: LITERAL('\', \'')
+        list[3]: Var#347<$destination>
+        list[4]: LITERAL('\', \'')
+        list[5]: Var#348<$imgname>
+        list[6]: LITERAL('\', \'')
+        list[7]: Var#349<$email>
+        list[8]: LITERAL('\', \'')
+        list[9]: Var#350<$imgdate>
+        list[10]: LITERAL('\', \'\', \'')
+        list[11]: Var#351<$cusernmae>
+        list[12]: LITERAL('\', \'')
+        list[13]: Var#352<$phone>
+        list[14]: LITERAL('\')')
+        result: Var#353
+    Expr_FuncCall
+        name: LITERAL('mysql_query')
+        args[0]: Var#353
+        result: Var#354
+    Stmt_JumpIf
+        cond: Var#354
+        if: Block#34
+        else: Block#35
+
+Block#28
+    Parent: Block#21
+    Var#355<$tmp_name> = Phi(Var#309<$tmp_name>)
+    Var#356<$destination> = Phi(Var#215<$destination>)
+    Var#357<$name> = Phi(Var#288<$name>)
+    Var#358<$username> = Phi(Var#217<$username>)
+    Expr_ConcatList
+        list[0]: Var#356<$destination>
+        list[1]: LITERAL('/')
+        result: Var#359
+    Expr_BinaryOp_Concat
+        left: Var#359
+        right: Var#357<$name>
+        result: Var#360
+    Expr_FuncCall
+        name: LITERAL('move_uploaded_file')
+        args[0]: Var#355<$tmp_name>
+        args[1]: Var#360
+        result: Var#361
+    Expr_ConcatList
+        list[0]: Var#356<$destination>
+        list[1]: LITERAL('/')
+        result: Var#362
+    Expr_BinaryOp_Concat
+        left: Var#362
+        right: Var#357<$name>
+        result: Var#363
+    Expr_Assign
+        var: Var#364<$saved>
+        expr: Var#363
+        result: Var#365
+    Expr_ConcatList
+        list[0]: LITERAL('insert into linked_data VALUES(\'NULL\',\'')
+        list[1]: Var#358<$username>
+        list[2]: LITERAL('\',\'')
+        list[3]: Var#364<$saved>
+        list[4]: LITERAL('\',\'')
+        list[5]: Var#356<$destination>
+        list[6]: LITERAL('\')')
+        result: Var#366
+    Expr_FuncCall
+        name: LITERAL('mysql_query')
+        args[0]: Var#366
+        result: Var#367
+    Stmt_JumpIf
+        cond: Var#367
+        if: Block#36
+        else: Block#37
+
+Block#29
+    Parent: Block#21
+    Stmt_Jump
+        target: Block#38
+
+Block#30
+    Parent: Block#22
+    Var#368<$thumbnail> = Phi(Var#221<$thumbnail>)
+    Var#369<$destination> = Phi(Var#215<$destination>)
+    Var#370<$imgname> = Phi(Var#223<$imgname>)
+    Var#371<$email> = Phi(Var#225<$email>)
+    Var#372<$imgdate> = Phi(Var#227<$imgdate>)
+    Var#373<$cusernmae> = Phi(Var#229<$cusernmae>)
+    Var#374<$phone> = Phi(Var#231<$phone>)
+    Expr_ConcatList
+        list[0]: LITERAL('INSERT INTO `mydocs`
+        	(`docs_id`, `img`, `current_folder`, `img_name`, `details`, `doc_date`, `doctor_name`, `client_name`, `client_phone`)
+        	 VALUES (NULL, \'')
+        list[1]: Var#368<$thumbnail>
+        list[2]: LITERAL('\', \'')
+        list[3]: Var#369<$destination>
+        list[4]: LITERAL('\', \'')
+        list[5]: Var#370<$imgname>
+        list[6]: LITERAL('\', \'')
+        list[7]: Var#371<$email>
+        list[8]: LITERAL('\', \'')
+        list[9]: Var#372<$imgdate>
+        list[10]: LITERAL('\', \'\', \'')
+        list[11]: Var#373<$cusernmae>
+        list[12]: LITERAL('\', \'')
+        list[13]: Var#374<$phone>
+        list[14]: LITERAL('\')')
+        result: Var#375
+    Expr_FuncCall
+        name: LITERAL('mysql_query')
+        args[0]: Var#375
+        result: Var#376
+    Stmt_JumpIf
+        cond: Var#376
+        if: Block#39
+        else: Block#40
+
+Block#31
+    Parent: Block#23
+    Var#377<$page> = Phi(Var#343<$page>)
+    Var#378<$limit> = Phi(Var#340<$limit>)
+    Expr_BinaryOp_Minus
+        left: Var#377<$page>
+        right: LITERAL(1)
+        result: Var#379
+    Expr_BinaryOp_Mul
+        left: Var#379
+        right: Var#378<$limit>
+        result: Var#380
+    Expr_Assign
+        var: Var#381<$start>
+        expr: Var#380
+        result: Var#382
+    Stmt_Jump
+        target: Block#41
+
+Block#32
+    Parent: Block#23
+    Expr_Assign
+        var: Var#383<$start>
+        expr: LITERAL(0)
+        result: Var#384
+    Stmt_Jump
+        target: Block#41
+
+Block#33
+    Parent: Block#25
+    Parent: Block#26
+    Var#385<$c> = Phi(Var#176<$c>)
+    Var#386<$increement> = Phi(Var#180<$increement>)
+    Var#387<$tmp_name> = Phi(Var#275<$tmp_name>)
+    Var#388<$destination> = Phi(Var#182<$destination>)
+    Var#389<$name> = Phi(Var#260<$name>)
+    Var#390<$_FILES> = Phi(Var#255<$_FILES>)
+    Var#391<$i> = Phi(Var#256<$i>)
+    Var#392<$cusernmae> = Phi(Var#184<$cusernmae>)
+    Var#393<$fileExt> = Phi(Var#186<$fileExt>)
+    Var#394<$thumbnail> = Phi(Var#188<$thumbnail>)
+    Var#395<$imgname> = Phi(Var#190<$imgname>)
+    Var#396<$email> = Phi(Var#192<$email>)
+    Var#397<$imgdate> = Phi(Var#194<$imgdate>)
+    Var#398<$phone> = Phi(Var#196<$phone>)
+    Var#399<$counting> = Phi(Var#198<$counting>)
+    Var#400<$count> = Phi(Var#200<$count>)
+    Var#401<$max> = Phi(Var#202<$max>)
+    Var#402<$_GET> = Phi(Var#204<$_GET>)
+    Var#403<$counter> = Phi(Var#206<$counter>)
+    Expr_ConcatList
+        list[0]: LITERAL('img.')
+        list[1]: Var#386<$increement>
+        result: Var#404
+    Expr_Assign
+        var: Var#405<$new_name>
+        expr: Var#404
+        result: Var#406
+    Expr_ConcatList
+        list[0]: LITERAL('Detail.')
+        list[1]: Var#386<$increement>
+        result: Var#407
+    Expr_Assign
+        var: Var#408<$detail>
+        expr: Var#407
+        result: Var#409
+    Expr_ConcatList
+        list[0]: Var#388<$destination>
+        list[1]: LITERAL('/')
+        result: Var#410
+    Expr_BinaryOp_Concat
+        left: Var#410
+        right: Var#389<$name>
+        result: Var#411
+    Expr_FuncCall
+        name: LITERAL('move_uploaded_file')
+        args[0]: Var#387<$tmp_name>
+        args[1]: Var#411
+        result: Var#412
+    Expr_ConcatList
+        list[0]: Var#388<$destination>
+        list[1]: LITERAL('/')
+        result: Var#413
+    Expr_BinaryOp_Concat
+        left: Var#413
+        right: Var#389<$name>
+        result: Var#414
+    Expr_Assign
+        var: Var#415<$saved>
+        expr: Var#414
+        result: Var#416
+    Expr_ArrayDimFetch
+        var: Var#390<$_FILES>
+        dim: LITERAL('myfile')
+        result: Var#417
+    Expr_ArrayDimFetch
+        var: Var#417
+        dim: LITERAL('name')
+        result: Var#418
+    Expr_ArrayDimFetch
+        var: Var#418
+        dim: Var#391<$i>
+        result: Var#419
+    Expr_Empty
+        expr: Var#419
+        result: Var#420
+    Expr_BooleanNot
+        expr: Var#420
+        result: Var#421
+    Stmt_JumpIf
+        cond: Var#421
+        if: Block#42
+        else: Block#43
+
+Block#34
+    Parent: Block#27
+    Var#422 = Phi(LITERAL(true), Var#423)
+    Var#424<$counting> = Phi(Var#198<$counting>)
+    Var#425<$i> = Phi(Var#174<$i>)
+    Var#426<$cusernmae> = Phi(Var#351<$cusernmae>)
+    Var#427<$count> = Phi(Var#200<$count>)
+    Var#428<$max> = Phi(Var#202<$max>)
+    Var#429<$_GET> = Phi(Var#204<$_GET>)
+    Var#430<$counter> = Phi(Var#206<$counter>)
+    Expr_BinaryOp_Plus
+        left: Var#424<$counting>
+        right: Var#425<$i>
+        result: Var#431
+    Expr_Assign
+        var: Var#432<$noc>
+        expr: Var#431
+        result: Var#433
+    Expr_ConcatList
+        list[0]: LITERAL('update client_login set no_of_upload=\'')
+        list[1]: Var#432<$noc>
+        list[2]: LITERAL('\' where username=\'')
+        list[3]: Var#426<$cusernmae>
+        list[4]: LITERAL('\' ')
+        result: Var#434
+    Expr_FuncCall
+        name: LITERAL('mysql_query')
+        args[0]: Var#434
+        result: Var#435
+    Stmt_JumpIf
+        cond: Var#435
+        if: Block#44
+        else: Block#45
+
+Block#35
+    Parent: Block#27
+    Expr_FuncCall
+        name: LITERAL('mysql_error')
+        result: Var#436
+    Expr_BinaryOp_Concat
+        left: Var#436
+        right: LITERAL('E22878798')
+        result: Var#437
+    Terminal_Exit
+        expr: Var#437
+
+Block#36
+    Parent: Block#28
+    Var#438 = Phi(LITERAL(true), Var#439)
+    Var#440<$c> = Phi(Var#211<$c>)
+    Var#441<$_FILES> = Phi(Var#283<$_FILES>)
+    Var#442<$destination> = Phi(Var#356<$destination>)
+    Var#443<$username> = Phi(Var#358<$username>)
+    Var#444<$saved> = Phi(Var#364<$saved>)
+    Var#445<$fileExt> = Phi(Var#219<$fileExt>)
+    Var#446<$i> = Phi(Var#284<$i>)
+    Var#447<$imgname> = Phi(Var#223<$imgname>)
+    Var#448<$email> = Phi(Var#225<$email>)
+    Var#449<$imgdate> = Phi(Var#227<$imgdate>)
+    Var#450<$cusernmae> = Phi(Var#229<$cusernmae>)
+    Var#451<$phone> = Phi(Var#231<$phone>)
+    Var#452<$counting> = Phi(Var#233<$counting>)
+    Var#453<$count> = Phi(Var#235<$count>)
+    Var#454<$max> = Phi(Var#237<$max>)
+    Var#455<$_GET> = Phi(Var#239<$_GET>)
+    Var#456<$counter> = Phi(Var#241<$counter>)
+    Expr_ConcatList
+        list[0]: Var#444<$saved>
+        result: Var#457
+    Expr_Assign
+        var: Var#458<$target_file>
+        expr: Var#457
+        result: Var#459
+    Expr_BinaryOp_Concat
+        left: Var#444<$saved>
+        right: LITERAL('_resized')
+        result: Var#460
+    Expr_Assign
+        var: Var#461<$resized_file>
+        expr: Var#460
+        result: Var#462
+    Expr_Assign
+        var: Var#463<$wmax>
+        expr: LITERAL(300)
+        result: Var#464
+    Expr_Assign
+        var: Var#465<$hmax>
+        expr: LITERAL(300)
+        result: Var#466
+    Expr_FuncCall
+        name: LITERAL('ak_img_resize')
+        args[0]: Var#458<$target_file>
+        args[1]: Var#461<$resized_file>
+        args[2]: Var#463<$wmax>
+        args[3]: Var#465<$hmax>
+        args[4]: Var#445<$fileExt>
+        result: Var#467
+    Expr_BinaryOp_Concat
+        left: Var#444<$saved>
+        right: LITERAL('_resized')
+        result: Var#468
+    Expr_Assign
+        var: Var#469<$target_file>
+        expr: Var#468
+        result: Var#470
+    Expr_BinaryOp_Concat
+        left: Var#444<$saved>
+        right: LITERAL('_thumb')
+        result: Var#471
+    Expr_Assign
+        var: Var#472<$thumbnail>
+        expr: Var#471
+        result: Var#473
+    Expr_Assign
+        var: Var#474<$wthumb>
+        expr: LITERAL(150)
+        result: Var#475
+    Expr_Assign
+        var: Var#476<$hthumb>
+        expr: LITERAL(150)
+        result: Var#477
+    Expr_FuncCall
+        name: LITERAL('ak_img_thumb')
+        args[0]: Var#469<$target_file>
+        args[1]: Var#472<$thumbnail>
+        args[2]: Var#474<$wthumb>
+        args[3]: Var#476<$hthumb>
+        args[4]: Var#445<$fileExt>
+        result: Var#478
+    Stmt_Jump
+        target: Block#38
+
+Block#37
+    Parent: Block#28
+    Expr_FuncCall
+        name: LITERAL('mysql_error')
+        result: Var#479
+    Expr_BinaryOp_Concat
+        left: Var#479
+        right: LITERAL('E123')
+        result: Var#480
+    Terminal_Exit
+        expr: Var#480
+
+Block#38
+    Parent: Block#36
+    Parent: Block#29
+    Var#212<$c> = Phi(Var#440<$c>, Var#211<$c>)
+    Var#214<$_FILES> = Phi(Var#441<$_FILES>, Var#283<$_FILES>)
+    Var#216<$destination> = Phi(Var#442<$destination>, Var#215<$destination>)
+    Var#218<$username> = Phi(Var#443<$username>, Var#217<$username>)
+    Var#220<$fileExt> = Phi(Var#445<$fileExt>, Var#219<$fileExt>)
+    Var#481<$i> = Phi(Var#446<$i>, Var#284<$i>)
+    Var#222<$thumbnail> = Phi(Var#472<$thumbnail>, Var#221<$thumbnail>)
+    Var#224<$imgname> = Phi(Var#447<$imgname>, Var#223<$imgname>)
+    Var#226<$email> = Phi(Var#448<$email>, Var#225<$email>)
+    Var#228<$imgdate> = Phi(Var#449<$imgdate>, Var#227<$imgdate>)
+    Var#230<$cusernmae> = Phi(Var#450<$cusernmae>, Var#229<$cusernmae>)
+    Var#232<$phone> = Phi(Var#451<$phone>, Var#231<$phone>)
+    Var#234<$counting> = Phi(Var#452<$counting>, Var#233<$counting>)
+    Var#236<$count> = Phi(Var#453<$count>, Var#235<$count>)
+    Var#238<$max> = Phi(Var#454<$max>, Var#237<$max>)
+    Var#240<$_GET> = Phi(Var#455<$_GET>, Var#239<$_GET>)
+    Var#242<$counter> = Phi(Var#456<$counter>, Var#241<$counter>)
+    Stmt_Jump
+        target: Block#46
+
+Block#39
+    Parent: Block#30
+    Var#482 = Phi(LITERAL(true), Var#483)
+    Var#484<$counting> = Phi(Var#233<$counting>)
+    Var#485<$i> = Phi(Var#209<$i>)
+    Var#486<$cusernmae> = Phi(Var#373<$cusernmae>)
+    Var#487<$count> = Phi(Var#235<$count>)
+    Var#488<$max> = Phi(Var#237<$max>)
+    Var#489<$_GET> = Phi(Var#239<$_GET>)
+    Var#490<$counter> = Phi(Var#241<$counter>)
+    Expr_BinaryOp_Plus
+        left: Var#484<$counting>
+        right: Var#485<$i>
+        result: Var#491
+    Expr_Assign
+        var: Var#492<$noc>
+        expr: Var#491
+        result: Var#493
+    Expr_ConcatList
+        list[0]: LITERAL('update client_login set no_of_upload=\'')
+        list[1]: Var#492<$noc>
+        list[2]: LITERAL('\' where username=\'')
+        list[3]: Var#486<$cusernmae>
+        list[4]: LITERAL('\' ')
+        result: Var#494
+    Expr_FuncCall
+        name: LITERAL('mysql_query')
+        args[0]: Var#494
+        result: Var#495
+    Terminal_Echo
+        expr: LITERAL('<h3>Your file is successfully Uploaded To the Server im in else mode</h3>')
+    Stmt_Jump
+        target: Block#47
+
+Block#40
+    Parent: Block#30
+    Expr_FuncCall
+        name: LITERAL('mysql_error')
+        result: Var#496
+    Expr_BinaryOp_Concat
+        left: Var#496
+        right: LITERAL('E22878798')
+        result: Var#497
+    Terminal_Exit
+        expr: Var#497
+
+Block#41
+    Parent: Block#31
+    Parent: Block#32
+    Var#498<$cusernmae> = Phi(Var#323<$cusernmae>)
+    Var#499<$start> = Phi(Var#381<$start>, Var#383<$start>)
+    Var#500<$limit> = Phi(Var#378<$limit>, Var#340<$limit>)
+    Var#501<$page> = Phi(Var#377<$page>, Var#343<$page>)
+    Var#502<$total_pages> = Phi(Var#336<$total_pages>)
+    Var#503<$targetpage> = Phi(Var#338<$targetpage>)
+    Var#504<$adjacents> = Phi(Var#325<$adjacents>)
+    Var#505<$counter> = Phi(Var#326<$counter>)
+    Expr_ConcatList
+        list[0]: LITERAL('select * from mydocs where client_name=\'')
+        list[1]: Var#498<$cusernmae>
+        list[2]: LITERAL('\' AND doctor_name!=\'\' order by docs_id DESC LIMIT ')
+        list[3]: Var#499<$start>
+        list[4]: LITERAL(', ')
+        list[5]: Var#500<$limit>
+        result: Var#506
+    Expr_Assign
+        var: Var#507<$sql>
+        expr: Var#506
+        result: Var#508
+    Expr_FuncCall
+        name: LITERAL('mysql_query')
+        args[0]: Var#507<$sql>
+        result: Var#509
+    Expr_Assign
+        var: Var#510<$result>
+        expr: Var#509
+        result: Var#511
+    Stmt_JumpIf
+        cond: Var#511
+        if: Block#48
+        else: Block#49
+
+Block#42
+    Parent: Block#33
+    Var#512<$cusernmae> = Phi(Var#392<$cusernmae>)
+    Var#513<$saved> = Phi(Var#415<$saved>)
+    Var#514<$destination> = Phi(Var#388<$destination>)
+    Expr_ConcatList
+        list[0]: LITERAL('insert into linked_data VALUES(\'NULL\',\'')
+        list[1]: Var#512<$cusernmae>
+        list[2]: LITERAL('\',\'')
+        list[3]: Var#513<$saved>
+        list[4]: LITERAL('\',\'')
+        list[5]: Var#514<$destination>
+        list[6]: LITERAL('\')')
+        result: Var#515
+    Expr_FuncCall
+        name: LITERAL('mysql_query')
+        args[0]: Var#515
+        result: Var#516
+    Stmt_JumpIf
+        cond: Var#516
+        if: Block#50
+        else: Block#51
+
+Block#43
+    Parent: Block#33
+    Stmt_Jump
+        target: Block#52
+
+Block#44
+    Parent: Block#34
+    Var#517 = Phi(LITERAL(true), Var#518)
+    Var#519<$count> = Phi(Var#427<$count>)
+    Var#520<$max> = Phi(Var#428<$max>)
+    Var#521<$cusernmae> = Phi(Var#426<$cusernmae>)
+    Var#522<$_GET> = Phi(Var#429<$_GET>)
+    Var#523<$counter> = Phi(Var#430<$counter>)
+    Terminal_Echo
+        expr: LITERAL('<h3 style="text-align:center;"> successfuly Uploaded To Server in in if mode</h3>')
+    Stmt_Jump
+        target: Block#47
+
+Block#45
+    Parent: Block#34
+    Expr_FuncCall
+        name: LITERAL('mysql_error')
+        result: Var#524
+    Expr_BinaryOp_Concat
+        left: Var#524
+        right: LITERAL(' Line 124')
+        result: Var#525
+    Terminal_Exit
+        expr: Var#525
+
+Block#46
+    Parent: Block#38
+    Var#526<$i> = Phi(Var#481<$i>)
+    Expr_BinaryOp_Plus
+        left: Var#526<$i>
+        right: LITERAL(1)
+        result: Var#527
+    Expr_Assign
+        var: Var#210<$i>
+        expr: Var#527
+        result: Var#528
+    Stmt_Jump
+        target: Block#17
+
+Block#47
+    Parent: Block#44
+    Parent: Block#39
+    Var#118<$count> = Phi(Var#519<$count>, Var#487<$count>)
+    Var#120<$max> = Phi(Var#520<$max>, Var#488<$max>)
+    Var#122<$cusernmae> = Phi(Var#521<$cusernmae>, Var#486<$cusernmae>)
+    Var#124<$_GET> = Phi(Var#522<$_GET>, Var#489<$_GET>)
+    Var#126<$counter> = Phi(Var#523<$counter>, Var#490<$counter>)
+    Stmt_Jump
+        target: Block#11
+
+Block#48
+    Parent: Block#41
+    Var#529 = Phi(LITERAL(true), Var#530)
+    Var#531<$page> = Phi(Var#501<$page>)
+    Var#532<$total_pages> = Phi(Var#502<$total_pages>)
+    Var#533<$limit> = Phi(Var#500<$limit>)
+    Var#534<$targetpage> = Phi(Var#503<$targetpage>)
+    Var#535<$adjacents> = Phi(Var#504<$adjacents>)
+    Var#536<$counter> = Phi(Var#505<$counter>)
+    Var#537<$result> = Phi(Var#510<$result>)
+    Expr_BinaryOp_Equal
+        left: Var#531<$page>
+        right: LITERAL(0)
+        result: Var#538
+    Stmt_JumpIf
+        cond: Var#538
+        if: Block#53
+        else: Block#54
+
+Block#49
+    Parent: Block#41
+    Expr_FuncCall
+        name: LITERAL('mysql_error')
+        result: Var#539
+    Expr_BinaryOp_Concat
+        left: Var#539
+        right: LITERAL('Hyper14')
+        result: Var#540
+    Terminal_Exit
+        expr: Var#540
+
+Block#50
+    Parent: Block#42
+    Var#541 = Phi(LITERAL(true), Var#542)
+    Var#543<$c> = Phi(Var#385<$c>)
+    Var#544<$_FILES> = Phi(Var#390<$_FILES>)
+    Var#545<$increement> = Phi(Var#386<$increement>)
+    Var#546<$destination> = Phi(Var#514<$destination>)
+    Var#547<$cusernmae> = Phi(Var#512<$cusernmae>)
+    Var#548<$saved> = Phi(Var#513<$saved>)
+    Var#549<$fileExt> = Phi(Var#393<$fileExt>)
+    Var#550<$i> = Phi(Var#391<$i>)
+    Var#551<$imgname> = Phi(Var#395<$imgname>)
+    Var#552<$email> = Phi(Var#396<$email>)
+    Var#553<$imgdate> = Phi(Var#397<$imgdate>)
+    Var#554<$phone> = Phi(Var#398<$phone>)
+    Var#555<$counting> = Phi(Var#399<$counting>)
+    Var#556<$count> = Phi(Var#400<$count>)
+    Var#557<$max> = Phi(Var#401<$max>)
+    Var#558<$_GET> = Phi(Var#402<$_GET>)
+    Var#559<$counter> = Phi(Var#403<$counter>)
+    Expr_ConcatList
+        list[0]: Var#548<$saved>
+        result: Var#560
+    Expr_Assign
+        var: Var#561<$target_file>
+        expr: Var#560
+        result: Var#562
+    Expr_BinaryOp_Concat
+        left: Var#548<$saved>
+        right: LITERAL('_resized')
+        result: Var#563
+    Expr_Assign
+        var: Var#564<$resized_file>
+        expr: Var#563
+        result: Var#565
+    Expr_Assign
+        var: Var#566<$wmax>
+        expr: LITERAL(300)
+        result: Var#567
+    Expr_Assign
+        var: Var#568<$hmax>
+        expr: LITERAL(300)
+        result: Var#569
+    Expr_FuncCall
+        name: LITERAL('ak_img_resize')
+        args[0]: Var#561<$target_file>
+        args[1]: Var#564<$resized_file>
+        args[2]: Var#566<$wmax>
+        args[3]: Var#568<$hmax>
+        args[4]: Var#549<$fileExt>
+        result: Var#570
+    Expr_BinaryOp_Concat
+        left: Var#548<$saved>
+        right: LITERAL('_resized')
+        result: Var#571
+    Expr_Assign
+        var: Var#572<$target_file>
+        expr: Var#571
+        result: Var#573
+    Expr_BinaryOp_Concat
+        left: Var#548<$saved>
+        right: LITERAL('_thumb')
+        result: Var#574
+    Expr_Assign
+        var: Var#575<$thumbnail>
+        expr: Var#574
+        result: Var#576
+    Expr_Assign
+        var: Var#577<$wthumb>
+        expr: LITERAL(150)
+        result: Var#578
+    Expr_Assign
+        var: Var#579<$hthumb>
+        expr: LITERAL(150)
+        result: Var#580
+    Expr_FuncCall
+        name: LITERAL('ak_img_thumb')
+        args[0]: Var#572<$target_file>
+        args[1]: Var#575<$thumbnail>
+        args[2]: Var#577<$wthumb>
+        args[3]: Var#579<$hthumb>
+        args[4]: Var#549<$fileExt>
+        result: Var#581
+    Stmt_Jump
+        target: Block#52
+
+Block#51
+    Parent: Block#42
+    Expr_FuncCall
+        name: LITERAL('mysql_error')
+        result: Var#582
+    Expr_BinaryOp_Concat
+        left: Var#582
+        right: LITERAL('E123')
+        result: Var#583
+    Terminal_Exit
+        expr: Var#583
+
+Block#52
+    Parent: Block#50
+    Parent: Block#43
+    Var#177<$c> = Phi(Var#543<$c>, Var#385<$c>)
+    Var#179<$_FILES> = Phi(Var#544<$_FILES>, Var#390<$_FILES>)
+    Var#181<$increement> = Phi(Var#545<$increement>, Var#386<$increement>)
+    Var#183<$destination> = Phi(Var#546<$destination>, Var#388<$destination>)
+    Var#185<$cusernmae> = Phi(Var#547<$cusernmae>, Var#392<$cusernmae>)
+    Var#187<$fileExt> = Phi(Var#549<$fileExt>, Var#393<$fileExt>)
+    Var#584<$i> = Phi(Var#550<$i>, Var#391<$i>)
+    Var#189<$thumbnail> = Phi(Var#575<$thumbnail>, Var#394<$thumbnail>)
+    Var#191<$imgname> = Phi(Var#551<$imgname>, Var#395<$imgname>)
+    Var#193<$email> = Phi(Var#552<$email>, Var#396<$email>)
+    Var#195<$imgdate> = Phi(Var#553<$imgdate>, Var#397<$imgdate>)
+    Var#197<$phone> = Phi(Var#554<$phone>, Var#398<$phone>)
+    Var#199<$counting> = Phi(Var#555<$counting>, Var#399<$counting>)
+    Var#201<$count> = Phi(Var#556<$count>, Var#400<$count>)
+    Var#203<$max> = Phi(Var#557<$max>, Var#401<$max>)
+    Var#205<$_GET> = Phi(Var#558<$_GET>, Var#402<$_GET>)
+    Var#207<$counter> = Phi(Var#559<$counter>, Var#403<$counter>)
+    Stmt_Jump
+        target: Block#55
+
+Block#53
+    Parent: Block#48
+    Expr_Assign
+        var: Var#585<$page>
+        expr: LITERAL(1)
+        result: Var#586
+    Stmt_Jump
+        target: Block#56
+
+Block#54
+    Parent: Block#48
+    Stmt_Jump
+        target: Block#56
+
+Block#55
+    Parent: Block#52
+    Var#587<$i> = Phi(Var#584<$i>)
+    Expr_BinaryOp_Plus
+        left: Var#587<$i>
+        right: LITERAL(1)
+        result: Var#588
+    Expr_Assign
+        var: Var#175<$i>
+        expr: Var#588
+        result: Var#589
+    Stmt_Jump
+        target: Block#16
+
+Block#56
+    Parent: Block#53
+    Parent: Block#54
+    Var#590<$page> = Phi(Var#585<$page>, Var#531<$page>)
+    Var#591<$total_pages> = Phi(Var#532<$total_pages>)
+    Var#592<$limit> = Phi(Var#533<$limit>)
+    Var#593<$targetpage> = Phi(Var#534<$targetpage>)
+    Var#594<$adjacents> = Phi(Var#535<$adjacents>)
+    Var#595<$counter> = Phi(Var#536<$counter>)
+    Var#596<$result> = Phi(Var#537<$result>)
+    Expr_BinaryOp_Minus
+        left: Var#590<$page>
+        right: LITERAL(1)
+        result: Var#597
+    Expr_Assign
+        var: Var#598<$prev>
+        expr: Var#597
+        result: Var#599
+    Expr_BinaryOp_Plus
+        left: Var#590<$page>
+        right: LITERAL(1)
+        result: Var#600
+    Expr_Assign
+        var: Var#601<$next>
+        expr: Var#600
+        result: Var#602
+    Expr_BinaryOp_Div
+        left: Var#591<$total_pages>
+        right: Var#592<$limit>
+        result: Var#603
+    Expr_FuncCall
+        name: LITERAL('ceil')
+        args[0]: Var#603
+        result: Var#604
+    Expr_Assign
+        var: Var#605<$lastpage>
+        expr: Var#604
+        result: Var#606
+    Expr_BinaryOp_Minus
+        left: Var#605<$lastpage>
+        right: LITERAL(1)
+        result: Var#607
+    Expr_Assign
+        var: Var#608<$lpm1>
+        expr: Var#607
+        result: Var#609
+    Expr_Assign
+        var: Var#610<$pagination>
+        expr: LITERAL('')
+        result: Var#611
+    Expr_BinaryOp_Greater
+        left: Var#605<$lastpage>
+        right: LITERAL(1)
+        result: Var#612
+    Stmt_JumpIf
+        cond: Var#612
+        if: Block#57
+        else: Block#58
+
+Block#57
+    Parent: Block#56
+    Var#613<$pagination> = Phi(Var#610<$pagination>)
+    Var#614<$page> = Phi(Var#590<$page>)
+    Expr_BinaryOp_Concat
+        left: Var#613<$pagination>
+        right: LITERAL('<div class="pagination">')
+        result: Var#615
+    Expr_Assign
+        var: Var#616<$pagination>
+        expr: Var#615
+        result: Var#617
+    Expr_BinaryOp_Greater
+        left: Var#614<$page>
+        right: LITERAL(1)
+        result: Var#618
+    Stmt_JumpIf
+        cond: Var#618
+        if: Block#59
+        else: Block#60
+
+Block#58
+    Parent: Block#56
+    Stmt_Jump
+        target: Block#61
+
+Block#59
+    Parent: Block#57
+    Var#619<$pagination> = Phi(Var#616<$pagination>)
+    Var#620<$targetpage> = Phi(Var#593<$targetpage>)
+    Var#621<$prev> = Phi(Var#598<$prev>)
+    Expr_ConcatList
+        list[0]: LITERAL(' <a href="')
+        list[1]: Var#620<$targetpage>
+        list[2]: LITERAL('?page=')
+        list[3]: Var#621<$prev>
+        list[4]: LITERAL('"> << previous  </a>')
+        result: Var#622
+    Expr_BinaryOp_Concat
+        left: Var#619<$pagination>
+        right: Var#622
+        result: Var#623
+    Expr_Assign
+        var: Var#624<$pagination>
+        expr: Var#623
+        result: Var#625
+    Stmt_Jump
+        target: Block#62
+
+Block#60
+    Parent: Block#57
+    Var#626<$pagination> = Phi(Var#616<$pagination>)
+    Expr_BinaryOp_Concat
+        left: Var#626<$pagination>
+        right: LITERAL(' <span class="disabled"> << previous   </span>')
+        result: Var#627
+    Expr_Assign
+        var: Var#628<$pagination>
+        expr: Var#627
+        result: Var#629
+    Stmt_Jump
+        target: Block#62
+
+Block#61
+    Parent: Block#93
+    Parent: Block#58
+    Var#630<$result> = Phi(Var#631<$result>, Var#596<$result>)
+    Var#632<$pagination> = Phi(Var#633<$pagination>, Var#610<$pagination>)
+    Stmt_Jump
+        target: Block#63
+
+Block#62
+    Parent: Block#59
+    Parent: Block#60
+    Var#634<$lastpage> = Phi(Var#605<$lastpage>)
+    Var#635<$adjacents> = Phi(Var#594<$adjacents>)
+    Var#636<$page> = Phi(Var#614<$page>)
+    Var#637<$pagination> = Phi(Var#624<$pagination>, Var#628<$pagination>)
+    Var#638<$targetpage> = Phi(Var#620<$targetpage>, Var#593<$targetpage>)
+    Var#639<$lpm1> = Phi(Var#608<$lpm1>)
+    Var#640<$counter> = Phi(Var#595<$counter>)
+    Var#641<$next> = Phi(Var#601<$next>)
+    Var#642<$result> = Phi(Var#596<$result>)
+    Expr_BinaryOp_Mul
+        left: Var#635<$adjacents>
+        right: LITERAL(2)
+        result: Var#643
+    Expr_BinaryOp_Plus
+        left: LITERAL(7)
+        right: Var#643
+        result: Var#644
+    Expr_BinaryOp_Smaller
+        left: Var#634<$lastpage>
+        right: Var#644
+        result: Var#645
+    Stmt_JumpIf
+        cond: Var#645
+        if: Block#64
+        else: Block#65
+
+Block#63
+    Parent: Block#61
+    Parent: Block#79
+    Var#646<$result> = Phi(Var#630<$result>, Var#647<$result>)
+    Var#648<$pagination> = Phi(Var#632<$pagination>, Var#649<$pagination>)
+    Expr_FuncCall
+        name: LITERAL('mysql_fetch_array')
+        args[0]: Var#646<$result>
+        result: Var#650
+    Expr_Assign
+        var: Var#651<$cdata>
+        expr: Var#650
+        result: Var#652
+    Stmt_JumpIf
+        cond: Var#652
+        if: Block#66
+        else: Block#67
+
+Block#64
+    Parent: Block#62
+    Expr_Assign
+        var: Var#653<$counter>
+        expr: LITERAL(1)
+        result: Var#654
+    Stmt_Jump
+        target: Block#68
+
+Block#65
+    Parent: Block#62
+    Var#655<$lastpage> = Phi(Var#634<$lastpage>)
+    Var#656<$adjacents> = Phi(Var#635<$adjacents>)
+    Expr_BinaryOp_Mul
+        left: Var#656<$adjacents>
+        right: LITERAL(2)
+        result: Var#657
+    Expr_BinaryOp_Plus
+        left: LITERAL(5)
+        right: Var#657
+        result: Var#658
+    Expr_BinaryOp_Greater
+        left: Var#655<$lastpage>
+        right: Var#658
+        result: Var#659
+    Stmt_JumpIf
+        cond: Var#659
+        if: Block#69
+        else: Block#70
+
+Block#66
+    Parent: Block#63
+    Var#660<$cdata> = Phi(Var#651<$cdata>)
+    Terminal_Echo
+        expr: LITERAL('<div class="row" >')
+    Expr_ArrayDimFetch
+        var: Var#660<$cdata>
+        dim: LITERAL('docs_id')
+        result: Var#661
+    Expr_Assign
+        var: Var#662<$docs_id>
+        expr: Var#661
+        result: Var#663
+    Expr_ArrayDimFetch
+        var: Var#660<$cdata>
+        dim: LITERAL('img')
+        result: Var#664
+    Expr_Assign
+        var: Var#665<$img>
+        expr: Var#664
+        result: Var#666
+    Expr_ArrayDimFetch
+        var: Var#660<$cdata>
+        dim: LITERAL('img_name')
+        result: Var#667
+    Expr_Assign
+        var: Var#668<$file_name>
+        expr: Var#667
+        result: Var#669
+    Expr_ArrayDimFetch
+        var: Var#660<$cdata>
+        dim: LITERAL('details')
+        result: Var#670
+    Expr_Assign
+        var: Var#671<$details>
+        expr: Var#670
+        result: Var#672
+    Expr_ArrayDimFetch
+        var: Var#660<$cdata>
+        dim: LITERAL('doc_date')
+        result: Var#673
+    Expr_Assign
+        var: Var#674<$date>
+        expr: Var#673
+        result: Var#675
+    Expr_ArrayDimFetch
+        var: Var#660<$cdata>
+        dim: LITERAL('client_phone')
+        result: Var#676
+    Expr_Assign
+        var: Var#677<$client_phone>
+        expr: Var#676
+        result: Var#678
+    Expr_ArrayDimFetch
+        var: Var#660<$cdata>
+        dim: LITERAL('current_folder')
+        result: Var#679
+    Expr_Assign
+        var: Var#680<$cf>
+        expr: Var#679
+        result: Var#681
+    Expr_ConcatList
+        list[0]: LITERAL('http://entspecialistnoida.com/docs/')
+        list[1]: Var#665<$img>
+        result: Var#682
+    Expr_Assign
+        var: Var#683<$link>
+        expr: Var#682
+        result: Var#684
+    Terminal_Echo
+        expr: LITERAL('
+        	<div class="span2">')
+    Expr_BinaryOp_Concat
+        left: LITERAL(' <a href="images.php?i=')
+        right: Var#665<$img>
+        result: Var#685
+    Expr_BinaryOp_Concat
+        left: Var#685
+        right: LITERAL('&f=')
+        result: Var#686
+    Expr_BinaryOp_Concat
+        left: Var#686
+        right: Var#680<$cf>
+        result: Var#687
+    Expr_BinaryOp_Concat
+        left: Var#687
+        right: LITERAL('"><img src="')
+        result: Var#688
+    Expr_BinaryOp_Concat
+        left: Var#688
+        right: Var#665<$img>
+        result: Var#689
+    Expr_BinaryOp_Concat
+        left: Var#689
+        right: LITERAL('" /></a>')
+        result: Var#690
+    Terminal_Echo
+        expr: Var#690
+    Terminal_Echo
+        expr: LITERAL('  	 				 </div>
+                            <div class="span2">')
+    Expr_ConcatList
+        list[0]: LITERAL('SELECT COUNT(`curent_folder`) FROM `linked_data` WHERE `curent_folder`=\'')
+        list[1]: Var#680<$cf>
+        list[2]: LITERAL('\'')
+        result: Var#691
+    Expr_FuncCall
+        name: LITERAL('mysql_query')
+        args[0]: Var#691
+        result: Var#692
+    Expr_Assign
+        var: Var#693<$crpf>
+        expr: Var#692
+        result: Var#694
+    Stmt_JumpIf
+        cond: Var#694
+        if: Block#71
+        else: Block#72
+
+Block#67
+    Parent: Block#63
+    Stmt_Jump
+        target: Block#73
+
+Block#68
+    Parent: Block#64
+    Parent: Block#94
+    Var#695<$counter> = Phi(Var#653<$counter>, Var#696<$counter>)
+    Var#697<$lastpage> = Phi(Var#634<$lastpage>, Var#698<$lastpage>)
+    Var#699<$page> = Phi(Var#636<$page>, Var#700<$page>)
+    Var#701<$pagination> = Phi(Var#637<$pagination>, Var#702<$pagination>)
+    Var#703<$targetpage> = Phi(Var#638<$targetpage>, Var#704<$targetpage>)
+    Var#705<$next> = Phi(Var#641<$next>, Var#706<$next>)
+    Var#707<$result> = Phi(Var#642<$result>, Var#708<$result>)
+    Expr_BinaryOp_SmallerOrEqual
+        left: Var#695<$counter>
+        right: Var#697<$lastpage>
+        result: Var#709
+    Stmt_JumpIf
+        cond: Var#709
+        if: Block#74
+        else: Block#75
+
+Block#69
+    Parent: Block#65
+    Var#710<$page> = Phi(Var#636<$page>)
+    Var#711<$adjacents> = Phi(Var#656<$adjacents>)
+    Expr_BinaryOp_Mul
+        left: Var#711<$adjacents>
+        right: LITERAL(2)
+        result: Var#712
+    Expr_BinaryOp_Plus
+        left: LITERAL(1)
+        right: Var#712
+        result: Var#713
+    Expr_BinaryOp_Smaller
+        left: Var#710<$page>
+        right: Var#713
+        result: Var#714
+    Stmt_JumpIf
+        cond: Var#714
+        if: Block#76
+        else: Block#77
+
+Block#70
+    Parent: Block#65
+    Stmt_Jump
+        target: Block#78
+
+Block#71
+    Parent: Block#66
+    Var#715 = Phi(LITERAL(true), Var#716)
+    Var#647<$result> = Phi(Var#646<$result>)
+    Var#717<$crpf> = Phi(Var#693<$crpf>)
+    Var#718<$docs_id> = Phi(Var#662<$docs_id>)
+    Var#719<$file_name> = Phi(Var#668<$file_name>)
+    Var#720<$details> = Phi(Var#671<$details>)
+    Var#721<$date> = Phi(Var#674<$date>)
+    Var#722<$client_phone> = Phi(Var#677<$client_phone>)
+    Var#723<$link> = Phi(Var#683<$link>)
+    Var#649<$pagination> = Phi(Var#648<$pagination>)
+    Expr_FuncCall
+        name: LITERAL('mysql_fetch_row')
+        args[0]: Var#717<$crpf>
+        result: Var#724
+    Expr_Assign
+        var: Var#725<$uiv>
+        expr: Var#724
+        result: Var#726
+    Expr_ArrayDimFetch
+        var: Var#725<$uiv>
+        dim: LITERAL(0)
+        result: Var#727
+    Expr_Assign
+        var: Var#728<$tncf>
+        expr: Var#727
+        result: Var#729
+    Expr_BinaryOp_Concat
+        left: LITERAL('<a href="cedit.php?page=')
+        right: Var#718<$docs_id>
+        result: Var#730
+    Expr_BinaryOp_Concat
+        left: Var#730
+        right: LITERAL('">')
+        result: Var#731
+    Expr_BinaryOp_Concat
+        left: Var#731
+        right: Var#719<$file_name>
+        result: Var#732
+    Expr_BinaryOp_Concat
+        left: Var#732
+        right: LITERAL('<br>No. of Images ')
+        result: Var#733
+    Expr_BinaryOp_Concat
+        left: Var#733
+        right: Var#728<$tncf>
+        result: Var#734
+    Expr_BinaryOp_Concat
+        left: Var#734
+        right: LITERAL('</a>')
+        result: Var#735
+    Terminal_Echo
+        expr: Var#735
+    Terminal_Echo
+        expr: LITERAL('</div>
+                            <div class="span2">')
+    Terminal_Echo
+        expr: Var#720<$details>
+    Terminal_Echo
+        expr: LITERAL('</div>
+                            <div class="span2">')
+    Terminal_Echo
+        expr: Var#721<$date>
+    Terminal_Echo
+        expr: LITERAL('</div>
+                          <div class="span1">')
+    Terminal_Echo
+        expr: Var#722<$client_phone>
+    Terminal_Echo
+        expr: LITERAL('</div>
+                          <div class="span2" style=" text-align:right">
+        				  	')
+    Expr_BinaryOp_Concat
+        left: LITERAL('<a href="https://www.facebook.com/sharer/sharer.php?s=100&p[url]=')
+        right: Var#723<$link>
+        result: Var#736
+    Expr_BinaryOp_Concat
+        left: Var#736
+        right: LITERAL('"><img src="img/Facebook-Icon.png" height="25" width="25"  title="Facebook"></a> <a href="http://twitter.com/share?')
+        result: Var#737
+    Expr_BinaryOp_Concat
+        left: Var#737
+        right: Var#723<$link>
+        result: Var#738
+    Expr_BinaryOp_Concat
+        left: Var#738
+        right: LITERAL('"><img src="img/twitter_icon.png" height="25" width="25" title="TWitter"></a> <a href="	 https://plus.google.com/share?url=')
+        result: Var#739
+    Expr_BinaryOp_Concat
+        left: Var#739
+        right: Var#723<$link>
+        result: Var#740
+    Expr_BinaryOp_Concat
+        left: Var#740
+        right: LITERAL('"><img src="img/google-Plus-icon.png" height="25" width="25"  title="Google+"></a>')
+        result: Var#741
+    Terminal_Echo
+        expr: Var#741
+    Terminal_Echo
+        expr: LITERAL('
+        <a href="whatsapp://send" data-text="My Prescription:" data-href="')
+    Terminal_Echo
+        expr: Var#723<$link>
+    Terminal_Echo
+        expr: LITERAL('" class="wa_btn wa_btn_s" >Whatsapp</a>
+        <script type="text/javascript">
+        if(typeof wabtn4fg==="undefined"){wabtn4fg=1;h=document.head||document.getElementsByTagName("head")[0],s=document.createElement("script");s.type="text/javascript";s.src="//www.whatsapp-sharing.com/button";h.appendChild(s);}
+        </script>
+        
+        
+                          </div>
+        
+        ')
+    Expr_BinaryOp_Concat
+        left: LITERAL('       <a href="del.php?page=')
+        right: Var#718<$docs_id>
+        result: Var#742
+    Expr_BinaryOp_Concat
+        left: Var#742
+        right: LITERAL('">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <img src="img/no.png" height="28" width="28" title="Delete" ></a>')
+        result: Var#743
+    Terminal_Echo
+        expr: Var#743
+    Terminal_Echo
+        expr: LITERAL('
+        
+        
+        
+              ')
+    Terminal_Echo
+        expr: LITERAL('</div>')
+    Terminal_Echo
+        expr: LITERAL('<hr>')
+    Stmt_Jump
+        target: Block#79
+
+Block#72
+    Parent: Block#66
+    Expr_FuncCall
+        name: LITERAL('mysql_error')
+        result: Var#744
+    Terminal_Exit
+        expr: Var#744
+
+Block#73
+    Parent: Block#67
+    Var#745<$pagination> = Phi(Var#648<$pagination>)
+    Terminal_Echo
+        expr: LITERAL('
+        <center>
+        ')
+    Terminal_Echo
+        expr: Var#745<$pagination>
+    Terminal_Echo
+        expr: LITERAL('</center>
+        
+        </div>
+        <script type="text/javascript" src="js/jquery-1.10.1.min.js"></script>
+        <script type="text/javascript" src="js/bootstrap.js"></script>
+        </body>
+        </html>
+        ')
+    Terminal_Return
+
+Block#74
+    Parent: Block#68
+    Var#746<$counter> = Phi(Var#695<$counter>)
+    Var#747<$page> = Phi(Var#699<$page>)
+    Expr_BinaryOp_Equal
+        left: Var#746<$counter>
+        right: Var#747<$page>
+        result: Var#748
+    Stmt_JumpIf
+        cond: Var#748
+        if: Block#80
+        else: Block#81
+
+Block#75
+    Parent: Block#68
+    Stmt_Jump
+        target: Block#82
+
+Block#76
+    Parent: Block#69
+    Expr_Assign
+        var: Var#749<$counter>
+        expr: LITERAL(1)
+        result: Var#750
+    Stmt_Jump
+        target: Block#83
+
+Block#77
+    Parent: Block#69
+    Var#751<$lastpage> = Phi(Var#655<$lastpage>)
+    Var#752<$adjacents> = Phi(Var#711<$adjacents>)
+    Var#753<$page> = Phi(Var#710<$page>)
+    Expr_BinaryOp_Mul
+        left: Var#752<$adjacents>
+        right: LITERAL(2)
+        result: Var#754
+    Expr_BinaryOp_Minus
+        left: Var#751<$lastpage>
+        right: Var#754
+        result: Var#755
+    Expr_BinaryOp_Greater
+        left: Var#755
+        right: Var#753<$page>
+        result: Var#756
+    Stmt_JumpIf
+        cond: Var#756
+        if: Block#84
+        else: Block#85
+
+Block#78
+    Parent: Block#82
+    Parent: Block#101
+    Parent: Block#70
+    Var#757<$page> = Phi(Var#699<$page>, Var#758<$page>, Var#636<$page>)
+    Var#759<$counter> = Phi(Var#695<$counter>, Var#760<$counter>, Var#640<$counter>)
+    Var#761<$pagination> = Phi(Var#701<$pagination>, Var#762<$pagination>, Var#637<$pagination>)
+    Var#763<$targetpage> = Phi(Var#703<$targetpage>, Var#764<$targetpage>, Var#638<$targetpage>)
+    Var#765<$next> = Phi(Var#705<$next>, Var#766<$next>, Var#641<$next>)
+    Var#767<$result> = Phi(Var#707<$result>, Var#768<$result>, Var#642<$result>)
+    Expr_BinaryOp_Minus
+        left: Var#759<$counter>
+        right: LITERAL(1)
+        result: Var#769
+    Expr_BinaryOp_Smaller
+        left: Var#757<$page>
+        right: Var#769
+        result: Var#770
+    Stmt_JumpIf
+        cond: Var#770
+        if: Block#86
+        else: Block#87
+
+Block#79
+    Parent: Block#71
+    Stmt_Jump
+        target: Block#63
+
+Block#80
+    Parent: Block#74
+    Var#771<$pagination> = Phi(Var#701<$pagination>)
+    Var#772<$counter> = Phi(Var#746<$counter>)
+    Expr_ConcatList
+        list[0]: LITERAL('<span class="current">')
+        list[1]: Var#772<$counter>
+        list[2]: LITERAL('</span>')
+        result: Var#773
+    Expr_BinaryOp_Concat
+        left: Var#771<$pagination>
+        right: Var#773
+        result: Var#774
+    Expr_Assign
+        var: Var#775<$pagination>
+        expr: Var#774
+        result: Var#776
+    Stmt_Jump
+        target: Block#88
+
+Block#81
+    Parent: Block#74
+    Var#777<$pagination> = Phi(Var#701<$pagination>)
+    Var#778<$targetpage> = Phi(Var#703<$targetpage>)
+    Var#779<$counter> = Phi(Var#746<$counter>)
+    Expr_ConcatList
+        list[0]: LITERAL('<a href="')
+        list[1]: Var#778<$targetpage>
+        list[2]: LITERAL('?page=')
+        list[3]: Var#779<$counter>
+        list[4]: LITERAL('">')
+        list[5]: Var#779<$counter>
+        list[6]: LITERAL('</a>')
+        result: Var#780
+    Expr_BinaryOp_Concat
+        left: Var#777<$pagination>
+        right: Var#780
+        result: Var#781
+    Expr_Assign
+        var: Var#782<$pagination>
+        expr: Var#781
+        result: Var#783
+    Stmt_Jump
+        target: Block#88
+
+Block#82
+    Parent: Block#75
+    Stmt_Jump
+        target: Block#78
+
+Block#83
+    Parent: Block#76
+    Parent: Block#106
+    Var#784<$counter> = Phi(Var#749<$counter>, Var#785<$counter>)
+    Var#786<$adjacents> = Phi(Var#711<$adjacents>, Var#787<$adjacents>)
+    Var#788<$page> = Phi(Var#710<$page>, Var#789<$page>)
+    Var#790<$pagination> = Phi(Var#637<$pagination>, Var#791<$pagination>)
+    Var#792<$targetpage> = Phi(Var#638<$targetpage>, Var#793<$targetpage>)
+    Var#794<$lpm1> = Phi(Var#639<$lpm1>, Var#795<$lpm1>)
+    Var#796<$lastpage> = Phi(Var#655<$lastpage>, Var#797<$lastpage>)
+    Var#798<$next> = Phi(Var#641<$next>, Var#799<$next>)
+    Var#800<$result> = Phi(Var#642<$result>, Var#801<$result>)
+    Expr_BinaryOp_Mul
+        left: Var#786<$adjacents>
+        right: LITERAL(2)
+        result: Var#802
+    Expr_BinaryOp_Plus
+        left: LITERAL(4)
+        right: Var#802
+        result: Var#803
+    Expr_BinaryOp_Smaller
+        left: Var#784<$counter>
+        right: Var#803
+        result: Var#804
+    Stmt_JumpIf
+        cond: Var#804
+        if: Block#89
+        else: Block#90
+
+Block#84
+    Parent: Block#77
+    Var#805<$page> = Phi(Var#753<$page>)
+    Var#806<$adjacents> = Phi(Var#752<$adjacents>)
+    Expr_BinaryOp_Mul
+        left: Var#806<$adjacents>
+        right: LITERAL(2)
+        result: Var#807
+    Expr_BinaryOp_Greater
+        left: Var#805<$page>
+        right: Var#807
+        result: Var#808
+    Expr_Cast_Bool
+        expr: Var#808
+        result: Var#809
+    Stmt_Jump
+        target: Block#85
+
+Block#85
+    Parent: Block#77
+    Parent: Block#84
+    Var#810 = Phi(LITERAL(false), Var#809)
+    Var#811<$pagination> = Phi(Var#637<$pagination>)
+    Var#812<$targetpage> = Phi(Var#638<$targetpage>)
+    Var#813<$page> = Phi(Var#753<$page>, Var#805<$page>)
+    Var#814<$adjacents> = Phi(Var#752<$adjacents>, Var#806<$adjacents>)
+    Var#815<$lpm1> = Phi(Var#639<$lpm1>)
+    Var#816<$lastpage> = Phi(Var#751<$lastpage>)
+    Var#817<$next> = Phi(Var#641<$next>)
+    Var#818<$result> = Phi(Var#642<$result>)
+    Stmt_JumpIf
+        cond: Var#810
+        if: Block#91
+        else: Block#92
+
+Block#86
+    Parent: Block#78
+    Var#819<$pagination> = Phi(Var#761<$pagination>)
+    Var#820<$targetpage> = Phi(Var#763<$targetpage>)
+    Var#821<$next> = Phi(Var#765<$next>)
+    Expr_ConcatList
+        list[0]: LITERAL(' <a href="')
+        list[1]: Var#820<$targetpage>
+        list[2]: LITERAL('?page=')
+        list[3]: Var#821<$next>
+        list[4]: LITERAL('"> next >></a>')
+        result: Var#822
+    Expr_BinaryOp_Concat
+        left: Var#819<$pagination>
+        right: Var#822
+        result: Var#823
+    Expr_Assign
+        var: Var#824<$pagination>
+        expr: Var#823
+        result: Var#825
+    Stmt_Jump
+        target: Block#93
+
+Block#87
+    Parent: Block#78
+    Var#826<$pagination> = Phi(Var#761<$pagination>)
+    Expr_BinaryOp_Concat
+        left: Var#826<$pagination>
+        right: LITERAL(' <span class="disabled"> next >></span>')
+        result: Var#827
+    Expr_Assign
+        var: Var#828<$pagination>
+        expr: Var#827
+        result: Var#829
+    Stmt_Jump
+        target: Block#93
+
+Block#88
+    Parent: Block#80
+    Parent: Block#81
+    Var#698<$lastpage> = Phi(Var#697<$lastpage>)
+    Var#700<$page> = Phi(Var#747<$page>)
+    Var#702<$pagination> = Phi(Var#775<$pagination>, Var#782<$pagination>)
+    Var#704<$targetpage> = Phi(Var#703<$targetpage>, Var#778<$targetpage>)
+    Var#830<$counter> = Phi(Var#772<$counter>, Var#779<$counter>)
+    Var#706<$next> = Phi(Var#705<$next>)
+    Var#708<$result> = Phi(Var#707<$result>)
+    Stmt_Jump
+        target: Block#94
+
+Block#89
+    Parent: Block#83
+    Var#831<$counter> = Phi(Var#784<$counter>)
+    Var#832<$page> = Phi(Var#788<$page>)
+    Expr_BinaryOp_Equal
+        left: Var#831<$counter>
+        right: Var#832<$page>
+        result: Var#833
+    Stmt_JumpIf
+        cond: Var#833
+        if: Block#95
+        else: Block#96
+
+Block#90
+    Parent: Block#83
+    Stmt_Jump
+        target: Block#97
+
+Block#91
+    Parent: Block#85
+    Var#834<$pagination> = Phi(Var#811<$pagination>)
+    Var#835<$targetpage> = Phi(Var#812<$targetpage>)
+    Var#836<$page> = Phi(Var#813<$page>)
+    Var#837<$adjacents> = Phi(Var#814<$adjacents>)
+    Expr_ConcatList
+        list[0]: LITERAL('<a href="')
+        list[1]: Var#835<$targetpage>
+        list[2]: LITERAL('?page=1">1</a>')
+        result: Var#838
+    Expr_BinaryOp_Concat
+        left: Var#834<$pagination>
+        right: Var#838
+        result: Var#839
+    Expr_Assign
+        var: Var#840<$pagination>
+        expr: Var#839
+        result: Var#841
+    Expr_ConcatList
+        list[0]: LITERAL('<a href="')
+        list[1]: Var#835<$targetpage>
+        list[2]: LITERAL('?page=2">2</a>')
+        result: Var#842
+    Expr_BinaryOp_Concat
+        left: Var#840<$pagination>
+        right: Var#842
+        result: Var#843
+    Expr_Assign
+        var: Var#844<$pagination>
+        expr: Var#843
+        result: Var#845
+    Expr_BinaryOp_Concat
+        left: Var#844<$pagination>
+        right: LITERAL('...')
+        result: Var#846
+    Expr_Assign
+        var: Var#847<$pagination>
+        expr: Var#846
+        result: Var#848
+    Expr_BinaryOp_Minus
+        left: Var#836<$page>
+        right: Var#837<$adjacents>
+        result: Var#849
+    Expr_Assign
+        var: Var#850<$counter>
+        expr: Var#849
+        result: Var#851
+    Stmt_Jump
+        target: Block#98
+
+Block#92
+    Parent: Block#85
+    Var#852<$pagination> = Phi(Var#811<$pagination>)
+    Var#853<$targetpage> = Phi(Var#812<$targetpage>)
+    Var#854<$lastpage> = Phi(Var#816<$lastpage>)
+    Var#855<$adjacents> = Phi(Var#814<$adjacents>)
+    Expr_ConcatList
+        list[0]: LITERAL('<a href="')
+        list[1]: Var#853<$targetpage>
+        list[2]: LITERAL('?page=1"> 1 </a>')
+        result: Var#856
+    Expr_BinaryOp_Concat
+        left: Var#852<$pagination>
+        right: Var#856
+        result: Var#857
+    Expr_Assign
+        var: Var#858<$pagination>
+        expr: Var#857
+        result: Var#859
+    Expr_ConcatList
+        list[0]: LITERAL('<a href="')
+        list[1]: Var#853<$targetpage>
+        list[2]: LITERAL('?page=2"> 2 </a>')
+        result: Var#860
+    Expr_BinaryOp_Concat
+        left: Var#858<$pagination>
+        right: Var#860
+        result: Var#861
+    Expr_Assign
+        var: Var#862<$pagination>
+        expr: Var#861
+        result: Var#863
+    Expr_BinaryOp_Concat
+        left: Var#862<$pagination>
+        right: LITERAL('...')
+        result: Var#864
+    Expr_Assign
+        var: Var#865<$pagination>
+        expr: Var#864
+        result: Var#866
+    Expr_BinaryOp_Mul
+        left: Var#855<$adjacents>
+        right: LITERAL(2)
+        result: Var#867
+    Expr_BinaryOp_Plus
+        left: LITERAL(2)
+        right: Var#867
+        result: Var#868
+    Expr_BinaryOp_Minus
+        left: Var#854<$lastpage>
+        right: Var#868
+        result: Var#869
+    Expr_Assign
+        var: Var#870<$counter>
+        expr: Var#869
+        result: Var#871
+    Stmt_Jump
+        target: Block#99
+
+Block#93
+    Parent: Block#86
+    Parent: Block#87
+    Var#872<$pagination> = Phi(Var#824<$pagination>, Var#828<$pagination>)
+    Var#631<$result> = Phi(Var#767<$result>)
+    Expr_BinaryOp_Concat
+        left: Var#872<$pagination>
+        right: LITERAL('</div>
+        ')
+        result: Var#873
+    Expr_Assign
+        var: Var#633<$pagination>
+        expr: Var#873
+        result: Var#874
+    Stmt_Jump
+        target: Block#61
+
+Block#94
+    Parent: Block#88
+    Var#875<$counter> = Phi(Var#830<$counter>)
+    Expr_BinaryOp_Plus
+        left: Var#875<$counter>
+        right: LITERAL(1)
+        result: Var#876
+    Expr_Assign
+        var: Var#696<$counter>
+        expr: Var#876
+        result: Var#877
+    Stmt_Jump
+        target: Block#68
+
+Block#95
+    Parent: Block#89
+    Var#878<$pagination> = Phi(Var#790<$pagination>)
+    Var#879<$counter> = Phi(Var#831<$counter>)
+    Expr_ConcatList
+        list[0]: LITERAL('<span class="current">')
+        list[1]: Var#879<$counter>
+        list[2]: LITERAL('</span>')
+        result: Var#880
+    Expr_BinaryOp_Concat
+        left: Var#878<$pagination>
+        right: Var#880
+        result: Var#881
+    Expr_Assign
+        var: Var#882<$pagination>
+        expr: Var#881
+        result: Var#883
+    Stmt_Jump
+        target: Block#100
+
+Block#96
+    Parent: Block#89
+    Var#884<$pagination> = Phi(Var#790<$pagination>)
+    Var#885<$targetpage> = Phi(Var#792<$targetpage>)
+    Var#886<$counter> = Phi(Var#831<$counter>)
+    Expr_ConcatList
+        list[0]: LITERAL('<a href="')
+        list[1]: Var#885<$targetpage>
+        list[2]: LITERAL('?page=')
+        list[3]: Var#886<$counter>
+        list[4]: LITERAL('">')
+        list[5]: Var#886<$counter>
+        list[6]: LITERAL('</a>')
+        result: Var#887
+    Expr_BinaryOp_Concat
+        left: Var#884<$pagination>
+        right: Var#887
+        result: Var#888
+    Expr_Assign
+        var: Var#889<$pagination>
+        expr: Var#888
+        result: Var#890
+    Stmt_Jump
+        target: Block#100
+
+Block#97
+    Parent: Block#90
+    Var#891<$pagination> = Phi(Var#790<$pagination>)
+    Var#892<$targetpage> = Phi(Var#792<$targetpage>)
+    Var#893<$lpm1> = Phi(Var#794<$lpm1>)
+    Var#894<$lastpage> = Phi(Var#796<$lastpage>)
+    Expr_BinaryOp_Concat
+        left: Var#891<$pagination>
+        right: LITERAL('...')
+        result: Var#895
+    Expr_Assign
+        var: Var#896<$pagination>
+        expr: Var#895
+        result: Var#897
+    Expr_ConcatList
+        list[0]: LITERAL('<a href="')
+        list[1]: Var#892<$targetpage>
+        list[2]: LITERAL('?page=')
+        list[3]: Var#893<$lpm1>
+        list[4]: LITERAL('">')
+        list[5]: Var#893<$lpm1>
+        list[6]: LITERAL('</a>')
+        result: Var#898
+    Expr_BinaryOp_Concat
+        left: Var#896<$pagination>
+        right: Var#898
+        result: Var#899
+    Expr_Assign
+        var: Var#900<$pagination>
+        expr: Var#899
+        result: Var#901
+    Expr_ConcatList
+        list[0]: LITERAL('<a href="')
+        list[1]: Var#892<$targetpage>
+        list[2]: LITERAL('?page=')
+        list[3]: Var#894<$lastpage>
+        list[4]: LITERAL('">')
+        list[5]: Var#894<$lastpage>
+        list[6]: LITERAL('</a>')
+        result: Var#902
+    Expr_BinaryOp_Concat
+        left: Var#900<$pagination>
+        right: Var#902
+        result: Var#903
+    Expr_Assign
+        var: Var#904<$pagination>
+        expr: Var#903
+        result: Var#905
+    Stmt_Jump
+        target: Block#101
+
+Block#98
+    Parent: Block#91
+    Parent: Block#115
+    Var#906<$counter> = Phi(Var#850<$counter>, Var#907<$counter>)
+    Var#908<$page> = Phi(Var#836<$page>, Var#909<$page>)
+    Var#910<$adjacents> = Phi(Var#837<$adjacents>, Var#911<$adjacents>)
+    Var#912<$pagination> = Phi(Var#847<$pagination>, Var#913<$pagination>)
+    Var#914<$targetpage> = Phi(Var#835<$targetpage>, Var#915<$targetpage>)
+    Var#916<$lpm1> = Phi(Var#815<$lpm1>, Var#917<$lpm1>)
+    Var#918<$lastpage> = Phi(Var#816<$lastpage>, Var#919<$lastpage>)
+    Var#920<$next> = Phi(Var#817<$next>, Var#921<$next>)
+    Var#922<$result> = Phi(Var#818<$result>, Var#923<$result>)
+    Expr_BinaryOp_Plus
+        left: Var#908<$page>
+        right: Var#910<$adjacents>
+        result: Var#924
+    Expr_BinaryOp_SmallerOrEqual
+        left: Var#906<$counter>
+        right: Var#924
+        result: Var#925
+    Stmt_JumpIf
+        cond: Var#925
+        if: Block#102
+        else: Block#103
+
+Block#99
+    Parent: Block#92
+    Parent: Block#116
+    Var#926<$counter> = Phi(Var#870<$counter>, Var#927<$counter>)
+    Var#928<$lastpage> = Phi(Var#854<$lastpage>, Var#929<$lastpage>)
+    Var#930<$page> = Phi(Var#813<$page>, Var#931<$page>)
+    Var#932<$pagination> = Phi(Var#865<$pagination>, Var#933<$pagination>)
+    Var#934<$targetpage> = Phi(Var#853<$targetpage>, Var#935<$targetpage>)
+    Var#936<$next> = Phi(Var#817<$next>, Var#937<$next>)
+    Var#938<$result> = Phi(Var#818<$result>, Var#939<$result>)
+    Expr_BinaryOp_SmallerOrEqual
+        left: Var#926<$counter>
+        right: Var#928<$lastpage>
+        result: Var#940
+    Stmt_JumpIf
+        cond: Var#940
+        if: Block#104
+        else: Block#105
+
+Block#100
+    Parent: Block#95
+    Parent: Block#96
+    Var#787<$adjacents> = Phi(Var#786<$adjacents>)
+    Var#789<$page> = Phi(Var#832<$page>)
+    Var#791<$pagination> = Phi(Var#882<$pagination>, Var#889<$pagination>)
+    Var#793<$targetpage> = Phi(Var#792<$targetpage>, Var#885<$targetpage>)
+    Var#941<$counter> = Phi(Var#879<$counter>, Var#886<$counter>)
+    Var#795<$lpm1> = Phi(Var#794<$lpm1>)
+    Var#797<$lastpage> = Phi(Var#796<$lastpage>)
+    Var#799<$next> = Phi(Var#798<$next>)
+    Var#801<$result> = Phi(Var#800<$result>)
+    Stmt_Jump
+        target: Block#106
+
+Block#101
+    Parent: Block#97
+    Parent: Block#109
+    Parent: Block#112
+    Var#758<$page> = Phi(Var#788<$page>, Var#908<$page>, Var#930<$page>)
+    Var#760<$counter> = Phi(Var#784<$counter>, Var#906<$counter>, Var#926<$counter>)
+    Var#762<$pagination> = Phi(Var#904<$pagination>, Var#942<$pagination>, Var#932<$pagination>)
+    Var#764<$targetpage> = Phi(Var#892<$targetpage>, Var#943<$targetpage>, Var#934<$targetpage>)
+    Var#766<$next> = Phi(Var#798<$next>, Var#920<$next>, Var#936<$next>)
+    Var#768<$result> = Phi(Var#800<$result>, Var#922<$result>, Var#938<$result>)
+    Stmt_Jump
+        target: Block#78
+
+Block#102
+    Parent: Block#98
+    Var#944<$counter> = Phi(Var#906<$counter>)
+    Var#945<$page> = Phi(Var#908<$page>)
+    Expr_BinaryOp_Equal
+        left: Var#944<$counter>
+        right: Var#945<$page>
+        result: Var#946
+    Stmt_JumpIf
+        cond: Var#946
+        if: Block#107
+        else: Block#108
+
+Block#103
+    Parent: Block#98
+    Stmt_Jump
+        target: Block#109
+
+Block#104
+    Parent: Block#99
+    Var#947<$counter> = Phi(Var#926<$counter>)
+    Var#948<$page> = Phi(Var#930<$page>)
+    Expr_BinaryOp_Equal
+        left: Var#947<$counter>
+        right: Var#948<$page>
+        result: Var#949
+    Stmt_JumpIf
+        cond: Var#949
+        if: Block#110
+        else: Block#111
+
+Block#105
+    Parent: Block#99
+    Stmt_Jump
+        target: Block#112
+
+Block#106
+    Parent: Block#100
+    Var#950<$counter> = Phi(Var#941<$counter>)
+    Expr_BinaryOp_Plus
+        left: Var#950<$counter>
+        right: LITERAL(1)
+        result: Var#951
+    Expr_Assign
+        var: Var#785<$counter>
+        expr: Var#951
+        result: Var#952
+    Stmt_Jump
+        target: Block#83
+
+Block#107
+    Parent: Block#102
+    Var#953<$pagination> = Phi(Var#912<$pagination>)
+    Var#954<$counter> = Phi(Var#944<$counter>)
+    Expr_ConcatList
+        list[0]: LITERAL('<span class="current">')
+        list[1]: Var#954<$counter>
+        list[2]: LITERAL('</span>')
+        result: Var#955
+    Expr_BinaryOp_Concat
+        left: Var#953<$pagination>
+        right: Var#955
+        result: Var#956
+    Expr_Assign
+        var: Var#957<$pagination>
+        expr: Var#956
+        result: Var#958
+    Stmt_Jump
+        target: Block#113
+
+Block#108
+    Parent: Block#102
+    Var#959<$pagination> = Phi(Var#912<$pagination>)
+    Var#960<$targetpage> = Phi(Var#914<$targetpage>)
+    Var#961<$counter> = Phi(Var#944<$counter>)
+    Expr_ConcatList
+        list[0]: LITERAL('<a href="')
+        list[1]: Var#960<$targetpage>
+        list[2]: LITERAL('?page=')
+        list[3]: Var#961<$counter>
+        list[4]: LITERAL('">')
+        list[5]: Var#961<$counter>
+        list[6]: LITERAL('</a>')
+        result: Var#962
+    Expr_BinaryOp_Concat
+        left: Var#959<$pagination>
+        right: Var#962
+        result: Var#963
+    Expr_Assign
+        var: Var#964<$pagination>
+        expr: Var#963
+        result: Var#965
+    Stmt_Jump
+        target: Block#113
+
+Block#109
+    Parent: Block#103
+    Var#966<$pagination> = Phi(Var#912<$pagination>)
+    Var#943<$targetpage> = Phi(Var#914<$targetpage>)
+    Var#967<$lpm1> = Phi(Var#916<$lpm1>)
+    Var#968<$lastpage> = Phi(Var#918<$lastpage>)
+    Expr_BinaryOp_Concat
+        left: Var#966<$pagination>
+        right: LITERAL('...')
+        result: Var#969
+    Expr_Assign
+        var: Var#970<$pagination>
+        expr: Var#969
+        result: Var#971
+    Expr_ConcatList
+        list[0]: LITERAL('<a href="')
+        list[1]: Var#943<$targetpage>
+        list[2]: LITERAL('?page=')
+        list[3]: Var#967<$lpm1>
+        list[4]: LITERAL('">')
+        list[5]: Var#967<$lpm1>
+        list[6]: LITERAL('</a>')
+        result: Var#972
+    Expr_BinaryOp_Concat
+        left: Var#970<$pagination>
+        right: Var#972
+        result: Var#973
+    Expr_Assign
+        var: Var#974<$pagination>
+        expr: Var#973
+        result: Var#975
+    Expr_ConcatList
+        list[0]: LITERAL('<a href="')
+        list[1]: Var#943<$targetpage>
+        list[2]: LITERAL('?page=')
+        list[3]: Var#968<$lastpage>
+        list[4]: LITERAL('">')
+        list[5]: Var#968<$lastpage>
+        list[6]: LITERAL('</a>')
+        result: Var#976
+    Expr_BinaryOp_Concat
+        left: Var#974<$pagination>
+        right: Var#976
+        result: Var#977
+    Expr_Assign
+        var: Var#942<$pagination>
+        expr: Var#977
+        result: Var#978
+    Stmt_Jump
+        target: Block#101
+
+Block#110
+    Parent: Block#104
+    Var#979<$pagination> = Phi(Var#932<$pagination>)
+    Var#980<$counter> = Phi(Var#947<$counter>)
+    Expr_ConcatList
+        list[0]: LITERAL('<span class="current">')
+        list[1]: Var#980<$counter>
+        list[2]: LITERAL('</span>')
+        result: Var#981
+    Expr_BinaryOp_Concat
+        left: Var#979<$pagination>
+        right: Var#981
+        result: Var#982
+    Expr_Assign
+        var: Var#983<$pagination>
+        expr: Var#982
+        result: Var#984
+    Stmt_Jump
+        target: Block#114
+
+Block#111
+    Parent: Block#104
+    Var#985<$pagination> = Phi(Var#932<$pagination>)
+    Var#986<$targetpage> = Phi(Var#934<$targetpage>)
+    Var#987<$counter> = Phi(Var#947<$counter>)
+    Expr_ConcatList
+        list[0]: LITERAL('<a href="')
+        list[1]: Var#986<$targetpage>
+        list[2]: LITERAL('?page=')
+        list[3]: Var#987<$counter>
+        list[4]: LITERAL('">')
+        list[5]: Var#987<$counter>
+        list[6]: LITERAL('</a>')
+        result: Var#988
+    Expr_BinaryOp_Concat
+        left: Var#985<$pagination>
+        right: Var#988
+        result: Var#989
+    Expr_Assign
+        var: Var#990<$pagination>
+        expr: Var#989
+        result: Var#991
+    Stmt_Jump
+        target: Block#114
+
+Block#112
+    Parent: Block#105
+    Stmt_Jump
+        target: Block#101
+
+Block#113
+    Parent: Block#107
+    Parent: Block#108
+    Var#909<$page> = Phi(Var#945<$page>)
+    Var#911<$adjacents> = Phi(Var#910<$adjacents>)
+    Var#913<$pagination> = Phi(Var#957<$pagination>, Var#964<$pagination>)
+    Var#915<$targetpage> = Phi(Var#914<$targetpage>, Var#960<$targetpage>)
+    Var#992<$counter> = Phi(Var#954<$counter>, Var#961<$counter>)
+    Var#917<$lpm1> = Phi(Var#916<$lpm1>)
+    Var#919<$lastpage> = Phi(Var#918<$lastpage>)
+    Var#921<$next> = Phi(Var#920<$next>)
+    Var#923<$result> = Phi(Var#922<$result>)
+    Stmt_Jump
+        target: Block#115
+
+Block#114
+    Parent: Block#110
+    Parent: Block#111
+    Var#929<$lastpage> = Phi(Var#928<$lastpage>)
+    Var#931<$page> = Phi(Var#948<$page>)
+    Var#933<$pagination> = Phi(Var#983<$pagination>, Var#990<$pagination>)
+    Var#935<$targetpage> = Phi(Var#934<$targetpage>, Var#986<$targetpage>)
+    Var#993<$counter> = Phi(Var#980<$counter>, Var#987<$counter>)
+    Var#937<$next> = Phi(Var#936<$next>)
+    Var#939<$result> = Phi(Var#938<$result>)
+    Stmt_Jump
+        target: Block#116
+
+Block#115
+    Parent: Block#113
+    Var#994<$counter> = Phi(Var#992<$counter>)
+    Expr_BinaryOp_Plus
+        left: Var#994<$counter>
+        right: LITERAL(1)
+        result: Var#995
+    Expr_Assign
+        var: Var#907<$counter>
+        expr: Var#995
+        result: Var#996
+    Stmt_Jump
+        target: Block#98
+
+Block#116
+    Parent: Block#114
+    Var#997<$counter> = Phi(Var#993<$counter>)
+    Expr_BinaryOp_Plus
+        left: Var#997<$counter>
+        right: LITERAL(1)
+        result: Var#998
+    Expr_Assign
+        var: Var#927<$counter>
+        expr: Var#998
+        result: Var#999
+    Stmt_Jump
+        target: Block#99

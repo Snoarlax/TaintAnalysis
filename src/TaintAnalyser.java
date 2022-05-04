@@ -10,6 +10,7 @@ public class TaintAnalyser {
     public static void main(String[] args) {
         // Verbose output prints everything, non-verbose output only prints variables with real names
         boolean Verbose = false;
+
         String Delimiter = " --> ";
         String Header = "A" + Delimiter + "B: A Taints B";
         String FailMessage = "The Analyser could not find any injection vulnerabilities. ";
@@ -43,7 +44,7 @@ public class TaintAnalyser {
         }
 
         catch (Exception e) {
-            System.out.println(e.getMessage());
+            System.err.println(e.getMessage());
             return;
         }
         // Use a FiFo queue to manage which blocks need to be analysed.
@@ -64,6 +65,7 @@ public class TaintAnalyser {
         for (Block block : parser.getBlocks())
             if (block.isTaintedSink()) {
                 tainted = true;
+
                 // Write output for that block
                 // Block: X Is Tainted!
                 // [var1] --> [var2] ... --> [Sink]
@@ -73,14 +75,15 @@ public class TaintAnalyser {
             }
 
         if (!tainted)
-            System.out.println(FailMessage);
+            System.err.println(FailMessage);
 
         else {
+            System.out.println("File: " + parser.getGraph().getAbsoluteFile() + " vulnerable. \n");
             System.out.println(Header);
             System.out.println("        " + "TAINT CHAIN[S]:");
             for (Statement statement : TaintedSinks) {
                 // Write summary of vulnerabilities for the program.
-                ArrayList<Variable> TaintedFrom = new ArrayList<>(statement.TaintedBy());
+                LinkedHashSet<Variable> TaintedFrom = new LinkedHashSet<>(statement.TaintedBy());
                 ArrayList<String> TaintChain = new ArrayList<>();
 
                 Sink sinkType = statement.getSinkType();
@@ -88,13 +91,14 @@ public class TaintAnalyser {
 
 
                 // constructs each link in the chain of variables which caused the taint.
+
                 TaintChain.add(String.format("[ %s ]", sinkType.name()));
                 while (!TaintedFrom.isEmpty()) {
                     StringBuilder CurrentVariableLink = new StringBuilder("[");
                     // if verbose, add all variables in tainted from to the current link
                     if (Verbose)
-                        for (Variable variable : TaintedFrom)
-                            CurrentVariableLink.append(String.format(" %s", variable.getVariableName()));
+                        TaintedFrom.forEach(x -> CurrentVariableLink.append(String.format(" %s", x.getVariableName())));
+
                     // otherwise only add the first real variable to the current link
                     else
                         TaintedFrom.stream().filter(Variable::isRealVariable).findFirst()
@@ -107,7 +111,7 @@ public class TaintAnalyser {
                         TaintChain.add(CurrentVariableLink.toString());
 
                     // finds the union of the variables that tainted these variables
-                    ArrayList<Variable> NewTaintedFrom = new ArrayList<>();
+                    LinkedHashSet<Variable> NewTaintedFrom = new LinkedHashSet<>();
                     if (Verbose)
                         for (Variable variable : TaintedFrom)
                             NewTaintedFrom.addAll(variable.getTaintedFrom());
@@ -118,7 +122,7 @@ public class TaintAnalyser {
                         if (RealVariable.isPresent())
                             NewTaintedFrom.addAll(RealVariable.get().getTaintedFrom());
                         else
-                            NewTaintedFrom.addAll(TaintedFrom.get(0).getTaintedFrom());
+                            NewTaintedFrom.addAll(TaintedFrom.iterator().next().getTaintedFrom());
                     }
 
                     TaintedFrom = NewTaintedFrom;
