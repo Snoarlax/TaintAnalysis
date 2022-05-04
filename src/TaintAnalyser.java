@@ -78,7 +78,7 @@ public class TaintAnalyser {
             System.err.println(FailMessage);
 
         else {
-            System.out.println("File: " + parser.getGraph().getAbsoluteFile() + " vulnerable. \n");
+            System.out.println("File: " + parser.getGraph().getName() + " vulnerable. \n");
             System.out.println(Header);
             System.out.println("        " + "TAINT CHAIN[S]:");
             for (Statement statement : TaintedSinks) {
