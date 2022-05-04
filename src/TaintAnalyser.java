@@ -4,12 +4,11 @@ import TaintAnalysisComponents.TaintMap;
 import TaintAnalysisComponents.Variable;
 import TaintAnalysisComponents.TaintType;
 
-import javax.swing.text.html.Option;
 import java.util.*;
 
 public class TaintAnalyser {
     public static void main(String[] args) {
-        // Verbose output prints everything, non verbose output only prints variables with real names
+        // Verbose output prints everything, non-verbose output only prints variables with real names
         boolean Verbose = false;
         String Delimiter = " --> ";
         String Header = "A" + Delimiter + "B: A Taints B";
@@ -19,7 +18,7 @@ public class TaintAnalyser {
                 Uses Taint analyses to analyse FILE in CFG form for injection vulnerabilities.
                 
                 OPTIONS
-                -v Print with Verbosity 
+                -v Print with Verbosity
                 """;
         if (args.length != 1 && args.length != 2) {
             System.out.println(UsageMessage);
