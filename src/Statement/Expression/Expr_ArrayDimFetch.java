@@ -11,17 +11,23 @@ public class Expr_ArrayDimFetch extends ExpressionStatement{
 
     @Override
     public void computeTaintFromInput(TaintMap inputTaint) {
-        // if the array is tainted, then the result of getting anything from the array will be considered tainted. (Possible extension to make more fine grained)
+        // if the array is tainted, then the result of getting anything from the array will be considered tainted.
         Variable var = inputTaint.get(Arguments[0].split(": ",2)[1]);
+        Variable result = inputTaint.get(Arguments[2].split(": ", 2)[1]);
+
+        // if the result EVER becomes tainted, the array should also become tainted!
+        var.markTaintDependency(result);
+        inputTaint.put(var);
+        inputTaint.put(result);
+
 
         if (var.isTainted()) {
-            Variable result = inputTaint.get(Arguments[2].split(": ", 2)[1]);
-            result.setAllTainted(var.getTaints());
-
-            result.TaintedFrom(var);
-
-            inputTaint.put(result);
+            if (!result.hasTainted(var.getTaints()))
+                result.TaintedFrom(var);
+                result.setAllTainted(var.getTaints());
         }
+
+
     }
 
     @Override

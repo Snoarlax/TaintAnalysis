@@ -6,7 +6,7 @@ public class Variable {
     private final String VariableName;
     private final HashSet<TaintType> Taints;
 
-
+    private Optional<HashSet<Variable>> TaintDependencies;
     private final HashSet<Variable> TaintedFrom;
 
     public Variable(String VariableName, Collection<TaintType> Tainted) {
@@ -14,6 +14,7 @@ public class Variable {
         this.VariableName = VariableName;
         this.Taints = new HashSet<>(Tainted);
 
+        TaintDependencies = Optional.empty();
         TaintedFrom = new HashSet<>();
     }
 
@@ -23,6 +24,7 @@ public class Variable {
         if (isRealVariable() && computeSource(VariableName))
             Collections.addAll(Taints, TaintType.values());
 
+        TaintDependencies = Optional.empty();
         TaintedFrom = new HashSet<>();
     }
 
@@ -31,22 +33,66 @@ public class Variable {
         return Arrays.stream(Source.values()).anyMatch(x -> variableName.endsWith("<" + x.name() + ">"));
     }
 
+    private boolean TaintDependencyCycle(Variable DependentVariable){
+        // implement cycle detection algorithm
+        // If the current variable is in the DependentVariable subtree,
+        // a cycle may occur if added.
 
+        // If DependentVariable is in the tree
+        Stack<Variable> DFSStack = new Stack<>();
+        HashSet<Variable> elements = new HashSet<>();
+        DFSStack.push(DependentVariable);
+        while (!DFSStack.isEmpty() && !elements.contains(this)) {
+            Variable CurrentVariable = DFSStack.pop();
+            elements.add(CurrentVariable);
+
+            if (CurrentVariable.TaintDependencies.isPresent())
+                for (Variable var : CurrentVariable.TaintDependencies.get())
+                    if (!elements.contains(var))
+                        DFSStack.push(var);
+        }
+
+        if (elements.contains(this))
+            return true;
+
+        return false;
+    }
+
+    public void markTaintDependency(Variable DependentVariable){
+        // Enforces that Tainted(Variable) => Tainted(DependentVariable)
+        if (TaintDependencies.isEmpty())
+            TaintDependencies = Optional.of(new HashSet<Variable>());
+
+        // check for cycles
+        if (!TaintDependencyCycle(DependentVariable))
+            TaintDependencies.get().add(DependentVariable);
+    }
 
     public String getVariableName() {
         return VariableName;
     }
 
     public boolean hasTainted(TaintType taint){
-        return Taints.contains(taint);
+        return Taints.contains(taint) ||
+                TaintDependencies.isPresent() && TaintDependencies.get().stream().anyMatch(x -> x.hasTainted(taint)) ;
+    }
+
+    public boolean hasTainted(Collection<? extends TaintType> taints){
+        return taints.stream().allMatch(this::hasTainted);
     }
 
     public boolean isTainted(){
-        return !Taints.isEmpty();
+        return !Taints.isEmpty() ||
+                TaintDependencies.isPresent() && TaintDependencies.get().stream().anyMatch(Variable::isTainted);
     }
 
     public HashSet<TaintType> getTaints(){
-        return new HashSet<>(Taints);
+        if (TaintDependencies.isEmpty())
+            return new HashSet<>(Taints);
+
+        HashSet<TaintType> returnTaints = new HashSet<>(Taints);
+        TaintDependencies.get().forEach(x -> returnTaints.addAll(x.getTaints()));
+        return returnTaints;
     }
 
     public void setTainted(TaintType newTaint){
@@ -57,6 +103,8 @@ public class Variable {
         Taints.addAll(newTaints);
     }
 
+    // do not clear dependent taints maintain over approximation.
+
     public void clearTainted(TaintType TaintToRemove){
         Taints.remove(TaintToRemove);
     }
@@ -65,12 +113,23 @@ public class Variable {
         Taints.removeAll(TaintsToRemove);
     }
 
-    public void TaintedFrom(Variable VariableTaintedBy) {TaintedFrom.add(VariableTaintedBy);}
+    public void TaintedFrom(HashSet<Variable> VariableTaintedBy) {
+        TaintedFrom.addAll(VariableTaintedBy);
+    }
 
-    public void TaintedFrom(HashSet<Variable> VariableTaintedBy) {TaintedFrom.addAll(VariableTaintedBy);}
+    public void TaintedFrom(Variable VariableTaintedBy) {
+        TaintedFrom.add(VariableTaintedBy);
+    }
 
     public HashSet<Variable> getTaintedFrom() {
-        return new HashSet<>(TaintedFrom);
+        if (TaintDependencies.isEmpty())
+            return new HashSet<>(TaintedFrom);
+
+        HashSet<Variable> returnTaintedFrom = new HashSet<>(TaintedFrom);
+
+        TaintDependencies.get().forEach(x -> returnTaintedFrom.addAll(x.getTaintedFrom()));
+        returnTaintedFrom.remove(this);
+        return returnTaintedFrom;
     }
 
     public boolean isRealVariable() {
@@ -82,5 +141,18 @@ public class Variable {
         // returns the non SSA form of the variable name if possible, else returns variable name.
 
         return isRealVariable() ? VariableName.substring(VariableName.indexOf("<") + 1, VariableName.lastIndexOf(">")) : VariableName;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Variable variable = (Variable) o;
+        return VariableName.equals(variable.VariableName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(VariableName);
     }
 }

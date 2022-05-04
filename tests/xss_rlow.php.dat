@@ -1,0 +1,401 @@
+
+Block#1
+    Var#1<$_COOKIE> = Phi()
+    Var#2<$_GET> = Phi()
+    Var#3<$html> = Phi()
+    Expr_FuncCall
+        name: LITERAL('define')
+        args[0]: LITERAL('DVWA_WEB_PAGE_TO_ROOT')
+        args[1]: LITERAL('../../')
+        result: Var#4
+    Expr_ConstFetch
+        name: LITERAL('DVWA_WEB_PAGE_TO_ROOT')
+        result: Var#5
+    Expr_BinaryOp_Concat
+        left: Var#5
+        right: LITERAL('dvwa/includes/dvwaPage.inc.php')
+        result: Var#6
+    Expr_Include
+        expr: Var#6
+        result: Var#7
+    Expr_Array
+        keys[0]: NULL
+        keys[1]: NULL
+        values[0]: LITERAL('authenticated')
+        values[1]: LITERAL('phpids')
+        result: Var#8
+    Expr_FuncCall
+        name: LITERAL('dvwaPageStartup')
+        args[0]: Var#8
+        result: Var#9
+    Expr_FuncCall
+        name: LITERAL('dvwaPageNewGrab')
+        result: Var#10
+    Expr_Assign
+        var: Var#11<$page>
+        expr: Var#10
+        result: Var#12
+    Expr_ArrayDimFetch
+        var: Var#11<$page>
+        dim: LITERAL('title_separator')
+        result: Var#13
+    Expr_BinaryOp_Concat
+        left: LITERAL('Vulnerability: Reflected Cross Site Scripting (XSS)')
+        right: Var#13
+        result: Var#14
+    Expr_ArrayDimFetch
+        var: Var#11<$page>
+        dim: LITERAL('title')
+        result: Var#15
+    Expr_BinaryOp_Concat
+        left: Var#14
+        right: Var#15
+        result: Var#16
+    Expr_ArrayDimFetch
+        var: Var#11<$page>
+        dim: LITERAL('title')
+        result: Var#17
+    Expr_Assign
+        var: Var#17
+        expr: Var#16
+        result: Var#18
+    Expr_ArrayDimFetch
+        var: Var#11<$page>
+        dim: LITERAL('page_id')
+        result: Var#19
+    Expr_Assign
+        var: Var#19
+        expr: LITERAL('xss_r')
+        result: Var#20
+    Expr_ArrayDimFetch
+        var: Var#11<$page>
+        dim: LITERAL('help_button')
+        result: Var#21
+    Expr_Assign
+        var: Var#21
+        expr: LITERAL('xss_r')
+        result: Var#22
+    Expr_ArrayDimFetch
+        var: Var#11<$page>
+        dim: LITERAL('source_button')
+        result: Var#23
+    Expr_Assign
+        var: Var#23
+        expr: LITERAL('xss_r')
+        result: Var#24
+    Expr_FuncCall
+        name: LITERAL('dvwaDatabaseConnect')
+        result: Var#25
+    Expr_Assign
+        var: Var#26<$vulnerabilityFile>
+        expr: LITERAL('')
+        result: Var#27
+    Expr_ArrayDimFetch
+        var: Var#1<$_COOKIE>
+        dim: LITERAL('security')
+        result: Var#28
+    Stmt_Switch
+        cond: Var#28
+        cases[0]: LITERAL('low')
+        cases[1]: LITERAL('medium')
+        cases[2]: LITERAL('high')
+        targets[0]: Block#2
+        targets[1]: Block#3
+        targets[2]: Block#4
+        default: Block#5
+
+Block#2
+    Parent: Block#1
+    Expr_Assign
+        var: Var#29<$vulnerabilityFile>
+        expr: LITERAL('low.php')
+        result: Var#30
+    Stmt_Jump
+        target: Block#6
+
+Block#3
+    Parent: Block#1
+    Expr_Assign
+        var: Var#31<$vulnerabilityFile>
+        expr: LITERAL('medium.php')
+        result: Var#32
+    Stmt_Jump
+        target: Block#6
+
+Block#4
+    Parent: Block#1
+    Expr_Assign
+        var: Var#33<$vulnerabilityFile>
+        expr: LITERAL('high.php')
+        result: Var#34
+    Stmt_Jump
+        target: Block#6
+
+Block#5
+    Parent: Block#1
+    Expr_Assign
+        var: Var#35<$vulnerabilityFile>
+        expr: LITERAL('impossible.php')
+        result: Var#36
+    Stmt_Jump
+        target: Block#6
+
+Block#6
+    Parent: Block#2
+    Parent: Block#3
+    Parent: Block#4
+    Parent: Block#5
+    Var#37<$_GET> = Phi(Var#38<$_GET>, Var#2<$_GET>)
+    Var#39<$html> = Phi(Var#40<$html>, Var#3<$html>)
+    Var#41<$page> = Phi(Var#42<$page>, Var#11<$page>)
+    Var#43<$vulnerabilityFile> = Phi(Var#44<$vulnerabilityFile>, Var#29<$vulnerabilityFile>, Var#31<$vulnerabilityFile>, Var#33<$vulnerabilityFile>, Var#35<$vulnerabilityFile>)
+    Expr_FuncCall
+        name: LITERAL('header')
+        args[0]: LITERAL('X-XSS-Protection: 0')
+        result: Var#45
+    Expr_FuncCall
+        name: LITERAL('array_key_exists')
+        args[0]: LITERAL('name')
+        args[1]: Var#37<$_GET>
+        result: Var#46
+    Stmt_JumpIf
+        cond: Var#46
+        if: Block#7
+        else: Block#8
+
+Block#7
+    Parent: Block#6
+    Var#47<$_GET> = Phi(Var#37<$_GET>)
+    Expr_ArrayDimFetch
+        var: Var#47<$_GET>
+        dim: LITERAL('name')
+        result: Var#48
+    Expr_ConstFetch
+        name: LITERAL('NULL')
+        result: Var#49
+    Expr_BinaryOp_NotEqual
+        left: Var#48
+        right: Var#49
+        result: Var#50
+    Expr_Cast_Bool
+        expr: Var#50
+        result: Var#51
+    Stmt_Jump
+        target: Block#8
+
+Block#8
+    Parent: Block#6
+    Parent: Block#7
+    Var#52 = Phi(LITERAL(false), Var#51)
+    Var#53<$html> = Phi(Var#39<$html>)
+    Var#54<$_GET> = Phi(Var#37<$_GET>, Var#47<$_GET>)
+    Var#55<$page> = Phi(Var#41<$page>)
+    Var#56<$vulnerabilityFile> = Phi(Var#43<$vulnerabilityFile>)
+    Stmt_JumpIf
+        cond: Var#52
+        if: Block#9
+        else: Block#10
+
+Block#9
+    Parent: Block#8
+    Var#57<$html> = Phi(Var#53<$html>)
+    Var#58<$_GET> = Phi(Var#54<$_GET>)
+    Expr_ArrayDimFetch
+        var: Var#58<$_GET>
+        dim: LITERAL('name')
+        result: Var#59
+    Expr_BinaryOp_Concat
+        left: LITERAL('<pre>Hello ')
+        right: Var#59
+        result: Var#60
+    Expr_BinaryOp_Concat
+        left: Var#60
+        right: LITERAL('</pre>')
+        result: Var#61
+    Expr_BinaryOp_Concat
+        left: Var#57<$html>
+        right: Var#61
+        result: Var#62
+    Expr_Assign
+        var: Var#63<$html>
+        expr: Var#62
+        result: Var#64
+    Stmt_Jump
+        target: Block#11
+
+Block#10
+    Parent: Block#8
+    Stmt_Jump
+        target: Block#11
+
+Block#11
+    Parent: Block#9
+    Parent: Block#10
+    Var#65<$page> = Phi(Var#55<$page>)
+    Var#66<$vulnerabilityFile> = Phi(Var#56<$vulnerabilityFile>)
+    Var#67<$html> = Phi(Var#63<$html>, Var#53<$html>)
+    Expr_ArrayDimFetch
+        var: Var#65<$page>
+        dim: LITERAL('body')
+        result: Var#68
+    Expr_BinaryOp_Concat
+        left: Var#68
+        right: LITERAL('
+        <div class="body_padded">
+        	<h1>Vulnerability: Reflected Cross Site Scripting (XSS)</h1>
+        
+        	<div class="vulnerable_code_area">
+        		<form name="XSS" action="#" method="GET">
+        			<p>
+        				What\'s your name?
+        				<input type="text" name="name">
+        				<input type="submit" value="Submit">
+        			</p>
+        ')
+        result: Var#69
+    Expr_Assign
+        var: Var#68
+        expr: Var#69
+        result: Var#70
+    Expr_BinaryOp_Equal
+        left: Var#66<$vulnerabilityFile>
+        right: LITERAL('impossible.php')
+        result: Var#71
+    Stmt_JumpIf
+        cond: Var#71
+        if: Block#12
+        else: Block#13
+
+Block#12
+    Parent: Block#11
+    Var#72<$page> = Phi(Var#65<$page>)
+    Expr_ArrayDimFetch
+        var: Var#72<$page>
+        dim: LITERAL('body')
+        result: Var#73
+    Expr_FuncCall
+        name: LITERAL('tokenField')
+        result: Var#74
+    Expr_BinaryOp_Concat
+        left: LITERAL('			')
+        right: Var#74
+        result: Var#75
+    Expr_BinaryOp_Concat
+        left: Var#73
+        right: Var#75
+        result: Var#76
+    Expr_Assign
+        var: Var#73
+        expr: Var#76
+        result: Var#77
+    Stmt_Jump
+        target: Block#14
+
+Block#13
+    Parent: Block#11
+    Stmt_Jump
+        target: Block#14
+
+Block#14
+    Parent: Block#12
+    Parent: Block#13
+    Var#78<$page> = Phi(Var#72<$page>, Var#65<$page>)
+    Var#79<$html> = Phi(Var#67<$html>)
+    Expr_ArrayDimFetch
+        var: Var#78<$page>
+        dim: LITERAL('body')
+        result: Var#80
+    Expr_ConcatList
+        list[0]: LITERAL('
+        		</form>
+        		')
+        list[1]: Var#79<$html>
+        list[2]: LITERAL('
+        	</div>
+        
+        	<h2>More Information</h2>
+        	<ul>
+        		<li>')
+        result: Var#81
+    Expr_FuncCall
+        name: LITERAL('dvwaExternalLinkUrlGet')
+        args[0]: LITERAL('https://owasp.org/www-community/attacks/xss/')
+        result: Var#82
+    Expr_BinaryOp_Concat
+        left: Var#81
+        right: Var#82
+        result: Var#83
+    Expr_BinaryOp_Concat
+        left: Var#83
+        right: LITERAL('</li>
+        		<li>')
+        result: Var#84
+    Expr_FuncCall
+        name: LITERAL('dvwaExternalLinkUrlGet')
+        args[0]: LITERAL('https://owasp.org/www-community/xss-filter-evasion-cheatsheet')
+        result: Var#85
+    Expr_BinaryOp_Concat
+        left: Var#84
+        right: Var#85
+        result: Var#86
+    Expr_BinaryOp_Concat
+        left: Var#86
+        right: LITERAL('</li>
+        		<li>')
+        result: Var#87
+    Expr_FuncCall
+        name: LITERAL('dvwaExternalLinkUrlGet')
+        args[0]: LITERAL('https://en.wikipedia.org/wiki/Cross-site_scripting')
+        result: Var#88
+    Expr_BinaryOp_Concat
+        left: Var#87
+        right: Var#88
+        result: Var#89
+    Expr_BinaryOp_Concat
+        left: Var#89
+        right: LITERAL('</li>
+        		<li>')
+        result: Var#90
+    Expr_FuncCall
+        name: LITERAL('dvwaExternalLinkUrlGet')
+        args[0]: LITERAL('http://www.cgisecurity.com/xss-faq.html')
+        result: Var#91
+    Expr_BinaryOp_Concat
+        left: Var#90
+        right: Var#91
+        result: Var#92
+    Expr_BinaryOp_Concat
+        left: Var#92
+        right: LITERAL('</li>
+        		<li>')
+        result: Var#93
+    Expr_FuncCall
+        name: LITERAL('dvwaExternalLinkUrlGet')
+        args[0]: LITERAL('http://www.scriptalert1.com/')
+        result: Var#94
+    Expr_BinaryOp_Concat
+        left: Var#93
+        right: Var#94
+        result: Var#95
+    Expr_BinaryOp_Concat
+        left: Var#95
+        right: LITERAL('</li>
+        	</ul>
+        </div>
+        ')
+        result: Var#96
+    Expr_BinaryOp_Concat
+        left: Var#80
+        right: Var#96
+        result: Var#97
+    Expr_Assign
+        var: Var#80
+        expr: Var#97
+        result: Var#98
+    Expr_ArrayDimFetch
+        var: Var#78<$page>
+        dim: LITERAL('body')
+        result: Var#99
+    Terminal_Echo
+        expr: Var#99
+    Terminal_Return

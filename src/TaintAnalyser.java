@@ -4,10 +4,12 @@ import TaintAnalysisComponents.TaintMap;
 import TaintAnalysisComponents.Variable;
 import TaintAnalysisComponents.TaintType;
 
+import javax.swing.text.html.Option;
 import java.util.*;
 
 public class TaintAnalyser {
     public static void main(String[] args) {
+        // Verbose output prints everything, non verbose output only prints variables with real names
         boolean Verbose = false;
         String Delimiter = " --> ";
         String Header = "A" + Delimiter + "B: A Taints B";
@@ -17,7 +19,7 @@ public class TaintAnalyser {
                 Uses Taint analyses to analyse FILE in CFG form for injection vulnerabilities.
                 
                 OPTIONS
-                -v Print with Verbosity
+                -v Print with Verbosity 
                 """;
         if (args.length != 1 && args.length != 2) {
             System.out.println(UsageMessage);
@@ -79,7 +81,7 @@ public class TaintAnalyser {
             System.out.println("        " + "TAINT CHAIN[S]:");
             for (Statement statement : TaintedSinks) {
                 // Write summary of vulnerabilities for the program.
-                HashSet<Variable> TaintedFrom = statement.TaintedBy();
+                ArrayList<Variable> TaintedFrom = new ArrayList<>(statement.TaintedBy());
                 ArrayList<String> TaintChain = new ArrayList<>();
 
                 Sink sinkType = statement.getSinkType();
@@ -90,29 +92,53 @@ public class TaintAnalyser {
                 TaintChain.add(String.format("[ %s ]", sinkType.name()));
                 while (!TaintedFrom.isEmpty()) {
                     StringBuilder CurrentVariableLink = new StringBuilder("[");
-                    for (Variable variable : TaintedFrom) {
-                        if (Verbose)
+                    // if verbose, add all variables in tainted from to the current link
+                    if (Verbose)
+                        for (Variable variable : TaintedFrom)
                             CurrentVariableLink.append(String.format(" %s", variable.getVariableName()));
-                        else if (variable.isRealVariable()){
-                            CurrentVariableLink.append(String.format(" %s", variable.getRealVariableName()));
-                        }
-                    }
+                    // otherwise only add the first real variable to the current link
+                    else
+                        TaintedFrom.stream().filter(Variable::isRealVariable).findFirst()
+                            .ifPresent(variable -> CurrentVariableLink.append(String.format(" %s", variable.getRealVariableName())));
+
+
                     CurrentVariableLink.append(" ]");
 
                     if (!CurrentVariableLink.toString().equals("[ ]"))
                         TaintChain.add(CurrentVariableLink.toString());
 
                     // finds the union of the variables that tainted these variables
-                    HashSet<Variable> NewTaintedFrom = new HashSet<>();
-                    for (Variable variable : TaintedFrom) {
-                        NewTaintedFrom.addAll(variable.getTaintedFrom());
+                    ArrayList<Variable> NewTaintedFrom = new ArrayList<>();
+                    if (Verbose)
+                        for (Variable variable : TaintedFrom)
+                            NewTaintedFrom.addAll(variable.getTaintedFrom());
+
+                    else {
+                        Optional<Variable> RealVariable = TaintedFrom.stream().filter(Variable::isRealVariable).findFirst();
+                        // Display the taint coming form the first real variable, or the first variable if none are real variables
+                        if (RealVariable.isPresent())
+                            NewTaintedFrom.addAll(RealVariable.get().getTaintedFrom());
+                        else
+                            NewTaintedFrom.addAll(TaintedFrom.get(0).getTaintedFrom());
                     }
+
                     TaintedFrom = NewTaintedFrom;
                 }
 
                 // reverse the taint chain since it is more intuitive (From source to sink instead of vice versa)
                 Collections.reverse(TaintChain);
 
+                // combine adjacent duplicates in non verbose mode; they are pointless otherwise
+                if (!Verbose) {
+                    ArrayList<String> DeduplicatedTaintChain = new ArrayList<>();
+                    for (int i = 0; i < TaintChain.size()-1; i++) {
+                        if (!TaintChain.get(i).equals(TaintChain.get(i+1)))
+                            DeduplicatedTaintChain.add(TaintChain.get(i));
+                    }
+                    // add the last element ( the sink )
+                    DeduplicatedTaintChain.add(TaintChain.get(TaintChain.size()-1));
+                    TaintChain = new ArrayList<>(DeduplicatedTaintChain);
+                }
                 // print the Taint Chain
                 System.out.println("                " + String.format("%s : ", sinkType.getVulnerableTaint()) + String.join(Delimiter, TaintChain));
                 System.out.println();

@@ -1,0 +1,114 @@
+
+Block#1
+    Var#1<$_GET> = Phi()
+    Expr_Array
+        keys[0]: LITERAL('body')
+        values[0]: LITERAL('')
+        result: Var#2
+    Expr_Assign
+        var: Var#3<$page>
+        expr: Var#2
+        result: Var#4
+    Expr_Assign
+        var: Var#5<$html>
+        expr: LITERAL('')
+        result: Var#6
+    Expr_FuncCall
+        name: LITERAL('array_key_exists')
+        args[0]: LITERAL('name')
+        args[1]: Var#1<$_GET>
+        result: Var#7
+    Stmt_JumpIf
+        cond: Var#7
+        if: Block#2
+        else: Block#3
+
+Block#2
+    Parent: Block#1
+    Var#8<$_GET> = Phi(Var#1<$_GET>)
+    Expr_ArrayDimFetch
+        var: Var#8<$_GET>
+        dim: LITERAL('name')
+        result: Var#9
+    Expr_ConstFetch
+        name: LITERAL('NULL')
+        result: Var#10
+    Expr_BinaryOp_NotEqual
+        left: Var#9
+        right: Var#10
+        result: Var#11
+    Expr_Cast_Bool
+        expr: Var#11
+        result: Var#12
+    Stmt_Jump
+        target: Block#3
+
+Block#3
+    Parent: Block#1
+    Parent: Block#2
+    Var#13 = Phi(LITERAL(false), Var#12)
+    Var#14<$html> = Phi(Var#5<$html>)
+    Var#15<$_GET> = Phi(Var#1<$_GET>, Var#8<$_GET>)
+    Var#16<$page> = Phi(Var#3<$page>)
+    Stmt_JumpIf
+        cond: Var#13
+        if: Block#4
+        else: Block#5
+
+Block#4
+    Parent: Block#3
+    Var#17<$html> = Phi(Var#14<$html>)
+    Var#18<$_GET> = Phi(Var#15<$_GET>)
+    Expr_ArrayDimFetch
+        var: Var#18<$_GET>
+        dim: LITERAL('name')
+        result: Var#19
+    Expr_BinaryOp_Concat
+        left: LITERAL('<pre>Hello ')
+        right: Var#19
+        result: Var#20
+    Expr_BinaryOp_Concat
+        left: Var#20
+        right: LITERAL('</pre>')
+        result: Var#21
+    Expr_BinaryOp_Concat
+        left: Var#17<$html>
+        right: Var#21
+        result: Var#22
+    Expr_Assign
+        var: Var#23<$html>
+        expr: Var#22
+        result: Var#24
+    Stmt_Jump
+        target: Block#6
+
+Block#5
+    Parent: Block#3
+    Stmt_Jump
+        target: Block#6
+
+Block#6
+    Parent: Block#4
+    Parent: Block#5
+    Var#25<$html> = Phi(Var#23<$html>, Var#14<$html>)
+    Var#26<$page> = Phi(Var#16<$page>)
+    Expr_ConcatList
+        list[0]: LITERAL('hello there ')
+        list[1]: Var#25<$html>
+        list[2]: LITERAL(' ')
+        result: Var#27
+    Expr_ArrayDimFetch
+        var: Var#26<$page>
+        dim: LITERAL('body')
+        result: Var#28
+    Expr_Assign
+        var: Var#28
+        expr: Var#27
+        result: Var#29
+    Expr_ArrayDimFetch
+        var: Var#26<$page>
+        dim: LITERAL('body')
+        result: Var#30
+    Terminal_Echo
+        expr: Var#30
+    Terminal_Return

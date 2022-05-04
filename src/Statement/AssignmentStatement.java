@@ -31,6 +31,7 @@ public class AssignmentStatement extends Statement{
         else
             Values = new String[] {AssignedValue};
 
+        // If the Values are empty, then just create a new variable with name equal to the assigned variable
         // For each of the potential values, see if it is tainted. If it is, the AssignedVariable could be tainted, so pass it on.
         for (String Value : Values){
             Variable var = inputTaint.get(Value);

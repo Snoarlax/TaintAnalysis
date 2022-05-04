@@ -1,9 +1,10 @@
 package TaintAnalysisComponents;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class TaintMap extends HashMap<String, Variable> {
-
+    // collection where the Variable "key" gets the taint from the variable "value" instead. Used when getting taints from Arrays.
     public TaintMap() {
         super();
     }
