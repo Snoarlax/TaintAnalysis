@@ -19,13 +19,12 @@ public class Expr_ArrayDimFetch extends ExpressionStatement{
         inputTaint.put(var);
         inputTaint.put(result);
 
-        if (var.isSource())
+        // only taint the result if the result was not the reason the array is tainted.
+        if (!var.getTaintedFrom().contains(result) && !result.hasTainted(var.getTaints()))
             // alternatively, if the result gets tainted from the array...
         {
-            if (!result.hasTainted(var.getTaints())) {
-                result.TaintedFrom(var);
-                result.setAllTainted(var.getTaints());
-            }
+            result.TaintedFrom(var);
+            result.setAllTainted(var.getTaints());
         }
 
         // if the result EVER becomes tainted int the future, the array should also become tainted if it is not already!

@@ -75,7 +75,7 @@ public class TaintAnalyser {
             }
 
         if (!tainted)
-            System.err.println(FailMessage);
+            System.out.println(FailMessage);
 
         else {
             System.out.println("File: " + parser.getGraph().getName() + " vulnerable. \n");
