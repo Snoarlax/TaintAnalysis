@@ -35,6 +35,7 @@ public class TaintAnalyser {
             }
         }
 
+        // Lex the file and then propogate taint
         boolean tainted = false;
         HashSet<TaintType> taintTypeList = new HashSet<>();
         HashSet<Statement> TaintedSinks = new HashSet<>();
@@ -74,6 +75,7 @@ public class TaintAnalyser {
                         TaintedSinks.add(statement);
             }
 
+        // output the result of taint propogation
         if (!tainted)
             System.out.println(FailMessage);
 
@@ -147,14 +149,15 @@ public class TaintAnalyser {
                 System.out.println();
             }
             System.out.println();
-            int spacing = -Integer.max(25, TaintType.getMaxMessageLength());
-            System.out.printf(String.join("", Collections.nCopies(5, "%"+spacing+"s")) + "%n",
-                    "Vulnerability", "Confidentiality", "Integrity", "Availability", "Priority");
+            String spacingMessage = "%" + -(Integer.max(20, TaintType.getMaxMessageLength())+5) + "s";
+            String spacingDescription = "%" + -(Integer.max(20, TaintType.getMaxDescriptionLength())+5) + "s";
+            System.out.printf(spacingMessage + spacingDescription + spacingMessage,
+                    "Vulnerability", "Description", "Priority");
             System.out.println();
 
             for (TaintType taintType : taintTypeList) {
-                System.out.printf(String.join("", Collections.nCopies(5, "%" + spacing + "s")) + "%n",
-                        taintType.getMessage(), taintType.getConfidentiality(), taintType.getIntegrity(), taintType.getAvailability(), taintType.getPriority());
+                System.out.printf(spacingMessage + spacingDescription + spacingMessage,
+                        taintType.getMessage(), taintType.getDescription(), taintType.getPriority());
                 System.out.println();
             }
         }

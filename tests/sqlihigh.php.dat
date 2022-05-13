@@ -1,0 +1,386 @@
+
+Block#1
+    Var#1<$_SESSION> = Phi()
+    Var#2<$_DVWA> = Phi()
+    Var#3<$GLOBALS> = Phi()
+    Var#4<$html> = Phi()
+    Var#5<$results> = Phi()
+    Var#6<$sqlite_db> = Phi()
+    Expr_ArrayDimFetch
+        var: Var#1<$_SESSION>
+        dim: LITERAL('id')
+        result: Var#7
+    Expr_Isset
+        vars[0]: Var#7
+        result: Var#8
+    Stmt_JumpIf
+        cond: Var#8
+        if: Block#2
+        else: Block#3
+
+Block#2
+    Parent: Block#1
+    Var#9<$_SESSION> = Phi(Var#1<$_SESSION>)
+    Var#10<$_DVWA> = Phi(Var#2<$_DVWA>)
+    Expr_ArrayDimFetch
+        var: Var#9<$_SESSION>
+        dim: LITERAL('id')
+        result: Var#11
+    Expr_Assign
+        var: Var#12<$id>
+        expr: Var#11
+        result: Var#13
+    Expr_ArrayDimFetch
+        var: Var#10<$_DVWA>
+        dim: LITERAL('SQLI_DB')
+        result: Var#14
+    Expr_ConstFetch
+        name: LITERAL('MYSQL')
+        result: Var#15
+    Expr_BinaryOp_Equal
+        left: Var#14
+        right: Var#15
+        result: Var#16
+    Stmt_JumpIf
+        cond: Var#16
+        if: Block#4
+        else: Block#5
+
+Block#3
+    Parent: Block#1
+    Stmt_Jump
+        target: Block#6
+
+Block#4
+    Parent: Block#2
+    Var#17<$id> = Phi(Var#12<$id>)
+    Var#18<$GLOBALS> = Phi(Var#3<$GLOBALS>)
+    Expr_ConcatList
+        list[0]: LITERAL('SELECT first_name, last_name FROM users WHERE user_id = \'')
+        list[1]: Var#17<$id>
+        list[2]: LITERAL('\' LIMIT 1;')
+        result: Var#19
+    Expr_Assign
+        var: Var#20<$query>
+        expr: Var#19
+        result: Var#21
+    Expr_ArrayDimFetch
+        var: Var#18<$GLOBALS>
+        dim: LITERAL('___mysqli_ston')
+        result: Var#22
+    Expr_FuncCall
+        name: LITERAL('mysqli_query')
+        args[0]: Var#22
+        args[1]: Var#20<$query>
+        result: Var#23
+    Expr_Assign
+        var: Var#24<$result>
+        expr: Var#23
+        result: Var#25
+    Stmt_JumpIf
+        cond: Var#25
+        if: Block#7
+        else: Block#8
+
+Block#5
+    Parent: Block#2
+    Expr_ConstFetch
+        name: LITERAL('SQLITE')
+        result: Var#26
+    Expr_BinaryOp_Equal
+        left: Var#14
+        right: Var#26
+        result: Var#27
+    Stmt_JumpIf
+        cond: Var#27
+        if: Block#9
+        else: Block#10
+
+Block#6
+    Parent: Block#19
+    Parent: Block#3
+    Terminal_Return
+
+Block#7
+    Parent: Block#4
+    Var#28 = Phi(LITERAL(true), Var#29)
+    Var#30<$result> = Phi(Var#24<$result>)
+    Var#31<$html> = Phi(Var#4<$html>)
+    Var#32<$id> = Phi(Var#17<$id>)
+    Var#33<$GLOBALS> = Phi(Var#18<$GLOBALS>)
+    Stmt_Jump
+        target: Block#11
+
+Block#8
+    Parent: Block#4
+    Terminal_Exit
+        expr: LITERAL('<pre>Something went wrong.</pre>')
+
+Block#9
+    Parent: Block#5
+    Var#34<$id> = Phi(Var#12<$id>)
+    Var#35<$results> = Phi(Var#5<$results>)
+    Terminal_GlobalVar
+        var: LITERAL('sqlite_db_connection')
+    Expr_ConcatList
+        list[0]: LITERAL('SELECT first_name, last_name FROM users WHERE user_id = \'')
+        list[1]: Var#34<$id>
+        list[2]: LITERAL('\' LIMIT 1;')
+        result: Var#36
+    Expr_Assign
+        var: Var#37<$query>
+        expr: Var#36
+        result: Var#38
+    Stmt_JumpIf
+        cond: Var#35<$results>
+        if: Block#12
+        else: Block#13
+
+Block#10
+    Parent: Block#5
+    Stmt_Jump
+        target: Block#14
+
+Block#11
+    Parent: Block#7
+    Parent: Block#20
+    Var#39<$result> = Phi(Var#30<$result>)
+    Var#40<$html> = Phi(Var#31<$html>, Var#41<$html>)
+    Var#42<$id> = Phi(Var#32<$id>, Var#43<$id>)
+    Var#44<$GLOBALS> = Phi(Var#33<$GLOBALS>)
+    Expr_FuncCall
+        name: LITERAL('mysqli_fetch_assoc')
+        args[0]: Var#39<$result>
+        result: Var#45
+    Expr_Assign
+        var: Var#46<$row>
+        expr: Var#45
+        result: Var#47
+    Stmt_JumpIf
+        cond: Var#47
+        if: Block#15
+        else: Block#16
+
+Block#12
+    Parent: Block#9
+    Stmt_Jump
+        target: Block#17
+
+Block#13
+    Parent: Block#9
+    Var#48<$sqlite_db> = Phi(Var#6<$sqlite_db>)
+    Expr_MethodCall
+        var: Var#48<$sqlite_db>
+        name: LITERAL('lastErrorMsg')
+        result: Var#49
+    Expr_BinaryOp_Concat
+        left: LITERAL('Error in fetch ')
+        right: Var#49
+        result: Var#50
+    Terminal_Echo
+        expr: Var#50
+    Stmt_Jump
+        target: Block#18
+
+Block#14
+    Parent: Block#10
+    Stmt_Jump
+        target: Block#19
+
+Block#15
+    Parent: Block#11
+    Var#51<$row> = Phi(Var#46<$row>)
+    Var#52<$html> = Phi(Var#40<$html>)
+    Var#43<$id> = Phi(Var#42<$id>)
+    Expr_ArrayDimFetch
+        var: Var#51<$row>
+        dim: LITERAL('first_name')
+        result: Var#53
+    Expr_Assign
+        var: Var#54<$first>
+        expr: Var#53
+        result: Var#55
+    Expr_ArrayDimFetch
+        var: Var#51<$row>
+        dim: LITERAL('last_name')
+        result: Var#56
+    Expr_Assign
+        var: Var#57<$last>
+        expr: Var#56
+        result: Var#58
+    Expr_ConcatList
+        list[0]: LITERAL('<pre>ID: ')
+        list[1]: Var#43<$id>
+        list[2]: LITERAL('<br />First name: ')
+        list[3]: Var#54<$first>
+        list[4]: LITERAL('<br />Surname: ')
+        list[5]: Var#57<$last>
+        list[6]: LITERAL('</pre>')
+        result: Var#59
+    Expr_BinaryOp_Concat
+        left: Var#52<$html>
+        right: Var#59
+        result: Var#60
+    Expr_Assign
+        var: Var#41<$html>
+        expr: Var#60
+        result: Var#61
+    Stmt_Jump
+        target: Block#20
+
+Block#16
+    Parent: Block#11
+    Stmt_Jump
+        target: Block#21
+
+Block#17
+    Parent: Block#12
+    Parent: Block#26
+    Var#62<$results> = Phi(Var#35<$results>)
+    Var#63<$html> = Phi(Var#4<$html>, Var#64<$html>)
+    Var#65<$id> = Phi(Var#34<$id>, Var#66<$id>)
+    Expr_MethodCall
+        var: Var#62<$results>
+        name: LITERAL('fetchArray')
+        result: Var#67
+    Expr_Assign
+        var: Var#68<$row>
+        expr: Var#67
+        result: Var#69
+    Stmt_JumpIf
+        cond: Var#69
+        if: Block#22
+        else: Block#23
+
+Block#18
+    Parent: Block#27
+    Parent: Block#13
+    Stmt_Jump
+        target: Block#19
+
+Block#19
+    Parent: Block#14
+    Parent: Block#28
+    Parent: Block#18
+    Stmt_Jump
+        target: Block#6
+
+Block#20
+    Parent: Block#15
+    Stmt_Jump
+        target: Block#11
+
+Block#21
+    Parent: Block#16
+    Var#70<$GLOBALS> = Phi(Var#44<$GLOBALS>)
+    Expr_ArrayDimFetch
+        var: Var#70<$GLOBALS>
+        dim: LITERAL('___mysqli_ston')
+        result: Var#71
+    Expr_FuncCall
+        name: LITERAL('mysqli_close')
+        args[0]: Var#71
+        result: Var#72
+    Expr_Assign
+        var: Var#73<$___mysqli_res>
+        expr: Var#72
+        result: Var#74
+    Expr_FuncCall
+        name: LITERAL('is_null')
+        args[0]: Var#74
+        result: Var#75
+    Stmt_JumpIf
+        cond: Var#75
+        if: Block#24
+        else: Block#25
+
+Block#22
+    Parent: Block#17
+    Var#76<$row> = Phi(Var#68<$row>)
+    Var#77<$html> = Phi(Var#63<$html>)
+    Var#66<$id> = Phi(Var#65<$id>)
+    Expr_ArrayDimFetch
+        var: Var#76<$row>
+        dim: LITERAL('first_name')
+        result: Var#78
+    Expr_Assign
+        var: Var#79<$first>
+        expr: Var#78
+        result: Var#80
+    Expr_ArrayDimFetch
+        var: Var#76<$row>
+        dim: LITERAL('last_name')
+        result: Var#81
+    Expr_Assign
+        var: Var#82<$last>
+        expr: Var#81
+        result: Var#83
+    Expr_ConcatList
+        list[0]: LITERAL('<pre>ID: ')
+        list[1]: Var#66<$id>
+        list[2]: LITERAL('<br />First name: ')
+        list[3]: Var#79<$first>
+        list[4]: LITERAL('<br />Surname: ')
+        list[5]: Var#82<$last>
+        list[6]: LITERAL('</pre>')
+        result: Var#84
+    Expr_BinaryOp_Concat
+        left: Var#77<$html>
+        right: Var#84
+        result: Var#85
+    Expr_Assign
+        var: Var#64<$html>
+        expr: Var#85
+        result: Var#86
+    Stmt_Jump
+        target: Block#26
+
+Block#23
+    Parent: Block#17
+    Stmt_Jump
+        target: Block#27
+
+Block#24
+    Parent: Block#21
+    Expr_Assertion<type(LITERAL('null'))>
+        expr: Var#74
+        result: Var#74
+    Expr_ConstFetch
+        name: LITERAL('false')
+        result: Var#87
+    Expr_Assign
+        var: Var#88
+        expr: Var#87
+        result: Var#89
+    Stmt_Jump
+        target: Block#28
+
+Block#25
+    Parent: Block#21
+    Var#90<$___mysqli_res> = Phi(Var#73<$___mysqli_res>)
+    Expr_Assertion<not(type(LITERAL('null')))>
+        expr: Var#74
+        result: Var#74
+    Expr_Assign
+        var: Var#91
+        expr: Var#90<$___mysqli_res>
+        result: Var#92
+    Stmt_Jump
+        target: Block#28
+
+Block#26
+    Parent: Block#22
+    Stmt_Jump
+        target: Block#17
+
+Block#27
+    Parent: Block#23
+    Stmt_Jump
+        target: Block#18
+
+Block#28
+    Parent: Block#24
+    Parent: Block#25
+    Var#93 = Phi(Var#88, Var#91)
+    Stmt_Jump
+        target: Block#19

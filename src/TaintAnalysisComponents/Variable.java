@@ -42,9 +42,9 @@ public class Variable {
     }
 
     private boolean TaintDependencyCycle(Variable DependentVariable){
-        // implement cycle detection algorithm
+        // cycle detection algorithm
         // If the current variable is in the DependentVariable subtree,
-        // a cycle may occur if added.
+        // a cycle will occur if added.
 
         // If DependentVariable is in the tree
         Stack<Variable> DFSStack = new Stack<>();
@@ -152,16 +152,4 @@ public class Variable {
         return isRealVariable() ? VariableName.substring(VariableName.indexOf("<") + 1, VariableName.lastIndexOf(">")) : VariableName;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Variable variable = (Variable) o;
-        return VariableName.equals(variable.VariableName);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(VariableName);
-    }
 }
